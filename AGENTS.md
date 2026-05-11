@@ -10,6 +10,11 @@ This repository is a collection of portable AI agent skills. Every subdirectory 
   - `references/`: Local documentation that the skill refers to.
 - **Deduplication**: If adding a new skill, check `.atl/skill-registry.md` to ensure no naming conflicts.
 
+## Available Skills
+
+- **flet-expert**: [skills/flet-expert/SKILL.md](skills/flet-expert/SKILL.md)
+- **mintoria-brand-guidelines**: [skills/mintoria-brand-guidelines/SKILL.md](skills/mintoria-brand-guidelines/SKILL.md)
+
 ## Developer Workflows
 
 ### Creating a New Skill

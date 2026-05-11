@@ -8,24 +8,31 @@ See `_shared/skill-resolver.md` for the full resolution protocol.
 
 | Trigger | Skill | Path |
 |---------|-------|------|
-| Flet, building Python web/desktop/mobile apps, ft.Page, Flet controls | flet-expert | /home/deuri-vasquez/Projects/agent-skills/skills/flet-expert/SKILL.md |
+| Flet, building Python web/desktop/mobile apps, ft.Page, Flet controls | flet-expert | skills/flet-expert/SKILL.md |
+| designing or implementing new UI components, pages, or brand assets for Mintoria | mintoria-brand-guidelines | skills/mintoria-brand-guidelines/SKILL.md |
 
 ## Compact Rules
 
 Pre-digested rules per skill. Delegators copy matching blocks into sub-agent prompts as `## Project Standards (auto-resolved)`.
 
 ### flet-expert
-- **Prefer Declarative UI**: Use `@ft.component`, `@ft.observable`, and `ft.use_state()`.
-- **UI = f(state)**: Update state (observable fields or hooks), not controls directly.
-- **No manual updates**: Avoid `page.update()` in declarative code; state changes trigger re-renders.
-- **DO**: Use conditional rendering (`if/else`) instead of `visible` property toggles.
-- **DON'T**: Use plain local variables for UI state; they reset on every render.
-- Layout: `ft.Row` (horizontal), `ft.Column` (vertical).
-- Standard entry point: `main(page: ft.Page)` with `import flet as ft`.
+- Always use `import flet as ft`.
+- Prefer Declarative UI: Use `@ft.component`, `@ft.observable`, `ft.use_state()`, `ft.use_effect()`.
+- Mindset: UI = f(state). Update state, not control properties.
+- Avoid manual `page.update()` or `control.update()` in declarative code.
+- Use `Control Refs` (`ft.Ref`) only for direct property access not mapped to state.
+
+### mintoria-brand-guidelines
+- Consistency: Use CSS variables from `src/styles/colors.css`.
+- Aesthetic: Premium FinTech ecosystem, glassmorphism, smooth transitions.
+- Assets: Use official logos from `assets/` (`mintoria-logo.webp`, `mintoria-icon.webp`).
+- Accessibility: Ensure contrast while maintaining vibrant look.
 
 ## Project Conventions
 
 | File | Path | Notes |
 |------|------|-------|
-| README.md | /home/deuri-vasquez/Projects/agent-skills/README.md | Project overview and installation |
-| AGENTS.md | /home/deuri-vasquez/Projects/agent-skills/AGENTS.md | Repository structure and developer workflows |
+| AGENTS.md | AGENTS.md | Index — references skills above |
+| README.md | README.md | Project documentation |
+
+Read the convention files listed above for project-specific patterns and rules. All referenced paths have been extracted — no need to read index files to discover more.

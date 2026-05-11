@@ -15,3 +15,4 @@ npx skills add deuriib/agent-skills
 ## Available Skills
 
 - **flet-expert**: A specialized skill for building apps with Flet (Python-based Flutter framework).
+- **mintoria-brand-guidelines**: Official brand guidelines for Mintoria, including colors, typography, logos, and premium design principles.
