@@ -12,6 +12,7 @@ This repository is a collection of portable AI agent skills. Every subdirectory 
 
 ## Available Skills
 
+- **bridge-xyz**: [skills/bridge-xyz/SKILL.md](skills/bridge-xyz/SKILL.md)
 - **flet-expert**: [skills/flet-expert/SKILL.md](skills/flet-expert/SKILL.md)
 - **mintoria-brand-guidelines**: [skills/mintoria-brand-guidelines/SKILL.md](skills/mintoria-brand-guidelines/SKILL.md)
 
