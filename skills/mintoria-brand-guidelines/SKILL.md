@@ -1,6 +1,9 @@
 ---
 name: mintoria-brand-guidelines
 description: Official brand guidelines for Mintoria, including colors, typography, logos, and premium design principles. Use this skill when designing or implementing new UI components, pages, or brand assets for Mintoria to ensure consistency and a high-end, premium aesthetic.
+metadata:
+  author: deuriib
+  version: "1.0"
 ---
 
 # Mintoria Brand Guidelines
