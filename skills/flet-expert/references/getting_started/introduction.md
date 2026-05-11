@@ -1,0 +1,8 @@
+# Introduction
+URL: https://flet.dev/docs/
+
+✓ Flet
+  https://flet.dev/docs/
+✓ Done
+"Introduction\nIntroduction\n\nFlet is a framework that allows building web, desktop and mobile applications in Python without prior experience in frontend development.\n\nFlet app example​\n\nBelow is a simple \"Counter\" app, with a text field and two buttons to increment and decrement the counter value:\n\ncounter.py\nimport flet as ft\n\n\n\ndef main(page: ft.Page):\n\n    page.title = \"Flet counter example\"\n\n    page.vertical_alignment = ft.MainAxisAlignment.CENTER\n\n\n\n    input = ft.TextField(value=\"0\", text_align=ft.TextAlign.RIGHT, width=100)\n\n\n\n    def minus_click(e):\n\n        input.value = str(int(input.value) - 1)\n\n\n\n    def plus_click(e):\n\n        input.value = str(int(input.value) + 1)\n\n\n\n    page.add(\n\n        ft.Row(\n\n            alignment=ft.MainAxisAlignment.CENTER,\n\n            controls=[\n\n                ft.IconButton(ft.Icons.REMOVE, on_click=minus_click),\n\n                input,\n\n                ft.IconButton(ft.Icons.ADD, on_click=plus_click),\n\n            ],\n\n        )\n\n    )\n\n\n\nft.run(main)\n\n\nTo run the app, install flet:\n\npip install 'flet[all]'\n\n\nthen launch the app:\n\nflet run counter.py\n\n\nThis will open the app in a native OS window - what a nice alternative to Electron! 🙂\n\nTo run the same app as a web app use --web option with flet run command:\n\nflet run --web counter.py\n\n\nEdit this page"
+✓ Browser closed

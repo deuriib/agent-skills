@@ -1,0 +1,8 @@
+# Testing on Mobile
+URL: https://flet.dev/docs/getting-started/testing-on-mobile
+
+✓ Flet
+  https://flet.dev/docs/getting-started/testing-on-mobile/
+✓ Done
+"Getting startedTesting on Mobile\nTesting on Mobile\n\nStart building awesome mobile apps in Python using just your computer and mobile phone!\n\nIMPORTANT\nMake sure your computer fulfills these requirements.\nYour device and computer must be connected to the same Wi-Fi or local network.\nWe recommend starting with the creation of a new virtual environment.\niOS\nAndroid\n\nInstall the Flet iOS app on your iOS device. You will be using this app to see how your Flet project is working on iPhone or iPad.\n\n[View on App Store](https://apps.apple.com/app/flet/id1624979699)\n\nRun the following command to start Flet development server with your app:\n\nuv\npip\nuv run flet run --ios [script]\n\n\n\nA QR code with encoded project URL will be displayed in the terminal:\n\nOpen Camera app on your Android device, point to QR code you got and click URL to open it in Flet app.\n\nTry updating your [script] - the app will be instantly refreshed on your Android device.\n\nTo return to \"Home\" tab either:\n\nLong-press anywhere on the screen with 3 fingers or\nShake your Android device.\n\nYou can also \"manually\" add a new project by clicking \"+\" floating action button in the app and typing in its URL.\n\nEXAMPLES\nBelow is a URL to a \"Counter\" Flet app that we hosted for testing purposes:\nhttps://flet-counter-test-ios.fly.dev\n\nThe \"Gallery\" tab of the app has some more examples that you can try out.\nExplore Flet examples for even more examples.\nEdit this page"
+✓ Browser closed
