@@ -4,18 +4,21 @@ description: "Trigger: Flet, building Python web/desktop/mobile apps, ft.Page, F
 license: Apache-2.0
 metadata:
   author: deuriib
-  version: "1.1"
+  version: "1.2"
 ---
 
 # Skill: flet-expert
 
 ## Activation Contract
+
 Use this skill when:
+
 - The user or agent needs to build, debug, or architect applications using the Flet framework (Python).
 - Questions arise about Flet controls, layout (Row/Column), navigation, or state management.
 - Implementation of tutorials (Calculator, ToDo, Chat) or cookbook patterns is required.
 
 ## Hard Rules
+
 - Always use the `ft` alias for the `flet` module: `import flet as ft`.
 - Follow the standard `main(page: ft.Page)` entry point structure.
 - **Prefer Declarative UI**: Use `@ft.component` and `@ft.observable` instead of manual control mutation.
@@ -25,6 +28,7 @@ Use this skill when:
 ## DO's and DON'Ts
 
 ### DO
+
 - **DO** use `@ft.observable` for your domain models and shared data.
 - **DO** use `ft.use_state()` within components for local, transient UI state (e.g., `is_editing`).
 - **DO** use conditional rendering (Python `if/else` inside components) instead of toggling the `visible` property of controls.
@@ -32,6 +36,7 @@ Use this skill when:
 - **DO** organize your UI into small, reusable `@ft.component` functions.
 
 ### DON'T
+
 - **DON'T** mutate control properties (like `control.value = "new"`) inside event handlers in declarative code; update the state instead.
 - **DON'T** call `page.update()` inside an event handler if you modified an `@ft.observable` object or used a `set_state` hook.
 - **DON'T** use plain local variables to track UI state inside a component; they will reset on every render. Use `ft.use_state()` instead.
@@ -40,10 +45,12 @@ Use this skill when:
 ## Recommended Approaches
 
 ### Declarative vs. Imperative
+
 **Mindset shift: UI = f(state)**. Instead of deciding "how" to change the screen, decide what the data looks like and let the component "describe" the UI for that data.
 
 - **Imperative (Avoid for complex apps)**: `button.text = "Clicked!"; page.update();`
 - **Declarative (Recommended)**:
+
   ```python
   @ft.component
   def MyComponent():
@@ -55,24 +62,28 @@ Use this skill when:
   ```
 
 ### State Management
+
 - Use **Hooks** (`ft.use_state`, `ft.use_effect`) for state that only matters to one component (e.g., "is this menu open?").
 - Use **Observables** (`@ft.observable`) for data that lives across the app or represents your business model (e.g., "list of users").
 
 ## Decision Gates
-| Feature | Approach |
-|---------|----------|
-| Layout | Use `ft.Row` for horizontal and `ft.Column` for vertical alignment. |
-| Navigation | Use `page.on_route_change` and `ft.TemplateRoute` for multi-page apps. |
-| State | Use `ft.use_state()` for local UI state or `@ft.observable` for domain data. |
-| Platform | Use `ft.app(target=main)` for desktop/web and `flet build` for mobile. |
+
+| Feature    | Approach                                                                     |
+| ---------- | ---------------------------------------------------------------------------- |
+| Layout     | Use `ft.Row` for horizontal and `ft.Column` for vertical alignment.          |
+| Navigation | Use `page.on_route_change` and `ft.TemplateRoute` for multi-page apps.       |
+| State      | Use `ft.use_state()` for local UI state or `@ft.observable` for domain data. |
+| Platform   | Use `ft.app(target=main)` for desktop/web and `flet build` for mobile.       |
 
 ## Execution Steps
+
 1. Identify the specific Flet component or pattern requested.
 2. Search the local documentation in `references/` (e.g., `reference/controls.md` or `cookbook/`) for implementation details.
 3. Provide a clean code snippet using `import flet as ft` and the **Declarative approach** by default.
 4. Explain any non-obvious event handlers or layout constraints.
 
 ## Output Contract
+
 - Correct Python code using Flet (declarative style preferred).
 - References to specific local documentation files used.
 - Clear explanation of the UI structure and behavior.
@@ -80,6 +91,7 @@ Use this skill when:
 ## References
 
 ### Getting Started
+
 - `references/getting_started/introduction.md`: Fundamental concepts and framework architecture.
 - `references/getting_started/installation.md`: Steps to set up the development environment.
 - `references/getting_started/creating_a_new_flet_app.md`: Boilerplate for starting new projects.
@@ -87,6 +99,7 @@ Use this skill when:
 - `references/getting_started/testing_on_mobile.md`: How to preview apps on mobile devices using Flet app.
 
 ### Cookbook (Patterns & Solutions)
+
 - **`references/cookbook/declarative_vs_imperative_crud_app.md`**: CRITICAL. Explains the shift from manual mutations to state-driven UI.
 - `references/cookbook/navigation_and_routing.md`: Implementing multi-page apps and URL handling.
 - `references/cookbook/async_apps.md`: Managing concurrency and non-blocking UI updates.
@@ -98,6 +111,7 @@ Use this skill when:
 - `references/cookbook/read_and_write_files.md`: Using file pickers and local file system access.
 
 ### API Reference
+
 - `references/reference/accelerometer.md`: Use case: Implementing and configuring Accelerometer components and features.
 - `references/reference/ads.md`: Use case: Implementing and configuring Ads components and features.
 - `references/reference/alertdialog.md`: Use case: Showing modal popups and alerts with Alertdialog.
@@ -451,11 +465,13 @@ Use this skill when:
 - `references/reference/windowsdeviceinfo.md`: Use case: Accessing hardware and OS details via Windowsdeviceinfo.
 
 ### Tutorials
+
 - `references/tutorials/calculator.md`: Example of a complete functional app with layout and logic.
 - `references/tutorials/todo.md`: CRUD patterns and state management example.
 - `references/tutorials/chat.md`: Real-time communication and complex list handling.
 - `references/tutorials/solitaire.md`: Game logic and advanced drag-and-drop example.
 
 ### Publishing
+
 - `references/publishing_flet_app/publishing_flet_app_(overview).md`: General guide for distribution.
 - `references/publishing_flet_app/android.md`, `ios.md`, `web.md`, etc.: Platform-specific build instructions.
