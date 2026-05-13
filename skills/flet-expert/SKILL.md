@@ -61,6 +61,283 @@ Use this skill when:
       )
   ```
 
+#### Declarative
+
+In the declarative version, you think model-first: the model is a set of classes, and the data their objects hold is the single source of truth. In our CRUD app, the model consists of User (persisted fields first_name, last_name) and a top-level App that owns users: list[User] plus actions like add_user(first, last) and delete_user(user). Both classes are marked @ft.observable, so assigning to their attributes (e.g., user.update(...), app.users.remove(user)) triggers re-rendering — no page.update().
+
+The UI is composed as components marked with @ft.component that return a view of the current state. Each row decides whether to show a read-only view or an inline editor using its own short-lived, local values (hooks), while the durable data lives on the model objects. Event handlers update state only (e.g., modify a user or add/remove items), not the controls themselves; Flet detects those changes and re-renders the affected parts. In short: UI = f(state), with User and App providing the authoritative data.
+
+```python
+from dataclasses import dataclass, field
+
+import flet as ft
+
+@ft.observable
+@dataclass
+class User:
+    first_name: str
+    last_name: str
+
+    def update(self, first_name: str, last_name: str):
+        self.first_name = first_name
+        self.last_name = last_name
+
+@ft.observable
+@dataclass
+class App:
+    users: list[User] = field(default_factory=list)
+
+    def add_user(self, first_name: str, last_name: str):
+        if first_name.strip() or last_name.strip():
+            self.users.append(User(first_name, last_name))
+
+    def delete_user(self, user: User):
+        self.users.remove(user)
+
+@ft.component
+def UserView(user: User, delete_user) -> ft.Control:
+    # Local (transient) editing state—NOT in User
+    is_editing, set_is_editing = ft.use_state(False)
+    new_first_name, set_new_first_name = ft.use_state(user.first_name)
+    new_last_name, set_new_last_name = ft.use_state(user.last_name)
+
+    def start_edit():
+        set_new_first_name(user.first_name)
+        set_new_last_name(user.last_name)
+        set_is_editing(True)
+
+    def save():
+        user.update(new_first_name, new_last_name)
+        set_is_editing(False)
+
+    def cancel():
+        set_is_editing(False)
+
+    if not is_editing:
+        return ft.Row(
+            [
+                ft.Text(f"{user.first_name} {user.last_name}"),
+                ft.Button("Edit", on_click=start_edit),
+                ft.Button("Delete", on_click=lambda: delete_user(user)),
+            ]
+        )
+
+    return ft.Row(
+        [
+            ft.TextField(
+                label="First Name",
+                value=new_first_name,
+                on_change=lambda e: set_new_first_name(e.control.value),
+                width=180,
+            ),
+            ft.TextField(
+                label="Last Name",
+                value=new_last_name,
+                on_change=lambda e: set_new_last_name(e.control.value),
+                width=180,
+            ),
+            ft.Button("Save", on_click=save),
+            ft.Button("Cancel", on_click=cancel),
+        ]
+    )
+
+@ft.component
+def AddUserForm(add_user) -> ft.Control:
+    # Uses local buffers; calls parent action on Add
+    new_first_name, set_new_first_name = ft.use_state("")
+    new_last_name, set_new_last_name = ft.use_state("")
+
+    def add_user_and_clear():
+        add_user(new_first_name, new_last_name)
+        set_new_first_name("")
+        set_new_last_name("")
+
+    return ft.Row(
+        controls=[
+            ft.TextField(
+                label="First Name",
+                width=200,
+                value=new_first_name,
+                on_change=lambda e: set_new_first_name(e.control.value),
+            ),
+            ft.TextField(
+                label="Last Name",
+                width=200,
+                value=new_last_name,
+                on_change=lambda e: set_new_last_name(e.control.value),
+            ),
+            ft.Button("Add", on_click=add_user_and_clear),
+        ]
+    )
+
+@ft.component
+def AppView() -> list[ft.Control]:
+    app, _ = ft.use_state(
+        App(
+            users=[
+                User("John", "Doe"),
+                User("Jane", "Doe"),
+                User("Foo", "Bar"),
+            ]
+        )
+    )
+
+    return [
+        AddUserForm(app.add_user),
+        *[UserView(user, app.delete_user) for user in app.users],
+    ]
+
+ft.run(lambda page: page.render(AppView))
+```
+
+##### Mindset shift: UI = f(state)
+
+The core idea is determinism: given the same state, your component should return the same UI. Think in two phases:
+
+    Handle event → update state Event handlers change data only (e.g., set_is_editing(True), user.update(...)). They don’t hide/show controls or call page.update().
+
+    Render → derive UI from state The component returns controls based on the current state snapshot. Because models are @ft.observable and locals come from ft.use_state, Flet re-runs the component when state changes and re-renders the right subtree.
+
+Declarative Building Blocks: Observables, Components, Hooks
+
+Below are the key pieces of the Flet framework that make the declarative approach work:
+Observables — your source of truth
+
+@ft.observable marks a dataclass as reactive. When you assign to its fields (user.first_name = "Ada" or app.users.append(user)), Flet re-renders any components that read those fields - no page.update() calls. Use observables for persisted/domain data (things you actually save).
+
+```python
+
+from dataclasses import dataclass, field
+import flet as ft
+
+@ft.observable
+@dataclass
+class User:
+first_name: str
+last_name: str
+
+@ft.observable
+@dataclass
+class AppState:
+users: list[User] = field(default_factory=list)
+
+```
+
+Components — functions that return UI
+
+@ft.component turns a function into a rendering unit. It takes props (regular args), may use hooks, and returns controls that describe the UI for the current state. Components do not imperatively mutate the page tree; they just return what the UI should look like now.
+
+```python
+
+import flet as ft
+
+@ft.component
+def UserRow(user: User, on*delete) -> ft.Control: # returns a row for the current snapshot of `user`
+return ft.Row([
+ft.Text(f"{user.first_name} {user.last_name}"),
+ft.Button("Delete", on_click=lambda*: on_delete(user)),
+])
+
+```
+
+Hooks — local, short-lived UI state
+
+Why they are needed: components are functions that re-run on every render. Plain local variables get reinitialized each time, and changing them doesn’t tell Flet to update the view. Hooks (e.g., ft.use_state) give a component a place to persist values across renders and a way to signal a re-render when those values change.
+
+What hooks solve
+
+    Persistence: locals reset on each render; hook state survives.
+    Reactivity: modifying a local doesn’t refresh the UI; a hook’s setter schedules a re-render.
+    Fresh values in handlers: event callbacks won’t see stale locals; they read the latest hook state.
+
+Use hooks for short-lived, view-only concerns (like an “is editing?” flag or current input text) that belong to a single component. Use observables for durable app/domain data shared across components.
+
+Example
+
+# Broken: local resets every render and doesn't trigger updates
+
+```python
+
+@ft.component
+def CounterBroken():
+count = 0
+return ft.Row([
+ft.Text(str(count)),
+ft.Button("+", on_click=lambda_: (count := count + 1)), # no re-render
+])
+
+```
+
+# Correct: persists across renders and re-renders when updated
+
+```python
+
+@ft.component
+def Counter():
+count, set*count = ft.use_state(0)
+return ft.Row([
+ft.Text(str(count)),
+ft.Button("+", on_click=lambda*: set_count(count + 1)),
+])
+
+```
+
+**Rule of thumb: if a value must survive re-renders and updating it should change the UI, don’t use a plain local — use hook state (for local UI) or an observable (for shared, persisted data).**
+
+### Rewrite recipes (imperative → declarative)
+
+1. Visibility toggles → Conditional rendering
+
+# Imperative
+
+```python
+self.text.visible = False
+self.save_button.visible = True
+self.page.update()
+
+# Declarative
+
+return (
+ft.Row([...read-only...])
+if not is_editing
+else ft.Row([...edit form...])
+)
+```
+
+1. Direct control mutation → Model mutation
+
+# Imperative
+
+```python
+self.text.value = f"{first} {last}"
+
+
+# Declarative
+user.update(new_first_name, new_last_name)
+
+```
+
+1. page.update() everywhere → Nowhere
+
+   Imperative handlers end with page.update().
+   Declarative code updates observable fields or use_state values and lets Flet re-render.
+
+2. Handlers manipulate state, not the view
+
+# Declarative example
+
+```python
+
+set_is_editing(True)
+set_new_first_name(user.first_name)
+
+```
+
+1. Extract UI into components
+
+   UserView = one row (read-only/editing)
+   AddUserForm = small, reusable add form
+
 ### State Management
 
 - Use **Hooks** (`ft.use_state`, `ft.use_effect`) for state that only matters to one component (e.g., "is this menu open?").
