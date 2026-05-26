@@ -1,0 +1,2306 @@
+openapi: 3.0.3
+info:
+  title: EF2 API - Sistema de Facturación Electrónica
+  description: |
+    API REST para la emisión de **Comprobantes Fiscales Electrónicos (e-CF)** ante la
+    **Dirección General de Impuestos Internos (DGII)** de la República Dominicana.
+
+    ---
+
+    ## Flujo de Integración
+
+    ```
+    ┌──────────────┐     ┌──────────────┐     ┌──────────────┐
+    │  1. Login    │────▶│  2. Obtener  │────▶│  3. Enviar   │
+    │  /auth/login │     │  Bearer Token│     │  Factura     │
+    └──────────────┘     └──────────────┘     └──────────────┘
+    ```
+
+    1. **Autenticarse** con `POST /auth/login.php` para obtener un **Bearer Token JWT**
+    2. **Incluir el token** en el header `Authorization: Bearer {token}` en cada petición
+    3. **Enviar el e-CF** con `POST /procesar_factura.php` — el sistema genera el **eNCF automáticamente** desde la secuencia registrada (o puede enviarlo si el cliente administra su propia secuencia)
+
+    ---
+
+    ## Tipos de Comprobantes Electrónicos (TipoeCF)
+
+    | Código | Prefijo | Nombre | Uso |
+    |--------|---------|--------|-----|
+    | **31** | E31 | Factura de Crédito Fiscal | Ventas a empresas con RNC (permite deducción de ITBIS) |
+    | **32** | E32 | Factura de Consumidor Final | Ventas al por menor / consumidor final |
+    | **33** | E33 | Nota de Débito | Cargos adicionales sobre factura previa |
+    | **34** | E34 | Nota de Crédito | Anulaciones, devoluciones, descuentos |
+    | **41** | E41 | Comprobante de Compra | Compras con retención de ITBIS e ISR |
+    | **43** | E43 | Gastos Menores | Gastos menores sin RNC de comprador |
+    | **44** | E44 | Regímenes Especiales | Ventas a zonas francas y regímenes especiales |
+    | **45** | E45 | Gubernamental | Ventas a instituciones del gobierno |
+    | **46** | E46 | Exportaciones | Ventas al exterior con logística |
+    | **47** | E47 | Pagos al Exterior | Pagos a proveedores internacionales |
+
+    ---
+
+    ## Conceptos Importantes
+
+    ### IndicadorMontoGravado
+    - `"0"` → ITBIS **NO** incluido en los precios de los items (se suma aparte)
+    - `"1"` → ITBIS **YA** incluido en los precios de los items
+
+    ### Formato de Fechas
+    Todas las fechas usan formato **`dd-mm-yyyy`** (ejemplo: `14-02-2026`)
+
+    ### Formato de Montos
+    Todos los montos deben enviarse como **string con 2 decimales** (ejemplo: `"1500.00"`)
+
+    ### RNC (Registro Nacional de Contribuyente)
+    - Personas jurídicas: **9 dígitos** (ejemplo: `131703836`)
+    - Personas físicas (cédula): **11 dígitos** (ejemplo: `00114587496`)
+
+    ### Códigos de Ubicación
+    - **Provincia**: 6 dígitos (ejemplo: `010000` = Distrito Nacional)
+    - **Municipio**: 6 dígitos (ejemplo: `010100` = Santo Domingo de Guzmán)
+
+  version: 2.0.0
+  contact:
+    name: EF2 Soporte Técnico
+    url: https://ef2.do
+    email: soporte@ef2.do
+  license:
+    name: Uso Privado
+    url: https://ef2.do/terminos
+
+servers:
+  - url: https://master.ef2.do/api2
+    description: Servidor de Producción
+
+tags:
+  - name: Autenticación
+    description: Endpoints para obtener y gestionar tokens de acceso
+  - name: Facturación
+    description: Emisión de comprobantes fiscales electrónicos (e-CF)
+  - name: "E31 - Crédito Fiscal"
+    description: Factura de Crédito Fiscal — ventas entre empresas
+  - name: "E32 - Consumidor Final"
+    description: Factura de Consumidor Final — ventas al por menor
+  - name: "E33 - Nota de Débito"
+    description: Nota de Débito — cargos adicionales
+  - name: "E34 - Nota de Crédito"
+    description: Nota de Crédito — anulaciones, devoluciones, descuentos
+  - name: "E41 - Comprobante de Compra"
+    description: Comprobante de Compra — con retenciones
+  - name: "E43 - Gastos Menores"
+    description: Gastos Menores — sin datos de comprador
+  - name: "E44 - Regímenes Especiales"
+    description: Regímenes Especiales — zonas francas
+  - name: "E45 - Gubernamental"
+    description: Comprobante Gubernamental — ventas al Estado
+  - name: "E46 - Exportaciones"
+    description: Exportaciones — ventas al exterior
+  - name: "E47 - Pagos al Exterior"
+    description: Pagos al Exterior — proveedores internacionales
+  - name: "Secuencias e-NCF"
+    description: |
+      Gestión de rangos de secuencias de comprobantes fiscales electrónicos autorizados por la DGII.
+
+      Cada empresa debe registrar los rangos de NCF (desde — hasta) que la DGII le ha autorizado,
+      junto con su fecha de vencimiento. El sistema usa estos rangos para generar el **eNCF automáticamente**
+      cuando se procesa una factura.
+
+      **Reglas clave:**
+      - Los rangos deben ser **consecutivos** — cada nuevo rango debe comenzar en `último_hasta + 1`
+      - No se permiten **solapamientos** entre rangos del mismo tipo
+      - El tipo **E32** no requiere fecha de vencimiento
+      - Solo se pueden **eliminar** rangos inactivos (debe desactivarlos primero)
+
+paths:
+  /auth/login.php:
+    post:
+      tags:
+        - Autenticación
+      summary: Obtener token de acceso (JWT)
+      description: |
+        Autentica al usuario y retorna un **Bearer Token JWT** que debe usarse en todas las peticiones subsecuentes.
+
+        ### Credenciales
+        - **username**: Usuario API asignado (formato: `api_empresa_codigo`)
+        - **password**: Token de API (formato: `tok_...`)
+
+        > **Nota**: Si el password empieza con `tok_`, se puede usar directamente como Bearer Token sin necesidad de llamar a este endpoint.
+      operationId: login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - username
+                - password
+              properties:
+                username:
+                  type: string
+                  description: Usuario API asignado a su empresa
+                  example: api_2buy_mliec4sb
+                password:
+                  type: string
+                  description: Token de autenticación (comienza con `tok_`)
+                  example: tok_e0f3065a8a7df34785d30b744bf4715b3c3b96759a1a7ca19f354817e4471e2e
+            examples:
+              login_basico:
+                summary: Login con credenciales API
+                value:
+                  username: api_2buy_mliec4sb
+                  password: tok_e0f3065a8a7df34785d30b744bf4715b3c3b96759a1a7ca19f354817e4471e2e
+      responses:
+        '200':
+          description: Autenticación exitosa
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  token:
+                    type: string
+                    description: Bearer Token JWT para autenticación
+                    example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+                  message:
+                    type: string
+                    example: Login exitoso
+                  empresa:
+                    type: object
+                    description: Datos de la empresa autenticada
+                    properties:
+                      nombre:
+                        type: string
+                        example: 2BUY ELECTRONICS AND SERVICES SRL
+                      rnc:
+                        type: string
+                        example: "132596161"
+              example:
+                success: true
+                token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+                message: Login exitoso
+                empresa:
+                  nombre: 2BUY ELECTRONICS AND SERVICES SRL
+                  rnc: "132596161"
+        '401':
+          description: Credenciales inválidas
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                success: false
+                message: Usuario o contraseña incorrectos
+
+  /procesar_factura.php:
+    post:
+      tags:
+        - Facturación
+      summary: Procesar comprobante fiscal electrónico (e-CF)
+      description: |
+        Endpoint principal para emitir cualquier tipo de comprobante fiscal electrónico.
+
+        El sistema **genera automáticamente el eNCF** (número de comprobante) — no es necesario enviarlo.
+
+        La estructura del JSON varía según el **TipoeCF** (ver ejemplos individuales por tipo).
+      operationId: procesarFactura
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ECFRequest'
+            examples:
+              e31_credito_fiscal:
+                $ref: '#/components/examples/E31_CreditoFiscal'
+              e32_consumidor_final_menor_250k:
+                $ref: '#/components/examples/E32_ConsumidorFinal_Menor250K'
+              e32_consumidor_final_mayor_250k:
+                $ref: '#/components/examples/E32_ConsumidorFinal_Mayor250K'
+              e33_nota_debito:
+                $ref: '#/components/examples/E33_NotaDebito'
+              e34_nota_credito:
+                $ref: '#/components/examples/E34_NotaCredito'
+              e41_comprobante_compra:
+                $ref: '#/components/examples/E41_ComprobanteCompra'
+              e43_gastos_menores:
+                $ref: '#/components/examples/E43_GastosMenores'
+              e44_regimenes_especiales:
+                $ref: '#/components/examples/E44_RegimenesEspeciales'
+              e45_gubernamental:
+                $ref: '#/components/examples/E45_Gubernamental'
+              e46_exportaciones:
+                $ref: '#/components/examples/E46_Exportaciones'
+              e47_pagos_exterior:
+                $ref: '#/components/examples/E47_PagosExterior'
+      responses:
+        '200':
+          description: Comprobante procesado exitosamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FacturaResponse'
+              example:
+                success: true
+                Estado: Procesada
+                eNCF: E310000012345
+                UrlENCF: https://master.ef2.do/consulta/E310000012345
+                FechaEmision: "14-02-2026"
+                MontoTotal: "1180.00"
+                message: Factura procesada exitosamente
+        '400':
+          description: Error de validación
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                success: false
+                message: "Error de validación"
+                errors:
+                  - "El RNCComprador debe tener 9 u 11 dígitos"
+                  - "El campo MontoTotal es requerido"
+        '401':
+          description: Token no proporcionado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                success: false
+                message: "Token de autenticación requerido"
+        '403':
+          description: Token inválido o expirado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                success: false
+                message: "Token inválido o expirado"
+        '500':
+          description: Error interno del servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                success: false
+                message: "Error interno del servidor al procesar la factura"
+
+  /ecf_secuencia_api.php:
+    get:
+      tags:
+        - "Secuencias e-NCF"
+      summary: Listar / consultar secuencias e-NCF
+      description: |
+        Endpoint multipropósito para consultar secuencias. El comportamiento depende de los
+        parámetros query enviados (se evalúan en este orden de prioridad):
+
+        | Parámetro | Descripción |
+        |-----------|-------------|
+        | `id={rango_id}` | Retorna un rango específico con estadísticas |
+        | `prefijo=E31` | Retorna el `max(hasta)` + rango activo para un prefijo |
+        | `disponibilidad_prefijo=E31` | Retorna disponibilidad total (secuencias libres) para un prefijo |
+        | `resource=tipos_ecf` | Lista los tipos de e-CF disponibles en el sistema |
+        | `resource=tipos_ecf&filter=empresa` | Lista solo tipos configurados para la empresa |
+        | *(sin parámetros)* | Lista **todos** los rangos de la empresa con estadísticas |
+
+        Todos los resultados están limitados a la empresa asociada al Bearer Token.
+      operationId: listarSecuencias
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: query
+          required: false
+          schema:
+            type: integer
+          description: ID del rango específico a consultar
+          example: 42
+        - name: prefijo
+          in: query
+          required: false
+          schema:
+            type: string
+          description: Prefijo (E31, E32, ...) para obtener último número y rango activo
+          example: E31
+        - name: disponibilidad_prefijo
+          in: query
+          required: false
+          schema:
+            type: string
+          description: Prefijo para obtener secuencias disponibles totales
+          example: E31
+        - name: resource
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [sequences, tipos_ecf]
+          description: Recurso a consultar. Por defecto `sequences`
+        - name: filter
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [empresa]
+          description: Solo aplica con `resource=tipos_ecf`. Usar `empresa` para filtrar tipos ya configurados
+      responses:
+        '200':
+          description: Consulta exitosa
+          content:
+            application/json:
+              examples:
+                listar_secuencias:
+                  summary: Listar todos los rangos de la empresa
+                  value:
+                    success: true
+                    message: "Secuencias obtenidas exitosamente"
+                    data:
+                      - id: 42
+                        tipo_ecf_id: 1
+                        prefijo: "E31"
+                        desde: 1
+                        hasta: 50000
+                        secuencia_actual: 3935
+                        fecha_vencimiento: "2028-12-31"
+                        estado: true
+                        tipo_codigo: "31"
+                        tipo_nombre: "Factura de Crédito Fiscal"
+                        total_secuencias: 50000
+                        secuencias_usadas: 3935
+                        secuencias_disponibles: 46065
+                        porcentaje_uso: 7.87
+                        created_at: "2025-01-15 10:30:00"
+                        updated_at: "2026-02-14 15:22:41"
+                rango_por_id:
+                  summary: Rango específico (?id=42)
+                  value:
+                    success: true
+                    message: "Rango obtenido exitosamente"
+                    data:
+                      id: 42
+                      tipo_ecf_id: 1
+                      prefijo: "E31"
+                      desde: 1
+                      hasta: 50000
+                      secuencia_actual: 3935
+                      secuencias_disponibles: 46065
+                      porcentaje_uso: 7.87
+                      estado: true
+                max_hasta_prefijo:
+                  summary: Máximo `hasta` para un prefijo (?prefijo=E31)
+                  value:
+                    success: true
+                    message: "Valor máximo obtenido exitosamente"
+                    data:
+                      prefijo: "E31"
+                      max_hasta: 50000
+                      tipo_codigo: "31"
+                      tipo_nombre: "Factura de Crédito Fiscal"
+                      total_rangos: 1
+                      rango_activo:
+                        desde: 1
+                        hasta: 50000
+                        secuencia_actual: 3935
+                        estado: true
+                      existe: true
+                disponibilidad_prefijo:
+                  summary: Disponibilidad total por prefijo
+                  value:
+                    success: true
+                    message: "Disponibilidad obtenida exitosamente"
+                    data:
+                      prefijo: "E31"
+                      tipo_codigo: "31"
+                      tipo_nombre: "Factura de Crédito Fiscal"
+                      disponibilidad_total: 46065
+                      rangos_activos: 1
+                      tiene_vencimiento: true
+                      fecha_vencimiento_proxima: "2028-12-31"
+                tipos_ecf:
+                  summary: Catálogo de tipos (?resource=tipos_ecf)
+                  value:
+                    success: true
+                    message: "Tipos ECF obtenidos exitosamente"
+                    data:
+                      - id: 1
+                        codigo: "31"
+                        nombre: "Factura de Crédito Fiscal"
+                        prefijo: "E31"
+                        estado: true
+                      - id: 2
+                        codigo: "32"
+                        nombre: "Factura de Consumo Electrónica"
+                        prefijo: "E32"
+                        estado: true
+        '401':
+          description: Token no proporcionado o inválido
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    post:
+      tags:
+        - "Secuencias e-NCF"
+      summary: Crear nuevo rango de secuencias
+      description: |
+        Registra un nuevo rango de secuencias autorizado por la DGII.
+
+        **Validaciones:**
+        - El `desde` debe ser igual a `MAX(hasta) + 1` del último rango del mismo tipo (continuidad)
+        - No puede solaparse con rangos existentes
+        - La `secuencia_actual` debe estar entre `desde` y `hasta` (o ser 0 para comenzar desde el inicio)
+        - La `fecha_vencimiento` es obligatoria salvo para **E32** (se asigna +100 años automáticamente)
+      operationId: crearSecuencia
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SecuenciaCreateRequest'
+            examples:
+              e31_primer_rango:
+                summary: Primer rango E31
+                value:
+                  tipo_ecf_id: 1
+                  prefijo: "E31"
+                  desde: 1
+                  hasta: 50000
+                  secuencia_actual: 0
+                  fecha_vencimiento: "2028-12-31"
+                  estado: true
+              e32_sin_vencimiento:
+                summary: Rango E32 (sin fecha de vencimiento)
+                value:
+                  tipo_ecf_id: 2
+                  prefijo: "E32"
+                  desde: 1
+                  hasta: 100000
+                  secuencia_actual: 0
+                  estado: true
+              e31_continuacion:
+                summary: Rango consecutivo (continuación)
+                value:
+                  tipo_ecf_id: 1
+                  prefijo: "E31"
+                  desde: 50001
+                  hasta: 100000
+                  secuencia_actual: 0
+                  fecha_vencimiento: "2029-12-31"
+                  estado: true
+      responses:
+        '200':
+          description: Rango creado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SecuenciaResponse'
+              example:
+                success: true
+                message: "Rango de secuencias creado exitosamente"
+                data:
+                  id: 43
+                  tipo_ecf_id: 1
+                  prefijo: "E31"
+                  desde: 50001
+                  hasta: 100000
+                  secuencia_actual: 0
+                  fecha_vencimiento: "2029-12-31"
+                  estado: 1
+                  tipo_codigo: "31"
+                  tipo_nombre: "Factura de Crédito Fiscal"
+        '400':
+          description: Error de validación
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                solapamiento:
+                  value:
+                    success: false
+                    message: "El rango se solapa con otro existente"
+                sin_continuidad:
+                  value:
+                    success: false
+                    message: "El número inicial debe ser 50001 para continuar la secuencia del último rango registrado"
+                rango_activo_existente:
+                  value:
+                    success: false
+                    message: "Ya existe un rango activo para este tipo de comprobante"
+    put:
+      tags:
+        - "Secuencias e-NCF"
+      summary: Actualizar rango existente
+      description: |
+        Actualiza campos de un rango existente. Todos los campos (salvo `id`) son opcionales —
+        solo se actualizan los que se envíen.
+
+        Para **activar** un rango inactivo no debe existir otro rango activo del mismo tipo.
+      operationId: actualizarSecuencia
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SecuenciaUpdateRequest'
+            examples:
+              actualizar_contador:
+                summary: Actualizar secuencia actual
+                value:
+                  id: 42
+                  secuencia_actual: 4500
+              desactivar:
+                summary: Desactivar rango
+                value:
+                  id: 42
+                  estado: false
+              extender_rango:
+                summary: Extender número final
+                value:
+                  id: 42
+                  hasta: 75000
+      responses:
+        '200':
+          description: Rango actualizado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SecuenciaResponse'
+              example:
+                success: true
+                message: "Rango actualizado exitosamente"
+                data:
+                  id: 42
+                  secuencia_actual: 4500
+                  estado: 1
+        '400':
+          description: Error de validación
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                success: false
+                message: "Rango no encontrado o no pertenece a su empresa"
+    delete:
+      tags:
+        - "Secuencias e-NCF"
+      summary: Eliminar rango inactivo
+      description: |
+        Elimina un rango de secuencias. **Solo se permite eliminar rangos inactivos** —
+        primero debe desactivar el rango con un PUT (`estado: false`).
+      operationId: eliminarSecuencia
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - id
+              properties:
+                id:
+                  type: integer
+                  description: ID del rango a eliminar
+                  example: 42
+      responses:
+        '200':
+          description: Rango eliminado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: "Rango eliminado exitosamente"
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 42
+        '400':
+          description: No se puede eliminar un rango activo
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                success: false
+                message: "No se puede eliminar un rango activo. Desactívelo primero"
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: |
+        Token JWT obtenido del endpoint `/auth/login.php`.
+
+        Incluir en cada petición:
+        ```
+        Authorization: Bearer eyJhbGciOiJIUzI1NiIs...
+        ```
+
+  examples:
+    # =====================================================
+    # E31 - FACTURA DE CRÉDITO FISCAL
+    # =====================================================
+    E31_CreditoFiscal:
+      summary: "E31 - Factura de Crédito Fiscal"
+      description: |
+        Factura para ventas entre empresas. Requiere RNC válido del comprador.
+        Permite al comprador deducir el ITBIS pagado.
+      value:
+        ECF:
+          Encabezado:
+            Version: "1.0"
+            IdDoc:
+              TipoeCF: "31"
+              FechaVencimientoSecuencia: "31-12-2028"
+              IndicadorMontoGravado: "0"
+              TipoIngresos: "01"
+              TipoPago: "1"
+            Emisor:
+              RNCEmisor: "132596161"
+              RazonSocialEmisor: "2BUY ELECTRONICS AND SERVICES SRL"
+              NombreComercial: "2BUY ELECTRONICS"
+              DireccionEmisor: "Av. San Vicente de Paul, Esq. Puerto Rico, Baro Plaza"
+              Municipio: "010100"
+              Provincia: "010000"
+              CorreoEmisor: "info@2buy.do"
+              FechaEmision: "14-02-2026"
+            Comprador:
+              RNCComprador: "131703836"
+              RazonSocialComprador: "GRUPO MEDIA SOFT TECHNOLOGY GMS SRL"
+              CorreoComprador: "compras@mediasoft.do"
+              DireccionComprador: "Santo Domingo"
+              MunicipioComprador: "010100"
+              ProvinciaComprador: "010000"
+            Totales:
+              MontoGravadoTotal: "1500.00"
+              MontoGravadoI1: "1500.00"
+              ITBIS1: "18"
+              TotalITBIS: "270.00"
+              TotalITBIS1: "270.00"
+              MontoTotal: "1770.00"
+          DetallesItems:
+            Item:
+              - NumeroLinea: "1"
+                IndicadorFacturacion: "1"
+                NombreItem: "Licencia de software plan emprendedor"
+                IndicadorBienoServicio: "2"
+                CantidadItem: "1"
+                UnidadMedida: "43"
+                PrecioUnitarioItem: "1500.00"
+                MontoItem: "1500.00"
+
+    # =====================================================
+    # E32 - FACTURA DE CONSUMIDOR FINAL (< RD$250,000)
+    # =====================================================
+    E32_ConsumidorFinal_Menor250K:
+      summary: "E32 - Consumidor Final < RD$250,000"
+      description: |
+        Factura para ventas al consumidor final con monto menor a RD$250,000.
+        - NO se envía la sección Comprador (no es requerida).
+        - Siempre incluir FechaLimitePago en IdDoc.
+        - NO incluir FechaVencimientoSecuencia.
+      value:
+        ECF:
+          Encabezado:
+            Version: "1.0"
+            IdDoc:
+              TipoeCF: "32"
+              IndicadorMontoGravado: "0"
+              TipoIngresos: "01"
+              TipoPago: "1"
+              FechaLimitePago: "14-02-2026"
+            Emisor:
+              RNCEmisor: "132596161"
+              RazonSocialEmisor: "2BUY ELECTRONICS AND SERVICES SRL"
+              NombreComercial: "2BUY ELECTRONICS"
+              DireccionEmisor: "Av. San Vicente de Paul, Esq. Puerto Rico, Baro Plaza"
+              Municipio: "010100"
+              Provincia: "010000"
+              CorreoEmisor: "info@2buy.do"
+              FechaEmision: "14-02-2026"
+            Totales:
+              MontoGravadoTotal: "5000.00"
+              MontoGravadoI1: "5000.00"
+              ITBIS1: "18"
+              TotalITBIS: "900.00"
+              TotalITBIS1: "900.00"
+              MontoTotal: "5900.00"
+          DetallesItems:
+            Item:
+              - NumeroLinea: "1"
+                IndicadorFacturacion: "1"
+                NombreItem: "Teclado mecanico RGB"
+                IndicadorBienoServicio: "1"
+                CantidadItem: "2"
+                UnidadMedida: "43"
+                PrecioUnitarioItem: "2500.00"
+                MontoItem: "5000.00"
+
+    # =====================================================
+    # E32 - FACTURA DE CONSUMIDOR FINAL (>= RD$250,000)
+    # =====================================================
+    E32_ConsumidorFinal_Mayor250K:
+      summary: "E32 - Consumidor Final >= RD$250,000"
+      description: |
+        Factura para ventas al consumidor final con monto igual o mayor a RD$250,000.
+        - Se REQUIERE la sección Comprador con RNCComprador y RazonSocialComprador.
+        - Siempre incluir FechaLimitePago en IdDoc.
+        - NO incluir FechaVencimientoSecuencia.
+      value:
+        ECF:
+          Encabezado:
+            Version: "1.0"
+            IdDoc:
+              TipoeCF: "32"
+              IndicadorMontoGravado: "0"
+              TipoIngresos: "01"
+              TipoPago: "1"
+              FechaLimitePago: "14-03-2026"
+            Emisor:
+              RNCEmisor: "132596161"
+              RazonSocialEmisor: "2BUY ELECTRONICS AND SERVICES SRL"
+              NombreComercial: "2BUY ELECTRONICS"
+              DireccionEmisor: "Av. San Vicente de Paul, Esq. Puerto Rico, Baro Plaza"
+              Municipio: "010100"
+              Provincia: "010000"
+              CorreoEmisor: "info@2buy.do"
+              FechaEmision: "14-02-2026"
+            Comprador:
+              RNCComprador: "131703836"
+              RazonSocialComprador: "GRUPO MEDIA SOFT TECHNOLOGY GMS SRL"
+              CorreoComprador: "compras@mediasoft.do"
+              DireccionComprador: "Santo Domingo"
+              MunicipioComprador: "010100"
+              ProvinciaComprador: "010000"
+            Totales:
+              MontoGravadoTotal: "280000.00"
+              MontoGravadoI1: "280000.00"
+              ITBIS1: "18"
+              TotalITBIS: "50400.00"
+              TotalITBIS1: "50400.00"
+              MontoTotal: "330400.00"
+          DetallesItems:
+            Item:
+              - NumeroLinea: "1"
+                IndicadorFacturacion: "1"
+                NombreItem: "MacBook Pro 16 M3 Max"
+                IndicadorBienoServicio: "1"
+                CantidadItem: "1"
+                UnidadMedida: "43"
+                PrecioUnitarioItem: "280000.00"
+                MontoItem: "280000.00"
+
+    # =====================================================
+    # E33 - NOTA DE DÉBITO
+    # =====================================================
+    E33_NotaDebito:
+      summary: "E33 - Nota de Débito"
+      description: |
+        Nota de débito para cargos adicionales o correcciones sobre una factura previamente emitida.
+        **Requiere**: InformacionReferencia con el NCF de la factura original.
+        **Totales simplificados**: solo MontoExento y MontoTotal.
+      value:
+        ECF:
+          Encabezado:
+            Version: "1.0"
+            IdDoc:
+              TipoeCF: "33"
+              FechaVencimientoSecuencia: "31-12-2028"
+              TipoIngresos: "01"
+              TipoPago: "1"
+            Emisor:
+              RNCEmisor: "132596161"
+              RazonSocialEmisor: "2BUY ELECTRONICS AND SERVICES SRL"
+              NombreComercial: "2BUY ELECTRONICS"
+              DireccionEmisor: "Av. San Vicente de Paul, Esq. Puerto Rico, Baro Plaza"
+              Municipio: "010101"
+              Provincia: "010000"
+              CorreoEmisor: "info@2buy.do"
+              FechaEmision: "14-02-2026"
+            Comprador:
+              RNCComprador: "131703836"
+              RazonSocialComprador: "GRUPO MEDIA SOFT TECHNOLOGY GMS SRL"
+              CorreoComprador: "compras@mediasoft.do"
+              DireccionComprador: "SAN VICENTE DE PAUL ESQ. PUERTO RICO"
+              MunicipioComprador: "010100"
+              ProvinciaComprador: "010000"
+            InformacionReferencia:
+              NCFModificado: "E310000003935"
+              RazonModificacion: "Cargo adicional por servicio express de entrega"
+              FechaNCFModificado: "14-02-2026"
+              CodigoModificacion: "3"
+            Totales:
+              MontoExento: "1500.00"
+              MontoTotal: "1500.00"
+          DetallesItems:
+            Item:
+              - NumeroLinea: "1"
+                IndicadorFacturacion: "4"
+                NombreItem: "Cargo adicional por servicio de instalación"
+                IndicadorBienoServicio: "1"
+                CantidadItem: "1"
+                PrecioUnitarioItem: "1500.00"
+                MontoItem: "1500.00"
+
+    # =====================================================
+    # E34 - NOTA DE CRÉDITO
+    # =====================================================
+    E34_NotaCredito:
+      summary: "E34 - Nota de Crédito"
+      description: |
+        Nota de crédito para anulaciones, devoluciones o descuentos sobre una factura previa.
+        **Requiere**: InformacionReferencia con el NCF original + IndicadorNotaCredito.
+        **Usa montos gravados** (con ITBIS) iguales a los de la factura que se modifica.
+      value:
+        ECF:
+          Encabezado:
+            Version: "1.0"
+            IdDoc:
+              TipoeCF: "34"
+              IndicadorNotaCredito: "0"
+              IndicadorMontoGravado: "0"
+              TipoIngresos: "01"
+              TipoPago: "1"
+            Emisor:
+              RNCEmisor: "132596161"
+              RazonSocialEmisor: "2BUY ELECTRONICS AND SERVICES SRL"
+              NombreComercial: "2BUY ELECTRONICS"
+              DireccionEmisor: "Av. San Vicente de Paul, Esq. Puerto Rico, Baro Plaza"
+              Municipio: "010101"
+              Provincia: "010000"
+              CorreoEmisor: "info@2buy.do"
+              WebSite: "www.2buy.do"
+              CodigoVendedor: "AA0000006"
+              NumeroFacturaInterna: "123456789016"
+              NumeroPedidoInterno: "123456789016"
+              ZonaVenta: "NORT"
+              FechaEmision: "14-02-2026"
+            Comprador:
+              RNCComprador: "131703836"
+              RazonSocialComprador: "GRUPO MEDIA SOFT TECHNOLOGY GMS SRL"
+              CorreoComprador: "compras@mediasoft.do"
+              DireccionComprador: "SAN VICENTE DE PAUL ESQ. PUERTO RICO"
+              MunicipioComprador: "010100"
+              ProvinciaComprador: "010000"
+            InformacionReferencia:
+              NCFModificado: "E310000003936"
+              RazonModificacion: "Devolución de producto por defecto de fabricación"
+              FechaNCFModificado: "14-02-2026"
+              CodigoModificacion: "3"
+            Totales:
+              MontoGravadoTotal: "1500.00"
+              MontoGravadoI1: "1500.00"
+              ITBIS1: "18"
+              TotalITBIS: "270.00"
+              TotalITBIS1: "270.00"
+              MontoTotal: "1770.00"
+          DetallesItems:
+            Item:
+              - NumeroLinea: "1"
+                IndicadorFacturacion: "1"
+                NombreItem: "Anulación de factura - Devolución de producto"
+                IndicadorBienoServicio: "1"
+                CantidadItem: "1"
+                UnidadMedida: "43"
+                PrecioUnitarioItem: "1500.00"
+                MontoItem: "1500.00"
+
+    # =====================================================
+    # E41 - COMPROBANTE DE COMPRA
+    # =====================================================
+    E41_ComprobanteCompra:
+      summary: "E41 - Comprobante de Compra"
+      description: |
+        Comprobante para registrar compras donde se aplican **retenciones de ITBIS e ISR**.
+        Los items incluyen un bloque `Retencion` con los montos retenidos.
+        Los totales incluyen `TotalITBISRetenido` y `TotalISRRetencion`.
+      value:
+        ECF:
+          Encabezado:
+            Version: "1.0"
+            IdDoc:
+              TipoeCF: "41"
+              FechaVencimientoSecuencia: "31-12-2028"
+              IndicadorMontoGravado: "0"
+              TipoPago: "1"
+              TablaFormasPago:
+                FormaDePago:
+                  - FormaPago: "1"
+                    MontoPago: "9000.00"
+            Emisor:
+              RNCEmisor: "132596161"
+              RazonSocialEmisor: "2BUY ELECTRONICS AND SERVICES SRL"
+              NombreComercial: "2BUY ELECTRONICS"
+              DireccionEmisor: "Av. San Vicente de Paul, Esq. Puerto Rico, Baro Plaza"
+              Municipio: "010101"
+              Provincia: "010000"
+              TablaTelefonoEmisor:
+                TelefonoEmisor:
+                  - "809-472-7676"
+                  - "809-491-1918"
+              CorreoEmisor: "info@2buy.do"
+              WebSite: "www.2buy.do"
+              NumeroFacturaInterna: "123456789016"
+              NumeroPedidoInterno: "123456789016"
+              FechaEmision: "14-02-2026"
+            Comprador:
+              RNCComprador: "131703836"
+              RazonSocialComprador: "GRUPO MEDIA SOFT TECHNOLOGY GMS SRL"
+              CorreoComprador: "compras@mediasoft.do"
+              DireccionComprador: "SAN VICENTE DE PAUL ESQ. PUERTO RICO"
+              MunicipioComprador: "010100"
+              ProvinciaComprador: "010000"
+            Totales:
+              MontoGravadoTotal: "10000.00"
+              MontoGravadoI1: "10000.00"
+              ITBIS1: "18"
+              TotalITBIS: "1800.00"
+              TotalITBIS1: "1800.00"
+              MontoTotal: "11800.00"
+              ValorPagar: "11800.00"
+              TotalITBISRetenido: "1800.00"
+              TotalISRRetencion: "1000.00"
+          DetallesItems:
+            Item:
+              - NumeroLinea: "1"
+                IndicadorFacturacion: "1"
+                Retencion:
+                  IndicadorAgenteRetencionoPercepcion: "1"
+                  MontoITBISRetenido: "1800.00"
+                  MontoISRRetenido: "1000.00"
+                NombreItem: "SERVICIO PUBLICIDAD"
+                IndicadorBienoServicio: "2"
+                DescripcionItem: "Prestación de servicios de publicidad y marketing digital"
+                CantidadItem: "1.00"
+                UnidadMedida: "43"
+                PrecioUnitarioItem: "10000.00"
+                MontoItem: "10000.00"
+
+    # =====================================================
+    # E43 - GASTOS MENORES
+    # =====================================================
+    E43_GastosMenores:
+      summary: "E43 - Gastos Menores"
+      description: |
+        Comprobante para registrar gastos menores de la empresa.
+        **Sin datos de comprador** (no se requiere sección Comprador).
+        Solo usa `MontoExento` y `MontoTotal` en Totales.
+      value:
+        ECF:
+          Encabezado:
+            Version: "1.0"
+            IdDoc:
+              TipoeCF: "43"
+              FechaVencimientoSecuencia: "31-12-2028"
+              TipoPago: "1"
+            Emisor:
+              RNCEmisor: "132596161"
+              RazonSocialEmisor: "2BUY ELECTRONICS AND SERVICES SRL"
+              NombreComercial: "2BUY ELECTRONICS"
+              DireccionEmisor: "Av. San Vicente de Paul, Esq. Puerto Rico, Baro Plaza"
+              Municipio: "010101"
+              Provincia: "010000"
+              TablaTelefonoEmisor:
+                TelefonoEmisor:
+                  - "809-472-7676"
+                  - "809-491-1918"
+              CorreoEmisor: "info@2buy.do"
+              WebSite: "www.2buy.do"
+              NumeroFacturaInterna: "123456789016"
+              NumeroPedidoInterno: "123456789016"
+              FechaEmision: "14-02-2026"
+            Totales:
+              MontoExento: "700.00"
+              MontoTotal: "700.00"
+          DetallesItems:
+            Item:
+              - NumeroLinea: "1"
+                IndicadorFacturacion: "4"
+                NombreItem: "Peajes viaje semana I"
+                IndicadorBienoServicio: "2"
+                CantidadItem: "7.00"
+                UnidadMedida: "43"
+                PrecioUnitarioItem: "100.00"
+                MontoItem: "700.00"
+
+    # =====================================================
+    # E44 - REGÍMENES ESPECIALES
+    # =====================================================
+    E44_RegimenesEspeciales:
+      summary: "E44 - Regímenes Especiales"
+      description: |
+        Comprobante para ventas a empresas en regímenes especiales (zonas francas, etc.).
+        Incluye datos de pago bancario: `TipoCuentaPago`, `NumeroCuentaPago`, `BancoPago`.
+        Generalmente usa `MontoExento` (sin ITBIS).
+        **No usar** `IndicadorMontoGravado` en IdDoc para este tipo.
+      value:
+        ECF:
+          Encabezado:
+            Version: "1.0"
+            IdDoc:
+              TipoeCF: "44"
+              FechaVencimientoSecuencia: "31-12-2028"
+              TipoIngresos: "01"
+              TipoPago: "1"
+              TablaFormasPago:
+                FormaDePago:
+                  - FormaPago: "2"
+                    MontoPago: "4840.00"
+              TipoCuentaPago: "CT"
+              NumeroCuentaPago: "0301678890090"
+              BancoPago: "BANCO POPULAR DOMINICANO"
+            Emisor:
+              RNCEmisor: "132596161"
+              RazonSocialEmisor: "2BUY ELECTRONICS AND SERVICES SRL"
+              NombreComercial: "2BUY ELECTRONICS"
+              DireccionEmisor: "Av. San Vicente de Paul, Esq. Puerto Rico, Baro Plaza"
+              Municipio: "010101"
+              Provincia: "010000"
+              TablaTelefonoEmisor:
+                TelefonoEmisor:
+                  - "809-472-7676"
+                  - "809-491-1918"
+              CorreoEmisor: "info@2buy.do"
+              WebSite: "www.2buy.do"
+              CodigoVendedor: "AA0000006"
+              NumeroFacturaInterna: "123456789016"
+              NumeroPedidoInterno: "123456789016"
+              ZonaVenta: "NORT"
+              FechaEmision: "14-02-2026"
+            Comprador:
+              RNCComprador: "131703836"
+              RazonSocialComprador: "EMPRESA ZONA FRANCA SRL"
+              ContactoComprador: "MARCOS LLUBERES"
+              CorreoComprador: "compras@zonafranca.com"
+              DireccionComprador: "PARQUE INDUSTRIAL ITABO, NAVE 12"
+              MunicipioComprador: "010100"
+              ProvinciaComprador: "010000"
+            Totales:
+              MontoExento: "4840.00"
+              MontoTotal: "4840.00"
+              ValorPagar: "4840.00"
+          DetallesItems:
+            Item:
+              - NumeroLinea: "1"
+                IndicadorFacturacion: "4"
+                NombreItem: "COMBUSTIBLE DIESEL"
+                IndicadorBienoServicio: "1"
+                CantidadItem: "22.00"
+                UnidadMedida: "15"
+                PrecioUnitarioItem: "220.00"
+                MontoItem: "4840.00"
+
+    # =====================================================
+    # E45 - GUBERNAMENTAL
+    # =====================================================
+    E45_Gubernamental:
+      summary: "E45 - Comprobante Gubernamental"
+      description: |
+        Comprobante para ventas a instituciones gubernamentales.
+        El comprador debe ser una entidad pública con RNC gubernamental.
+        Puede incluir `InformacionesAdicionales` con datos de contenedor/referencia.
+        Generalmente usa `TipoPago: "2"` (crédito) ya que el Estado paga a plazos.
+      value:
+        ECF:
+          Encabezado:
+            Version: "1.0"
+            IdDoc:
+              TipoeCF: "45"
+              FechaVencimientoSecuencia: "31-12-2028"
+              IndicadorMontoGravado: "0"
+              TipoIngresos: "01"
+              TipoPago: "1"
+            Emisor:
+              RNCEmisor: "132596161"
+              RazonSocialEmisor: "2BUY ELECTRONICS AND SERVICES SRL"
+              NombreComercial: "2BUY ELECTRONICS"
+              DireccionEmisor: "Av. San Vicente de Paul, Esq. Puerto Rico, Baro Plaza"
+              Municipio: "010101"
+              Provincia: "010000"
+              TablaTelefonoEmisor:
+                TelefonoEmisor:
+                  - "809-472-7676"
+                  - "809-491-1918"
+              CorreoEmisor: "info@2buy.do"
+              WebSite: "www.2buy.do"
+              CodigoVendedor: "AA0000006"
+              NumeroFacturaInterna: "123456789016"
+              NumeroPedidoInterno: "123456789016"
+              ZonaVenta: "NORT"
+              FechaEmision: "14-02-2026"
+            Comprador:
+              RNCComprador: "132596161"
+              RazonSocialComprador: "AYUNTAMIENTO DEL DISTRITO NACIONAL"
+              ContactoComprador: "DEPARTAMENTO DE COMPRAS"
+              CorreoComprador: "compras@adn.gob.do"
+              DireccionComprador: "AV GEORGE WASHINGTON, SANTO DOMINGO"
+              MunicipioComprador: "010100"
+              ProvinciaComprador: "010000"
+              FechaEntrega: "10-10-2025"
+              FechaOrdenCompra: "10-11-2025"
+              NumeroOrdenCompra: "4500352238"
+              CodigoInternoComprador: "10633440"
+            InformacionesAdicionales:
+              NumeroContenedor: "8019289"
+              NumeroReferencia: "1447"
+            Totales:
+              MontoGravadoTotal: "30000.00"
+              MontoGravadoI1: "30000.00"
+              ITBIS1: "18"
+              TotalITBIS: "5400.00"
+              TotalITBIS1: "5400.00"
+              MontoTotal: "35400.00"
+              ValorPagar: "35400.00"
+          DetallesItems:
+            Item:
+              - NumeroLinea: "1"
+                IndicadorFacturacion: "1"
+                NombreItem: "SERVICIO PUBLICIDAD"
+                IndicadorBienoServicio: "2"
+                DescripcionItem: "Prestación de servicios de publicidad institucional"
+                CantidadItem: "1.00"
+                UnidadMedida: "43"
+                PrecioUnitarioItem: "30000.00"
+                MontoItem: "30000.00"
+
+    # =====================================================
+    # E46 - EXPORTACIONES
+    # =====================================================
+    E46_Exportaciones:
+      summary: "E46 - Comprobante de Exportación"
+      description: |
+        Comprobante para ventas de exportación. Incluye:
+        - `InformacionesAdicionales`: datos logísticos (embarque, peso, bultos, volumen)
+        - `Transporte`: datos de albarán
+        - `TablaCodigosItem`: códigos internos de producto
+        - ITBIS tasa 3 al 0% (productos de exportación están exentos)
+        - `IndicadorFacturacion: "3"` para tasa ITBIS 0%
+      value:
+        ECF:
+          Encabezado:
+            Version: "1.0"
+            IdDoc:
+              TipoeCF: "46"
+              FechaVencimientoSecuencia: "31-12-2028"
+              TipoIngresos: "01"
+              TipoPago: "2"
+              FechaLimitePago: "14-03-2026"
+              TerminoPago: "1 mes"
+              TablaFormasPago:
+                FormaDePago:
+                  - FormaPago: "2"
+                    MontoPago: "1800.00"
+            Emisor:
+              RNCEmisor: "132596161"
+              RazonSocialEmisor: "2BUY ELECTRONICS AND SERVICES SRL"
+              NombreComercial: "2BUY ELECTRONICS"
+              DireccionEmisor: "Av. San Vicente de Paul, Esq. Puerto Rico, Baro Plaza"
+              CorreoEmisor: "info@2buy.do"
+              WebSite: "www.2buy.do"
+              FechaEmision: "14-02-2026"
+            Comprador:
+              RNCComprador: "132596161"
+              RazonSocialComprador: "EMPRESA IMPORTADORA INTERNACIONAL SRL"
+              ContactoComprador: "MARCOS LLUBERES"
+              CorreoComprador: "imports@empresa.com"
+              DireccionComprador: "ZONA PORTUARIA, HAINA"
+              MunicipioComprador: "010100"
+              ProvinciaComprador: "010000"
+              FechaEntrega: "07-04-2026"
+              ContactoEntrega: "JACINTO MANON"
+              DireccionEntrega: "ZONA HAINA"
+              TelefonoAdicional: "809-555-5050"
+              FechaOrdenCompra: "14-02-2026"
+              NumeroOrdenCompra: "4500352230"
+              CodigoInternoComprador: "10633441"
+            InformacionesAdicionales:
+              FechaEmbarque: "10-04-2026"
+              NumeroEmbarque: "10010-1207-000254"
+              NumeroContenedor: "ERTY227958722"
+              NumeroReferencia: "1448"
+              PesoBruto: "25000.00"
+              PesoNeto: "24878.00"
+              UnidadPesoBruto: "21"
+              UnidadPesoNeto: "21"
+              CantidadBulto: "250.00"
+              UnidadBulto: "25"
+              VolumenBulto: "45"
+              UnidadVolumen: "27"
+            Transporte:
+              NumeroAlbaran: "56789UJILLL"
+            Totales:
+              MontoGravadoTotal: "1800.00"
+              MontoGravadoI3: "1800.00"
+              ITBIS3: "0"
+              TotalITBIS: "0.00"
+              TotalITBIS3: "0.00"
+              MontoTotal: "1800.00"
+          DetallesItems:
+            Item:
+              - NumeroLinea: "1"
+                TablaCodigosItem:
+                  CodigosItem:
+                    - TipoCodigo: "INTERNA"
+                      CodigoItem: "123456"
+                IndicadorFacturacion: "3"
+                NombreItem: "AGUACATE CRIOLLO"
+                IndicadorBienoServicio: "1"
+                CantidadItem: "100.00"
+                UnidadMedida: "43"
+                PrecioUnitarioItem: "18.00"
+                MontoItem: "1800.00"
+
+    # =====================================================
+    # E47 - PAGOS AL EXTERIOR
+    # =====================================================
+    E47_PagosExterior:
+      summary: "E47 - Pagos al Exterior"
+      description: |
+        Comprobante para pagos a proveedores internacionales (no tienen RNC dominicano).
+        **Diferencias clave:**
+        - Se usa `IdentificadorExtranjero` en vez de `RNCComprador`
+        - Incluye bloque `OtraMoneda` con tipo de cambio
+        - Items incluyen `OtraMonedaDetalle` con precios en moneda extranjera
+        - Puede incluir retención de ISR (`MontoISRRetenido`, `TotalISRRetencion`)
+        - Datos bancarios: `NumeroCuentaPago`, `BancoPago`
+        - **No usar** `IndicadorMontoGravado` en IdDoc para este tipo
+      value:
+        ECF:
+          Encabezado:
+            Version: "1.0"
+            IdDoc:
+              TipoeCF: "47"
+              FechaVencimientoSecuencia: "31-12-2028"
+              NumeroCuentaPago: "BB00058745214789635"
+              BancoPago: "BANCO POPULAR DOMINICANO"
+            Emisor:
+              RNCEmisor: "132596161"
+              RazonSocialEmisor: "2BUY ELECTRONICS AND SERVICES SRL"
+              NombreComercial: "2BUY ELECTRONICS"
+              DireccionEmisor: "Av. San Vicente de Paul, Esq. Puerto Rico, Baro Plaza"
+              CorreoEmisor: "info@2buy.do"
+              WebSite: "www.2buy.do"
+              FechaEmision: "14-02-2026"
+            Comprador:
+              IdentificadorExtranjero: "533445888"
+              RazonSocialComprador: "INTERNATIONAL SOFTWARE INC"
+            Totales:
+              MontoExento: "180000.00"
+              MontoTotal: "180000.00"
+              TotalISRRetencion: "48600.00"
+            OtraMoneda:
+              TipoMoneda: "USD"
+              TipoCambio: "60.0000"
+              MontoExentoOtraMoneda: "3000.00"
+              MontoTotalOtraMoneda: "3000.00"
+          DetallesItems:
+            Item:
+              - NumeroLinea: "1"
+                IndicadorFacturacion: "4"
+                Retencion:
+                  IndicadorAgenteRetencionoPercepcion: "1"
+                  MontoISRRetenido: "48600.00"
+                NombreItem: "LICENCIA SOFTWARE INTERNACIONAL"
+                IndicadorBienoServicio: "2"
+                CantidadItem: "1.00"
+                UnidadMedida: "43"
+                PrecioUnitarioItem: "180000.00"
+                OtraMonedaDetalle:
+                  PrecioOtraMoneda: "3000.0000"
+                  MontoItemOtraMoneda: "3000.00"
+                MontoItem: "180000.00"
+
+  schemas:
+    # =====================================================
+    # SCHEMAS PRINCIPALES
+    # =====================================================
+    ECFRequest:
+      type: object
+      required:
+        - ECF
+      properties:
+        ECF:
+          type: object
+          required:
+            - Encabezado
+            - DetallesItems
+          properties:
+            Encabezado:
+              $ref: '#/components/schemas/Encabezado'
+            DetallesItems:
+              $ref: '#/components/schemas/DetallesItems'
+
+    Encabezado:
+      type: object
+      required:
+        - Version
+        - IdDoc
+        - Emisor
+        - Totales
+      properties:
+        Version:
+          type: string
+          enum: ["1.0"]
+          description: Versión del formato ECF
+          example: "1.0"
+        IdDoc:
+          $ref: '#/components/schemas/IdDoc'
+        Emisor:
+          $ref: '#/components/schemas/Emisor'
+        Comprador:
+          $ref: '#/components/schemas/Comprador'
+        InformacionesAdicionales:
+          $ref: '#/components/schemas/InformacionesAdicionales'
+        Transporte:
+          $ref: '#/components/schemas/Transporte'
+        Totales:
+          $ref: '#/components/schemas/Totales'
+        OtraMoneda:
+          $ref: '#/components/schemas/OtraMoneda'
+        InformacionReferencia:
+          $ref: '#/components/schemas/InformacionReferencia'
+
+    # =====================================================
+    # IdDoc - IDENTIFICACIÓN DEL DOCUMENTO
+    # =====================================================
+    IdDoc:
+      type: object
+      required:
+        - TipoeCF
+      description: |
+        Identificación del documento. Los campos requeridos varían según el TipoeCF.
+      properties:
+        TipoeCF:
+          type: string
+          enum: ["31", "32", "33", "34", "41", "43", "44", "45", "46", "47"]
+          description: |
+            Tipo de comprobante fiscal electrónico:
+            - `31`: Factura de Crédito Fiscal
+            - `32`: Factura de Consumidor Final
+            - `33`: Nota de Débito
+            - `34`: Nota de Crédito
+            - `41`: Comprobante de Compra
+            - `43`: Gastos Menores
+            - `44`: Regímenes Especiales
+            - `45`: Gubernamental
+            - `46`: Exportaciones
+            - `47`: Pagos al Exterior
+          example: "31"
+        eNCF:
+          type: string
+          description: |
+            Número de comprobante fiscal electrónico.
+            **Opcional** — si no se envía, el sistema lo genera automáticamente desde la secuencia registrada.
+            Enviar solo si el cliente administra su propia secuencia de NCF.
+          example: "E310000012345"
+        FechaVencimientoSecuencia:
+          type: string
+          description: |
+            Fecha de vencimiento de la secuencia autorizada por DGII.
+            Formato: `dd-mm-yyyy`. **No incluir en E32.**
+          example: "31-12-2028"
+        IndicadorMontoGravado:
+          type: string
+          enum: ["0", "1"]
+          description: |
+            - `"0"`: ITBIS NO incluido en los precios de items
+            - `"1"`: ITBIS YA incluido en los precios de items
+          example: "0"
+        IndicadorNotaCredito:
+          type: string
+          enum: ["0", "1"]
+          description: |
+            Solo para E34. `"0"` = nota de crédito normal.
+          example: "0"
+        TipoIngresos:
+          type: string
+          enum: ["01", "02", "03", "04", "05", "06"]
+          description: |
+            - `01`: Ingresos por operaciones (no financieros)
+            - `02`: Ingresos financieros
+            - `03`: Ingresos extraordinarios
+            - `04`: Ingresos por arrendamientos
+            - `05`: Ingresos por venta de activos depreciables
+            - `06`: Otros ingresos
+          example: "01"
+        TipoPago:
+          type: string
+          enum: ["1", "2", "3"]
+          description: |
+            - `"1"`: Contado
+            - `"2"`: Crédito
+            - `"3"`: Gratuito
+          example: "1"
+        FechaLimitePago:
+          type: string
+          description: Fecha límite de pago (formato `dd-mm-yyyy`). Requerido para crédito.
+          example: "31-12-2026"
+        TerminoPago:
+          type: string
+          description: Descripción del término de pago
+          example: "1 mes"
+        TablaFormasPago:
+          $ref: '#/components/schemas/TablaFormasPago'
+        TipoCuentaPago:
+          type: string
+          description: Tipo de cuenta bancaria (para E44)
+          example: "CT"
+        NumeroCuentaPago:
+          type: string
+          description: Número de cuenta bancaria del receptor del pago
+          example: "0301678890090"
+        BancoPago:
+          type: string
+          description: Nombre del banco receptor del pago
+          example: "BANCO POPULAR DOMINICANO"
+
+    TablaFormasPago:
+      type: object
+      required:
+        - FormaDePago
+      properties:
+        FormaDePago:
+          type: array
+          minItems: 1
+          items:
+            type: object
+            required:
+              - FormaPago
+              - MontoPago
+            properties:
+              FormaPago:
+                type: string
+                enum: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"]
+                description: |
+                  - `"1"`: Efectivo
+                  - `"2"`: Cheque / Transferencia / Depósito
+                  - `"3"`: Tarjeta de crédito / débito
+                  - `"4"`: Compra a crédito
+                  - `"5"`: Permuta
+                  - `"6"`: Nota de crédito
+                  - `"7"`: Mixto
+                example: "1"
+              MontoPago:
+                type: string
+                description: Monto del pago (con 2 decimales)
+                example: "1180.00"
+
+    # =====================================================
+    # EMISOR
+    # =====================================================
+    Emisor:
+      type: object
+      required:
+        - RNCEmisor
+        - RazonSocialEmisor
+        - NombreComercial
+        - DireccionEmisor
+        - CorreoEmisor
+        - FechaEmision
+      properties:
+        RNCEmisor:
+          type: string
+          description: RNC del emisor (9 u 11 dígitos)
+          pattern: '^\d{9}$|^\d{11}$'
+          example: "132596161"
+        RazonSocialEmisor:
+          type: string
+          maxLength: 200
+          description: Razón social registrada en DGII
+          example: "2BUY ELECTRONICS AND SERVICES SRL"
+        NombreComercial:
+          type: string
+          maxLength: 80
+          description: Nombre comercial de la empresa
+          example: "2BUY ELECTRONICS"
+        DireccionEmisor:
+          type: string
+          maxLength: 100
+          description: Dirección del emisor (se trunca a 100 caracteres)
+          example: "Av. San Vicente de Paul, Esq. Puerto Rico"
+        Municipio:
+          type: string
+          description: Código de municipio DGII (6 dígitos)
+          example: "010100"
+        Provincia:
+          type: string
+          description: Código de provincia DGII (6 dígitos)
+          example: "010000"
+        TablaTelefonoEmisor:
+          type: object
+          description: Teléfonos del emisor (opcional)
+          properties:
+            TelefonoEmisor:
+              type: array
+              items:
+                type: string
+              example: ["809-472-7676", "809-491-1918"]
+        CorreoEmisor:
+          type: string
+          format: email
+          description: Email del emisor
+          example: "info@2buy.do"
+        WebSite:
+          type: string
+          description: Sitio web del emisor (opcional)
+          example: "www.2buy.do"
+        CodigoVendedor:
+          type: string
+          description: Código interno del vendedor (opcional)
+          example: "AA0000006"
+        NumeroFacturaInterna:
+          type: string
+          description: Número de factura en su sistema interno (opcional)
+          example: "123456789016"
+        NumeroPedidoInterno:
+          type: string
+          description: Número de pedido interno (opcional)
+          example: "123456789016"
+        ZonaVenta:
+          type: string
+          description: Zona de venta (opcional)
+          example: "NORT"
+        FechaEmision:
+          type: string
+          description: Fecha de emisión (formato `dd-mm-yyyy`)
+          example: "14-02-2026"
+
+    # =====================================================
+    # COMPRADOR
+    # =====================================================
+    Comprador:
+      type: object
+      description: |
+        Datos del comprador. No requerido para E43 (Gastos Menores).
+        Para E47 (Pagos al Exterior) se usa `IdentificadorExtranjero` en vez de `RNCComprador`.
+      properties:
+        RNCComprador:
+          type: string
+          description: RNC o Cédula del comprador (9 u 11 dígitos)
+          example: "131703836"
+        IdentificadorExtranjero:
+          type: string
+          description: ID del comprador extranjero (solo para E47, reemplaza RNCComprador)
+          example: "533445888"
+        RazonSocialComprador:
+          type: string
+          maxLength: 200
+          description: Nombre o razón social del comprador
+          example: "GRUPO MEDIA SOFT TECHNOLOGY GMS SRL"
+        ContactoComprador:
+          type: string
+          description: Persona de contacto (opcional)
+          example: "MARCOS LLUBERES"
+        CorreoComprador:
+          type: string
+          format: email
+          description: Email del comprador (se le envía copia del e-CF)
+          example: "compras@mediasoft.do"
+        DireccionComprador:
+          type: string
+          maxLength: 100
+          description: Dirección del comprador
+          example: "Santo Domingo"
+        MunicipioComprador:
+          type: string
+          description: Código de municipio DGII
+          example: "010100"
+        ProvinciaComprador:
+          type: string
+          description: Código de provincia DGII
+          example: "010000"
+        FechaEntrega:
+          type: string
+          description: Fecha de entrega (formato `dd-mm-yyyy`, opcional)
+          example: "10-10-2025"
+        ContactoEntrega:
+          type: string
+          description: Persona de contacto para entrega (opcional)
+          example: "JACINTO MANON"
+        DireccionEntrega:
+          type: string
+          description: Dirección de entrega (opcional)
+          example: "ZONA HAINA"
+        TelefonoAdicional:
+          type: string
+          description: Teléfono adicional de contacto (opcional)
+          example: "809-555-5050"
+        FechaOrdenCompra:
+          type: string
+          description: Fecha de la orden de compra (formato `dd-mm-yyyy`, opcional)
+          example: "14-02-2026"
+        NumeroOrdenCompra:
+          type: string
+          description: Número de orden de compra del comprador (opcional)
+          example: "4500352238"
+        CodigoInternoComprador:
+          type: string
+          description: Código interno del comprador en su sistema (opcional)
+          example: "10633440"
+
+    # =====================================================
+    # TOTALES
+    # =====================================================
+    Totales:
+      type: object
+      required:
+        - MontoTotal
+      description: |
+        Los campos requeridos varían según el tipo de comprobante:
+
+        **Con ITBIS (E31, E32, E34, E41, E45):**
+        MontoGravadoTotal, MontoGravadoI1, ITBIS1, TotalITBIS, TotalITBIS1, MontoTotal
+
+        **Sin ITBIS / Exento (E33, E43, E44):**
+        MontoExento, MontoTotal
+
+        **Exportaciones (E46):**
+        MontoGravadoTotal, MontoGravadoI3, ITBIS3 (=0), TotalITBIS, TotalITBIS3, MontoTotal
+
+        **Pagos al Exterior (E47):**
+        MontoExento, MontoTotal, TotalISRRetencion
+      properties:
+        MontoGravadoTotal:
+          type: string
+          description: Monto total gravado (base imponible)
+          example: "1500.00"
+        MontoGravadoI1:
+          type: string
+          description: Monto gravado con ITBIS tasa 1 (18%)
+          example: "1500.00"
+        MontoGravadoI3:
+          type: string
+          description: Monto gravado con ITBIS tasa 3 (0%, para exportaciones)
+          example: "1800.00"
+        MontoExento:
+          type: string
+          description: Monto exento de impuestos
+          example: "0.00"
+        ITBIS1:
+          type: string
+          description: Tasa ITBIS 1 (18%)
+          example: "18"
+        ITBIS3:
+          type: string
+          description: Tasa ITBIS 3 (0%, para exportaciones)
+          example: "0"
+        TotalITBIS:
+          type: string
+          description: Total de ITBIS de la factura
+          example: "270.00"
+        TotalITBIS1:
+          type: string
+          description: Total ITBIS correspondiente a tasa 1 (18%)
+          example: "270.00"
+        TotalITBIS3:
+          type: string
+          description: Total ITBIS correspondiente a tasa 3 (0%)
+          example: "0.00"
+        MontoTotal:
+          type: string
+          description: Monto total de la factura (gravado + exento + ITBIS)
+          example: "1770.00"
+        ValorPagar:
+          type: string
+          description: Valor a pagar (puede diferir del total si hay retenciones)
+          example: "1770.00"
+        TotalITBISRetenido:
+          type: string
+          description: Total de ITBIS retenido (para E41)
+          example: "1800.00"
+        TotalISRRetencion:
+          type: string
+          description: Total de ISR retenido (para E41, E47)
+          example: "1000.00"
+
+    # =====================================================
+    # DETALLES DE ITEMS
+    # =====================================================
+    DetallesItems:
+      type: object
+      required:
+        - Item
+      properties:
+        Item:
+          type: array
+          minItems: 1
+          description: Lista de items/productos/servicios de la factura
+          items:
+            $ref: '#/components/schemas/Item'
+
+    Item:
+      type: object
+      required:
+        - NumeroLinea
+        - IndicadorFacturacion
+        - NombreItem
+        - IndicadorBienoServicio
+        - CantidadItem
+        - PrecioUnitarioItem
+        - MontoItem
+      properties:
+        NumeroLinea:
+          type: string
+          description: Número de línea secuencial (empezando en 1)
+          example: "1"
+        TablaCodigosItem:
+          $ref: '#/components/schemas/TablaCodigosItem'
+        IndicadorFacturacion:
+          type: string
+          enum: ["1", "2", "3", "4"]
+          description: |
+            Indica el tipo de gravamen del item:
+            - `"1"`: Gravado con ITBIS tasa 1 (18%)
+            - `"2"`: Gravado con ITBIS tasa 2 (16%)
+            - `"3"`: Gravado con ITBIS tasa 3 (0% — exportaciones)
+            - `"4"`: Exento de ITBIS
+          example: "1"
+        Retencion:
+          $ref: '#/components/schemas/Retencion'
+        NombreItem:
+          type: string
+          maxLength: 200
+          description: Nombre/descripción del producto o servicio
+          example: "Licencia de software"
+        DescripcionItem:
+          type: string
+          maxLength: 1000
+          description: Descripción detallada (opcional)
+          example: "Licencia anual de software de contabilidad"
+        IndicadorBienoServicio:
+          type: string
+          enum: ["1", "2", "3", "4"]
+          description: |
+            - `"1"`: Bien
+            - `"2"`: Servicio
+            - `"3"`: Bien y Servicio
+            - `"4"`: Otros
+          example: "2"
+        CantidadItem:
+          type: string
+          description: Cantidad del item
+          example: "1.00"
+        UnidadMedida:
+          type: string
+          description: |
+            Código de unidad de medida según catálogo DGII:
+            - `"43"`: Servicio (Unidad)
+            - `"15"`: Litro
+            - `"21"`: Kilogramo
+            - `"25"`: Caja
+            - `"27"`: Metro cúbico
+            - `"NIU"`: Unidad (alternativa)
+            - `"DPC"`: Docena de piezas
+            - `"MTR"`: Metro
+          example: "43"
+        PrecioUnitarioItem:
+          type: string
+          description: Precio unitario del item
+          example: "1500.00"
+        OtraMonedaDetalle:
+          $ref: '#/components/schemas/OtraMonedaDetalle'
+        MontoItem:
+          type: string
+          description: Monto total del item (CantidadItem x PrecioUnitarioItem)
+          example: "1500.00"
+
+    # =====================================================
+    # SCHEMAS AUXILIARES
+    # =====================================================
+    Retencion:
+      type: object
+      description: |
+        Información de retención aplicada al item. Se usa en E41 (Comprobante de Compra) y E47 (Pagos al Exterior).
+      properties:
+        IndicadorAgenteRetencionoPercepcion:
+          type: string
+          enum: ["1", "2"]
+          description: |
+            - `"1"`: Agente de retención
+            - `"2"`: Agente de percepción
+          example: "1"
+        MontoITBISRetenido:
+          type: string
+          description: Monto de ITBIS retenido
+          example: "1800.00"
+        MontoISRRetenido:
+          type: string
+          description: Monto de ISR retenido
+          example: "1000.00"
+
+    TablaCodigosItem:
+      type: object
+      description: Códigos de producto internos o estándar (usado en E46 - Exportaciones)
+      properties:
+        CodigosItem:
+          type: array
+          items:
+            type: object
+            properties:
+              TipoCodigo:
+                type: string
+                description: Tipo de código (INTERNA, EAN, etc.)
+                example: "INTERNA"
+              CodigoItem:
+                type: string
+                description: Código del item
+                example: "123456"
+
+    InformacionReferencia:
+      type: object
+      description: |
+        **Requerido para E33 (Nota de Débito) y E34 (Nota de Crédito).**
+        Referencia a la factura original que se está modificando.
+      required:
+        - NCFModificado
+        - RazonModificacion
+        - FechaNCFModificado
+        - CodigoModificacion
+      properties:
+        NCFModificado:
+          type: string
+          description: eNCF de la factura original que se modifica
+          example: "E310000012345"
+        FechaNCFModificado:
+          type: string
+          description: Fecha de emisión del NCF original (formato `dd-mm-yyyy`)
+          example: "10-02-2026"
+        CodigoModificacion:
+          type: string
+          enum: ["1", "2", "3", "4", "5"]
+          description: |
+            Razón de la modificación:
+            - `"1"`: Cancelación total de la factura
+            - `"2"`: Corrección de texto / error de escritura
+            - `"3"`: Devolución de bienes
+            - `"4"`: Descuento / bonificación
+            - `"5"`: Cambio de precio
+          example: "3"
+        RazonModificacion:
+          type: string
+          description: |
+            Descripción de la razón de modificación.
+            **Requerido** — debe explicar por qué se emite la nota de débito o crédito.
+          example: "Devolución de producto por defecto de fabricación"
+
+    InformacionesAdicionales:
+      type: object
+      description: Información adicional de logística y embarque (usado en E45, E46)
+      properties:
+        FechaEmbarque:
+          type: string
+          description: Fecha de embarque (formato `dd-mm-yyyy`)
+          example: "10-04-2026"
+        NumeroEmbarque:
+          type: string
+          description: Número de embarque
+          example: "10010-1207-000254"
+        NumeroContenedor:
+          type: string
+          description: Número de contenedor
+          example: "ERTY227958722"
+        NumeroReferencia:
+          type: string
+          description: Número de referencia
+          example: "1448"
+        PesoBruto:
+          type: string
+          description: Peso bruto
+          example: "25000.00"
+        PesoNeto:
+          type: string
+          description: Peso neto
+          example: "24878.00"
+        UnidadPesoBruto:
+          type: string
+          description: Código de unidad de peso bruto
+          example: "21"
+        UnidadPesoNeto:
+          type: string
+          description: Código de unidad de peso neto
+          example: "21"
+        CantidadBulto:
+          type: string
+          description: Cantidad de bultos
+          example: "250.00"
+        UnidadBulto:
+          type: string
+          description: Código de unidad de bultos
+          example: "25"
+        VolumenBulto:
+          type: string
+          description: Volumen de los bultos
+          example: "45"
+        UnidadVolumen:
+          type: string
+          description: Código de unidad de volumen
+          example: "27"
+
+    Transporte:
+      type: object
+      description: Datos de transporte (usado en E46 - Exportaciones)
+      properties:
+        NumeroAlbaran:
+          type: string
+          description: Número de albarán de entrega
+          example: "56789UJILLL"
+
+    OtraMoneda:
+      type: object
+      description: |
+        Información de moneda extranjera. Usado en E47 (Pagos al Exterior).
+        Permite registrar los montos en la moneda original de la transacción.
+      properties:
+        TipoMoneda:
+          type: string
+          description: Código ISO de la moneda (USD, EUR, etc.)
+          example: "USD"
+        TipoCambio:
+          type: string
+          description: Tasa de cambio respecto al DOP (peso dominicano)
+          example: "60.0000"
+        MontoGravadoTotalOtraMoneda:
+          type: string
+          description: Monto gravado en moneda extranjera
+          example: "3000.00"
+        MontoExentoOtraMoneda:
+          type: string
+          description: Monto exento en moneda extranjera
+          example: "3000.00"
+        MontoTotalOtraMoneda:
+          type: string
+          description: Monto total en moneda extranjera
+          example: "3000.00"
+
+    OtraMonedaDetalle:
+      type: object
+      description: Detalle de moneda extranjera por item (usado en E47)
+      properties:
+        PrecioOtraMoneda:
+          type: string
+          description: Precio unitario en moneda extranjera
+          example: "3000.0000"
+        MontoItemOtraMoneda:
+          type: string
+          description: Monto del item en moneda extranjera
+          example: "3000.00"
+
+    # =====================================================
+    # RESPUESTAS
+    # =====================================================
+    FacturaResponse:
+      type: object
+      description: |
+        Respuesta completa del procesamiento de un e-CF.
+        Incluye información de la DGII, enlaces a archivos XML/PDF y datos de envío por email.
+      properties:
+        success:
+          type: boolean
+          description: Indica si la operación fue exitosa
+          example: true
+        message:
+          type: string
+          description: Mensaje descriptivo del resultado
+          example: "Factura procesada y guardada correctamente"
+        code:
+          type: string
+          description: Código de resultado
+          example: "SUCCESS"
+        id_factura:
+          type: integer
+          description: ID interno de la factura en el sistema EF2
+          example: 3260
+        ncf:
+          type: string
+          description: Número de comprobante fiscal electrónico generado (eNCF)
+          example: "E310000003935"
+        fecha_vencimiento:
+          type: string
+          description: Fecha de vencimiento de la secuencia
+          example: "31-12-2028"
+        estado:
+          type: string
+          description: Estado de la factura ante la DGII
+          enum: ["Aceptado", "Rechazado", "En proceso"]
+          example: "Aceptado"
+        tipo_ecf:
+          type: string
+          description: Tipo de comprobante procesado
+          example: "31"
+        monto:
+          type: string
+          description: Monto total de la factura
+          example: "1770.00"
+        mensaje_rechazo:
+          type: string
+          nullable: true
+          description: Mensaje de rechazo de la DGII (null si fue aceptado)
+          example: null
+        qr_link:
+          type: string
+          format: uri
+          description: |
+            URL del QR para validación ante la DGII.
+            El comprador puede escanear este QR para verificar la autenticidad del comprobante.
+          example: "https://ecf.dgii.gov.do/CerteCF/ConsultaTimbre?RncEmisor=132596161&RncComprador=131703836&ENCF=E310000003935&FechaEmision=14-02-2026&MontoTotal=1770.00"
+        xml_path:
+          type: string
+          format: uri
+          description: URL temporal (24h) para descargar el XML firmado del e-CF
+          example: "https://storage.googleapis.com/ef2_xml/132596161/facturas/...xml"
+        semilla_xml_path:
+          type: string
+          format: uri
+          description: URL temporal (24h) para descargar la semilla XML
+          example: "https://storage.googleapis.com/ef2_xml/132596161/semillas/...xml"
+        pdf_cloud_url:
+          type: string
+          format: uri
+          description: URL temporal (24h) para descargar el PDF de la factura
+          example: "https://storage.googleapis.com/ef2_xml/132596161/pdfs/...pdf"
+        email_enviado:
+          type: boolean
+          description: Indica si se envió el email al comprador
+          example: true
+        email_error:
+          type: string
+          nullable: true
+          description: Error de envío de email (null si fue exitoso)
+          example: null
+        email_destinatario:
+          type: string
+          description: Email al que se envió la copia del e-CF
+          example: "comprador@example.com"
+        dgii_info:
+          type: object
+          description: Información detallada de la respuesta de la DGII
+          properties:
+            track_id:
+              type: string
+              format: uuid
+              description: ID de seguimiento en la DGII
+              example: "76e64bdb-14e4-49a3-af3f-3b659840a3e5"
+            estado:
+              type: string
+              description: Estado ante la DGII
+              example: "Aceptado"
+            tipo_ecf:
+              type: string
+              example: "31"
+            rnc_emisor:
+              type: string
+              example: "132596161"
+            monto_total:
+              type: string
+              example: "1770.00"
+            xml_url:
+              type: string
+              format: uri
+              description: URL del XML en la nube
+            semilla_xml_url:
+              type: string
+              format: uri
+              description: URL de la semilla XML
+            mensaje_rechazo:
+              type: string
+              nullable: true
+              description: Motivo de rechazo (null si aceptado)
+
+    ErrorResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: false
+        message:
+          type: string
+          description: Descripción del error
+          example: "Error de validación en campo RNCComprador"
+        code:
+          type: string
+          description: Código de error
+          example: "VALIDATION_ERROR"
+        errors:
+          type: array
+          description: Lista detallada de errores (cuando aplica)
+          items:
+            type: string
+          example:
+            - "El RNCComprador debe tener 9 u 11 dígitos"
+            - "El campo MontoTotal es requerido"
+
+    # =====================================================
+    # SECUENCIAS e-NCF
+    # =====================================================
+    SecuenciaCreateRequest:
+      type: object
+      required:
+        - tipo_ecf_id
+        - prefijo
+        - desde
+        - hasta
+      properties:
+        tipo_ecf_id:
+          type: integer
+          description: |
+            ID del tipo de comprobante. Obtener con `GET /ecf_secuencia_api.php?resource=tipos_ecf`.
+          example: 1
+        prefijo:
+          type: string
+          description: Prefijo del e-CF (E31, E32, E33, ...). Debe coincidir con el tipo
+          example: "E31"
+        desde:
+          type: integer
+          description: |
+            Número inicial del rango autorizado por la DGII.
+            Debe ser `MAX(hasta) + 1` del último rango del mismo tipo (continuidad obligatoria).
+          minimum: 1
+          example: 1
+        hasta:
+          type: integer
+          description: Número final del rango autorizado por la DGII
+          minimum: 1
+          example: 50000
+        secuencia_actual:
+          type: integer
+          description: |
+            Último número utilizado. Dejar en `0` para empezar desde `desde`.
+            Si se especifica, debe estar entre `desde` y `hasta`.
+          minimum: 0
+          default: 0
+          example: 0
+        fecha_vencimiento:
+          type: string
+          format: date
+          description: |
+            Fecha de vencimiento autorizada por la DGII (formato `YYYY-MM-DD`).
+            **Requerida** para todos los tipos excepto E32.
+          example: "2028-12-31"
+        estado:
+          type: boolean
+          description: Indica si el rango está activo. Solo puede haber un rango activo por tipo
+          default: true
+          example: true
+
+    SecuenciaUpdateRequest:
+      type: object
+      required:
+        - id
+      description: |
+        Todos los campos son opcionales salvo `id`. Solo se actualizan los campos enviados.
+      properties:
+        id:
+          type: integer
+          description: ID del rango a actualizar
+          example: 42
+        prefijo:
+          type: string
+          example: "E31"
+        desde:
+          type: integer
+          minimum: 1
+          example: 1
+        hasta:
+          type: integer
+          minimum: 1
+          example: 75000
+        secuencia_actual:
+          type: integer
+          minimum: 0
+          example: 4500
+        estado:
+          type: boolean
+          example: true
+
+    SecuenciaResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        message:
+          type: string
+          example: "Rango de secuencias creado exitosamente"
+        data:
+          type: object
+          properties:
+            id:
+              type: integer
+              example: 42
+            tipo_ecf_id:
+              type: integer
+              example: 1
+            prefijo:
+              type: string
+              example: "E31"
+            desde:
+              type: integer
+              example: 1
+            hasta:
+              type: integer
+              example: 50000
+            secuencia_actual:
+              type: integer
+              description: Último número consumido (0 si aún no se ha emitido ninguno en el rango)
+              example: 3935
+            fecha_vencimiento:
+              type: string
+              format: date
+              example: "2028-12-31"
+            estado:
+              type: integer
+              description: 1 = activo, 0 = inactivo
+              example: 1
+            tipo_codigo:
+              type: string
+              example: "31"
+            tipo_nombre:
+              type: string
+              example: "Factura de Crédito Fiscal"
+            total_secuencias:
+              type: integer
+              description: hasta − desde + 1
+              example: 50000
+            secuencias_usadas:
+              type: integer
+              example: 3935
+            secuencias_disponibles:
+              type: integer
+              example: 46065
+            porcentaje_uso:
+              type: number
+              format: float
+              example: 7.87
+            created_at:
+              type: string
+              format: date-time
+              example: "2025-01-15 10:30:00"
+            updated_at:
+              type: string
+              format: date-time
+              example: "2026-02-14 15:22:41"

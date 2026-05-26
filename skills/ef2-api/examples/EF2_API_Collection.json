@@ -1,0 +1,482 @@
+{
+  "info": {
+    "name": "EF2 API - Facturacion Electronica",
+    "description": "Coleccion de la API EF2 para facturacion electronica (e-CF) en Republica Dominicana. Incluye autenticacion y procesamiento de los 10 tipos de comprobantes fiscales electronicos (e-CF): Factura de Credito Fiscal (e31), Factura de Consumo (e32), Nota de Debito (e33), Nota de Credito (e34), Compras (e41), Gastos Menores (e43), Regimenes Especiales (e44), Gubernamental (e45), Exportaciones (e46) y Pagos al Exterior (e47).",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if(pm.response.code===200){var j=pm.response.json();if(j.token)pm.collectionVariables.set(\"token\",j.token);}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"api_2buy_mliec4sb\",\n  \"password\": \"tok_e0f3065a8a7df34785d30b744bf4715b3c3b96759a1a7ca19f354817e4471e2e\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/login.php",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "auth",
+                "login.php"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Facturacion",
+      "item": [
+        {
+          "name": "e31 - Factura de Credito Fiscal Electronica",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"ECF\": {\n    \"Encabezado\": {\n      \"Version\": \"1.0\",\n      \"IdDoc\": {\n        \"TipoeCF\": \"31\",\n        \"FechaVencimientoSecuencia\": \"31-12-2028\",\n        \"IndicadorMontoGravado\": \"0\",\n        \"TipoIngresos\": \"01\",\n        \"TipoPago\": \"1\"\n      },\n      \"Emisor\": {\n        \"RNCEmisor\": \"132596161\",\n        \"RazonSocialEmisor\": \"2BUY ELECTRONICS AND SERVICES SRL\",\n        \"NombreComercial\": \"2BUY ELECTRONICS\",\n        \"DireccionEmisor\": \"Av. San Vicente de Paul, Esq. Puerto Rico, Baro Plaza\",\n        \"Municipio\": \"010100\",\n        \"Provincia\": \"010000\",\n        \"CorreoEmisor\": \"info@2buy.do\",\n        \"FechaEmision\": \"14-02-2026\"\n      },\n      \"Comprador\": {\n        \"RNCComprador\": \"131703836\",\n        \"RazonSocialComprador\": \"GRUPO MEDIA SOFT TECHNOLOGY GMS SRL\",\n        \"CorreoComprador\": \"compras@mediasoft.do\",\n        \"DireccionComprador\": \"Santo Domingo\",\n        \"MunicipioComprador\": \"010100\",\n        \"ProvinciaComprador\": \"010000\"\n      },\n      \"Totales\": {\n        \"MontoGravadoTotal\": \"1500.00\",\n        \"MontoGravadoI1\": \"1500.00\",\n        \"ITBIS1\": \"18\",\n        \"TotalITBIS\": \"270.00\",\n        \"TotalITBIS1\": \"270.00\",\n        \"MontoTotal\": \"1770.00\"\n      }\n    },\n    \"DetallesItems\": {\n      \"Item\": [\n        {\n          \"NumeroLinea\": \"1\",\n          \"IndicadorFacturacion\": \"1\",\n          \"NombreItem\": \"Licencia de software plan emprendedor\",\n          \"IndicadorBienoServicio\": \"2\",\n          \"CantidadItem\": \"1\",\n          \"UnidadMedida\": \"43\",\n          \"PrecioUnitarioItem\": \"1500.00\",\n          \"MontoItem\": \"1500.00\"\n        }\n      ]\n    }\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/procesar_factura.php",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "procesar_factura.php"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "e32 - Factura de Consumo Electronica",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"ECF\": {\n    \"Encabezado\": {\n      \"Version\": \"1.0\",\n      \"IdDoc\": {\n        \"TipoeCF\": \"32\",\n        \"IndicadorMontoGravado\": \"0\",\n        \"TipoIngresos\": \"01\",\n        \"TipoPago\": \"1\"\n      },\n      \"Emisor\": {\n        \"RNCEmisor\": \"132596161\",\n        \"RazonSocialEmisor\": \"2BUY ELECTRONICS AND SERVICES SRL\",\n        \"NombreComercial\": \"2BUY ELECTRONICS\",\n        \"DireccionEmisor\": \"Av. San Vicente de Paul, Esq. Puerto Rico, Baro Plaza\",\n        \"Municipio\": \"010100\",\n        \"Provincia\": \"010000\",\n        \"CorreoEmisor\": \"info@2buy.do\",\n        \"FechaEmision\": \"14-02-2026\"\n      },\n      \"Comprador\": {\n        \"RNCComprador\": \"131703836\",\n        \"RazonSocialComprador\": \"GRUPO MEDIA SOFT TECHNOLOGY GMS SRL\",\n        \"CorreoComprador\": \"cliente@gmail.com\",\n        \"DireccionComprador\": \"Santo Domingo\"\n      },\n      \"Totales\": {\n        \"MontoGravadoTotal\": \"30000.00\",\n        \"MontoGravadoI1\": \"30000.00\",\n        \"ITBIS1\": \"18\",\n        \"TotalITBIS\": \"5400.00\",\n        \"TotalITBIS1\": \"5400.00\",\n        \"MontoTotal\": \"35400.00\"\n      }\n    },\n    \"DetallesItems\": {\n      \"Item\": [\n        {\n          \"NumeroLinea\": \"1\",\n          \"IndicadorFacturacion\": \"1\",\n          \"NombreItem\": \"Laptop Dell Inspiron 15\",\n          \"IndicadorBienoServicio\": \"1\",\n          \"CantidadItem\": \"1\",\n          \"UnidadMedida\": \"43\",\n          \"PrecioUnitarioItem\": \"30000.00\",\n          \"MontoItem\": \"30000.00\"\n        }\n      ]\n    }\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/procesar_factura.php",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "procesar_factura.php"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "e33 - Nota de Debito Electronica",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"ECF\": {\n    \"Encabezado\": {\n      \"Version\": \"1.0\",\n      \"IdDoc\": {\n        \"TipoeCF\": \"33\",\n        \"FechaVencimientoSecuencia\": \"31-12-2028\",\n        \"TipoIngresos\": \"01\",\n        \"TipoPago\": \"1\"\n      },\n      \"Emisor\": {\n        \"RNCEmisor\": \"132596161\",\n        \"RazonSocialEmisor\": \"2BUY ELECTRONICS AND SERVICES SRL\",\n        \"NombreComercial\": \"2BUY ELECTRONICS\",\n        \"DireccionEmisor\": \"Av. San Vicente de Paul, Esq. Puerto Rico, Baro Plaza\",\n        \"Municipio\": \"010101\",\n        \"Provincia\": \"010000\",\n        \"CorreoEmisor\": \"info@2buy.do\",\n        \"FechaEmision\": \"14-02-2026\"\n      },\n      \"Comprador\": {\n        \"RNCComprador\": \"131703836\",\n        \"RazonSocialComprador\": \"GRUPO MEDIA SOFT TECHNOLOGY GMS SRL\",\n        \"CorreoComprador\": \"compras@mediasoft.do\",\n        \"DireccionComprador\": \"Santo Domingo\",\n        \"MunicipioComprador\": \"010100\",\n        \"ProvinciaComprador\": \"010000\"\n      },\n      \"InformacionReferencia\": {\n        \"NCFModificado\": \"E310000003935\",\n        \"RazonModificacion\": \"Cargo adicional por servicio express de entrega\",\n        \"FechaNCFModificado\": \"14-02-2026\",\n        \"CodigoModificacion\": \"3\"\n      },\n      \"Totales\": {\n        \"MontoExento\": \"1500.00\",\n        \"MontoTotal\": \"1500.00\"\n      }\n    },\n    \"DetallesItems\": {\n      \"Item\": [\n        {\n          \"NumeroLinea\": \"1\",\n          \"IndicadorFacturacion\": \"4\",\n          \"NombreItem\": \"Cargo adicional por servicio de instalacion\",\n          \"IndicadorBienoServicio\": \"1\",\n          \"CantidadItem\": \"1\",\n          \"PrecioUnitarioItem\": \"1500.00\",\n          \"MontoItem\": \"1500.00\"\n        }\n      ]\n    }\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/procesar_factura.php",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "procesar_factura.php"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "e34 - Nota de Credito Electronica",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"ECF\": {\n    \"Encabezado\": {\n      \"Version\": \"1.0\",\n      \"IdDoc\": {\n        \"TipoeCF\": \"34\",\n        \"IndicadorNotaCredito\": \"0\",\n        \"IndicadorMontoGravado\": \"0\",\n        \"TipoIngresos\": \"01\",\n        \"TipoPago\": \"1\"\n      },\n      \"Emisor\": {\n        \"RNCEmisor\": \"132596161\",\n        \"RazonSocialEmisor\": \"2BUY ELECTRONICS AND SERVICES SRL\",\n        \"NombreComercial\": \"2BUY ELECTRONICS\",\n        \"DireccionEmisor\": \"Av. San Vicente de Paul, Esq. Puerto Rico, Baro Plaza\",\n        \"Municipio\": \"010101\",\n        \"Provincia\": \"010000\",\n        \"CorreoEmisor\": \"info@2buy.do\",\n        \"FechaEmision\": \"14-02-2026\"\n      },\n      \"Comprador\": {\n        \"RNCComprador\": \"131703836\",\n        \"RazonSocialComprador\": \"GRUPO MEDIA SOFT TECHNOLOGY GMS SRL\",\n        \"CorreoComprador\": \"compras@mediasoft.do\",\n        \"DireccionComprador\": \"Santo Domingo\",\n        \"MunicipioComprador\": \"010100\",\n        \"ProvinciaComprador\": \"010000\"\n      },\n      \"InformacionReferencia\": {\n        \"NCFModificado\": \"E310000003936\",\n        \"RazonModificacion\": \"Devolucion de producto por defecto de fabricacion\",\n        \"FechaNCFModificado\": \"14-02-2026\",\n        \"CodigoModificacion\": \"3\"\n      },\n      \"Totales\": {\n        \"MontoGravadoTotal\": \"1500.00\",\n        \"MontoGravadoI1\": \"1500.00\",\n        \"ITBIS1\": \"18\",\n        \"TotalITBIS\": \"270.00\",\n        \"TotalITBIS1\": \"270.00\",\n        \"MontoTotal\": \"1770.00\"\n      }\n    },\n    \"DetallesItems\": {\n      \"Item\": [\n        {\n          \"NumeroLinea\": \"1\",\n          \"IndicadorFacturacion\": \"1\",\n          \"NombreItem\": \"Anulacion - Devolucion de producto\",\n          \"IndicadorBienoServicio\": \"1\",\n          \"CantidadItem\": \"1\",\n          \"UnidadMedida\": \"43\",\n          \"PrecioUnitarioItem\": \"1500.00\",\n          \"MontoItem\": \"1500.00\"\n        }\n      ]\n    }\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/procesar_factura.php",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "procesar_factura.php"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "e41 - Factura de Compras Electronica",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"ECF\": {\n    \"Encabezado\": {\n      \"Version\": \"1.0\",\n      \"IdDoc\": {\n        \"TipoeCF\": \"41\",\n        \"FechaVencimientoSecuencia\": \"31-12-2028\",\n        \"IndicadorMontoGravado\": \"0\",\n        \"TipoPago\": \"1\",\n        \"TablaFormasPago\": {\n          \"FormaDePago\": [\n            { \"FormaPago\": \"1\", \"MontoPago\": \"9000.00\" }\n          ]\n        }\n      },\n      \"Emisor\": {\n        \"RNCEmisor\": \"132596161\",\n        \"RazonSocialEmisor\": \"2BUY ELECTRONICS AND SERVICES SRL\",\n        \"NombreComercial\": \"2BUY ELECTRONICS\",\n        \"DireccionEmisor\": \"Av. San Vicente de Paul, Esq. Puerto Rico, Baro Plaza\",\n        \"Municipio\": \"010101\",\n        \"Provincia\": \"010000\",\n        \"TablaTelefonoEmisor\": {\n          \"TelefonoEmisor\": [\"809-472-7676\"]\n        },\n        \"CorreoEmisor\": \"info@2buy.do\",\n        \"NumeroFacturaInterna\": \"123456789016\",\n        \"FechaEmision\": \"14-02-2026\"\n      },\n      \"Comprador\": {\n        \"RNCComprador\": \"131703836\",\n        \"RazonSocialComprador\": \"GRUPO MEDIA SOFT TECHNOLOGY GMS SRL\",\n        \"CorreoComprador\": \"compras@mediasoft.do\",\n        \"DireccionComprador\": \"Santo Domingo\",\n        \"MunicipioComprador\": \"010100\",\n        \"ProvinciaComprador\": \"010000\"\n      },\n      \"Totales\": {\n        \"MontoGravadoTotal\": \"10000.00\",\n        \"MontoGravadoI1\": \"10000.00\",\n        \"ITBIS1\": \"18\",\n        \"TotalITBIS\": \"1800.00\",\n        \"TotalITBIS1\": \"1800.00\",\n        \"MontoTotal\": \"11800.00\",\n        \"ValorPagar\": \"11800.00\",\n        \"TotalITBISRetenido\": \"1800.00\",\n        \"TotalISRRetencion\": \"1000.00\"\n      }\n    },\n    \"DetallesItems\": {\n      \"Item\": [\n        {\n          \"NumeroLinea\": \"1\",\n          \"IndicadorFacturacion\": \"1\",\n          \"Retencion\": {\n            \"IndicadorAgenteRetencionoPercepcion\": \"1\",\n            \"MontoITBISRetenido\": \"1800.00\",\n            \"MontoISRRetenido\": \"1000.00\"\n          },\n          \"NombreItem\": \"SERVICIO PUBLICIDAD\",\n          \"IndicadorBienoServicio\": \"2\",\n          \"DescripcionItem\": \"Servicio de publicidad y marketing digital\",\n          \"CantidadItem\": \"1.00\",\n          \"UnidadMedida\": \"43\",\n          \"PrecioUnitarioItem\": \"10000.00\",\n          \"MontoItem\": \"10000.00\"\n        }\n      ]\n    }\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/procesar_factura.php",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "procesar_factura.php"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "e43 - Factura de Gastos Menores Electronica",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"ECF\": {\n    \"Encabezado\": {\n      \"Version\": \"1.0\",\n      \"IdDoc\": {\n        \"TipoeCF\": \"43\",\n        \"FechaVencimientoSecuencia\": \"31-12-2028\",\n        \"TipoPago\": \"1\"\n      },\n      \"Emisor\": {\n        \"RNCEmisor\": \"132596161\",\n        \"RazonSocialEmisor\": \"2BUY ELECTRONICS AND SERVICES SRL\",\n        \"NombreComercial\": \"2BUY ELECTRONICS\",\n        \"DireccionEmisor\": \"Av. San Vicente de Paul, Esq. Puerto Rico, Baro Plaza\",\n        \"Municipio\": \"010101\",\n        \"Provincia\": \"010000\",\n        \"CorreoEmisor\": \"info@2buy.do\",\n        \"NumeroFacturaInterna\": \"123456789016\",\n        \"FechaEmision\": \"14-02-2026\"\n      },\n      \"Totales\": {\n        \"MontoExento\": \"700.00\",\n        \"MontoTotal\": \"700.00\"\n      }\n    },\n    \"DetallesItems\": {\n      \"Item\": [\n        {\n          \"NumeroLinea\": \"1\",\n          \"IndicadorFacturacion\": \"4\",\n          \"NombreItem\": \"Peajes viaje semana I\",\n          \"IndicadorBienoServicio\": \"2\",\n          \"CantidadItem\": \"7.00\",\n          \"UnidadMedida\": \"43\",\n          \"PrecioUnitarioItem\": \"100.00\",\n          \"MontoItem\": \"700.00\"\n        }\n      ]\n    }\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/procesar_factura.php",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "procesar_factura.php"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "e44 - Factura de Regimenes Especiales Electronica",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"ECF\": {\n    \"Encabezado\": {\n      \"Version\": \"1.0\",\n      \"IdDoc\": {\n        \"TipoeCF\": \"44\",\n        \"FechaVencimientoSecuencia\": \"31-12-2028\",\n        \"TipoIngresos\": \"01\",\n        \"TipoPago\": \"1\",\n        \"TablaFormasPago\": {\n          \"FormaDePago\": [\n            { \"FormaPago\": \"2\", \"MontoPago\": \"4840.00\" }\n          ]\n        },\n        \"TipoCuentaPago\": \"CT\",\n        \"NumeroCuentaPago\": \"0301678890090\",\n        \"BancoPago\": \"BANCO POPULAR DOMINICANO\"\n      },\n      \"Emisor\": {\n        \"RNCEmisor\": \"132596161\",\n        \"RazonSocialEmisor\": \"2BUY ELECTRONICS AND SERVICES SRL\",\n        \"NombreComercial\": \"2BUY ELECTRONICS\",\n        \"DireccionEmisor\": \"Av. San Vicente de Paul, Esq. Puerto Rico, Baro Plaza\",\n        \"Municipio\": \"010101\",\n        \"Provincia\": \"010000\",\n        \"CorreoEmisor\": \"info@2buy.do\",\n        \"FechaEmision\": \"14-02-2026\"\n      },\n      \"Comprador\": {\n        \"RNCComprador\": \"131703836\",\n        \"RazonSocialComprador\": \"EMPRESA ZONA FRANCA SRL\",\n        \"ContactoComprador\": \"MARCOS LLUBERES\",\n        \"CorreoComprador\": \"compras@zonafranca.com\",\n        \"DireccionComprador\": \"PARQUE INDUSTRIAL ITABO, NAVE 12\",\n        \"MunicipioComprador\": \"010100\",\n        \"ProvinciaComprador\": \"010000\"\n      },\n      \"Totales\": {\n        \"MontoExento\": \"4840.00\",\n        \"MontoTotal\": \"4840.00\",\n        \"ValorPagar\": \"4840.00\"\n      }\n    },\n    \"DetallesItems\": {\n      \"Item\": [\n        {\n          \"NumeroLinea\": \"1\",\n          \"IndicadorFacturacion\": \"4\",\n          \"NombreItem\": \"COMBUSTIBLE DIESEL\",\n          \"IndicadorBienoServicio\": \"1\",\n          \"CantidadItem\": \"22.00\",\n          \"UnidadMedida\": \"15\",\n          \"PrecioUnitarioItem\": \"220.00\",\n          \"MontoItem\": \"4840.00\"\n        }\n      ]\n    }\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/procesar_factura.php",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "procesar_factura.php"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "e45 - Factura Gubernamental Electronica",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"ECF\": {\n    \"Encabezado\": {\n      \"Version\": \"1.0\",\n      \"IdDoc\": {\n        \"TipoeCF\": \"45\",\n        \"FechaVencimientoSecuencia\": \"31-12-2028\",\n        \"IndicadorMontoGravado\": \"0\",\n        \"TipoIngresos\": \"01\",\n        \"TipoPago\": \"1\"\n      },\n      \"Emisor\": {\n        \"RNCEmisor\": \"132596161\",\n        \"RazonSocialEmisor\": \"2BUY ELECTRONICS AND SERVICES SRL\",\n        \"NombreComercial\": \"2BUY ELECTRONICS\",\n        \"DireccionEmisor\": \"Av. San Vicente de Paul, Esq. Puerto Rico, Baro Plaza\",\n        \"Municipio\": \"010101\",\n        \"Provincia\": \"010000\",\n        \"CorreoEmisor\": \"info@2buy.do\",\n        \"FechaEmision\": \"14-02-2026\"\n      },\n      \"Comprador\": {\n        \"RNCComprador\": \"132596161\",\n        \"RazonSocialComprador\": \"AYUNTAMIENTO DEL DISTRITO NACIONAL\",\n        \"CorreoComprador\": \"compras@adn.gob.do\",\n        \"DireccionComprador\": \"AV GEORGE WASHINGTON, SANTO DOMINGO\",\n        \"MunicipioComprador\": \"010100\",\n        \"ProvinciaComprador\": \"010000\"\n      },\n      \"Totales\": {\n        \"MontoGravadoTotal\": \"30000.00\",\n        \"MontoGravadoI1\": \"30000.00\",\n        \"ITBIS1\": \"18\",\n        \"TotalITBIS\": \"5400.00\",\n        \"TotalITBIS1\": \"5400.00\",\n        \"MontoTotal\": \"35400.00\",\n        \"ValorPagar\": \"35400.00\"\n      }\n    },\n    \"DetallesItems\": {\n      \"Item\": [\n        {\n          \"NumeroLinea\": \"1\",\n          \"IndicadorFacturacion\": \"1\",\n          \"NombreItem\": \"SERVICIO PUBLICIDAD INSTITUCIONAL\",\n          \"IndicadorBienoServicio\": \"2\",\n          \"CantidadItem\": \"1.00\",\n          \"UnidadMedida\": \"43\",\n          \"PrecioUnitarioItem\": \"30000.00\",\n          \"MontoItem\": \"30000.00\"\n        }\n      ]\n    }\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/procesar_factura.php",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "procesar_factura.php"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "e46 - Factura de Exportaciones Electronica",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"ECF\": {\n    \"Encabezado\": {\n      \"Version\": \"1.0\",\n      \"IdDoc\": {\n        \"TipoeCF\": \"46\",\n        \"FechaVencimientoSecuencia\": \"31-12-2028\",\n        \"TipoIngresos\": \"01\",\n        \"TipoPago\": \"2\",\n        \"FechaLimitePago\": \"14-03-2026\",\n        \"TerminoPago\": \"1 mes\",\n        \"TablaFormasPago\": {\n          \"FormaDePago\": [\n            { \"FormaPago\": \"2\", \"MontoPago\": \"1800.00\" }\n          ]\n        }\n      },\n      \"Emisor\": {\n        \"RNCEmisor\": \"132596161\",\n        \"RazonSocialEmisor\": \"2BUY ELECTRONICS AND SERVICES SRL\",\n        \"NombreComercial\": \"2BUY ELECTRONICS\",\n        \"DireccionEmisor\": \"Av. San Vicente de Paul, Esq. Puerto Rico, Baro Plaza\",\n        \"CorreoEmisor\": \"info@2buy.do\",\n        \"FechaEmision\": \"14-02-2026\"\n      },\n      \"Comprador\": {\n        \"RNCComprador\": \"132596161\",\n        \"RazonSocialComprador\": \"EMPRESA IMPORTADORA INTERNACIONAL SRL\",\n        \"ContactoComprador\": \"MARCOS LLUBERES\",\n        \"CorreoComprador\": \"imports@empresa.com\",\n        \"DireccionComprador\": \"ZONA PORTUARIA, HAINA\",\n        \"MunicipioComprador\": \"010100\",\n        \"ProvinciaComprador\": \"010000\"\n      },\n      \"InformacionesAdicionales\": {\n        \"FechaEmbarque\": \"10-04-2026\",\n        \"NumeroEmbarque\": \"10010-1207-000254\",\n        \"NumeroContenedor\": \"ERTY227958722\",\n        \"NumeroReferencia\": \"1448\",\n        \"PesoBruto\": \"25000.00\",\n        \"PesoNeto\": \"24878.00\",\n        \"UnidadPesoBruto\": \"21\",\n        \"UnidadPesoNeto\": \"21\",\n        \"CantidadBulto\": \"250.00\",\n        \"UnidadBulto\": \"25\",\n        \"VolumenBulto\": \"45\",\n        \"UnidadVolumen\": \"27\"\n      },\n      \"Transporte\": {\n        \"NumeroAlbaran\": \"56789UJILLL\"\n      },\n      \"Totales\": {\n        \"MontoGravadoTotal\": \"1800.00\",\n        \"MontoGravadoI3\": \"1800.00\",\n        \"ITBIS3\": \"0\",\n        \"TotalITBIS\": \"0.00\",\n        \"TotalITBIS3\": \"0.00\",\n        \"MontoTotal\": \"1800.00\"\n      }\n    },\n    \"DetallesItems\": {\n      \"Item\": [\n        {\n          \"NumeroLinea\": \"1\",\n          \"TablaCodigosItem\": {\n            \"CodigosItem\": [\n              { \"TipoCodigo\": \"INTERNA\", \"CodigoItem\": \"123456\" }\n            ]\n          },\n          \"IndicadorFacturacion\": \"3\",\n          \"NombreItem\": \"AGUACATE CRIOLLO\",\n          \"IndicadorBienoServicio\": \"1\",\n          \"CantidadItem\": \"100.00\",\n          \"UnidadMedida\": \"43\",\n          \"PrecioUnitarioItem\": \"18.00\",\n          \"MontoItem\": \"1800.00\"\n        }\n      ]\n    }\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/procesar_factura.php",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "procesar_factura.php"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "e47 - Factura de Pagos al Exterior Electronica",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"ECF\": {\n    \"Encabezado\": {\n      \"Version\": \"1.0\",\n      \"IdDoc\": {\n        \"TipoeCF\": \"47\",\n        \"FechaVencimientoSecuencia\": \"31-12-2028\",\n        \"NumeroCuentaPago\": \"BB00058745214789635\",\n        \"BancoPago\": \"BANCO POPULAR DOMINICANO\"\n      },\n      \"Emisor\": {\n        \"RNCEmisor\": \"132596161\",\n        \"RazonSocialEmisor\": \"2BUY ELECTRONICS AND SERVICES SRL\",\n        \"NombreComercial\": \"2BUY ELECTRONICS\",\n        \"DireccionEmisor\": \"Av. San Vicente de Paul, Esq. Puerto Rico, Baro Plaza\",\n        \"CorreoEmisor\": \"info@2buy.do\",\n        \"FechaEmision\": \"14-02-2026\"\n      },\n      \"Comprador\": {\n        \"IdentificadorExtranjero\": \"533445888\",\n        \"RazonSocialComprador\": \"INTERNATIONAL SOFTWARE INC\"\n      },\n      \"Totales\": {\n        \"MontoExento\": \"180000.00\",\n        \"MontoTotal\": \"180000.00\",\n        \"TotalISRRetencion\": \"48600.00\"\n      },\n      \"OtraMoneda\": {\n        \"TipoMoneda\": \"USD\",\n        \"TipoCambio\": \"60.0000\",\n        \"MontoExentoOtraMoneda\": \"3000.00\",\n        \"MontoTotalOtraMoneda\": \"3000.00\"\n      }\n    },\n    \"DetallesItems\": {\n      \"Item\": [\n        {\n          \"NumeroLinea\": \"1\",\n          \"IndicadorFacturacion\": \"4\",\n          \"Retencion\": {\n            \"IndicadorAgenteRetencionoPercepcion\": \"1\",\n            \"MontoISRRetenido\": \"48600.00\"\n          },\n          \"NombreItem\": \"LICENCIA SOFTWARE INTERNACIONAL\",\n          \"IndicadorBienoServicio\": \"2\",\n          \"CantidadItem\": \"1.00\",\n          \"UnidadMedida\": \"43\",\n          \"PrecioUnitarioItem\": \"180000.00\",\n          \"OtraMonedaDetalle\": {\n            \"PrecioOtraMoneda\": \"3000.0000\",\n            \"MontoItemOtraMoneda\": \"3000.00\"\n          },\n          \"MontoItem\": \"180000.00\"\n        }\n      ]\n    }\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/procesar_factura.php",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "procesar_factura.php"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "https://master.ef2.do/api2"
+    },
+    {
+      "key": "token",
+      "value": ""
+    }
+  ]
+}

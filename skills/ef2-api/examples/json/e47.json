@@ -1,0 +1,58 @@
+{
+  "ECF": {
+    "Encabezado": {
+      "Version": "1.0",
+      "IdDoc": {
+        "TipoeCF": "47",
+        "FechaVencimientoSecuencia": "31-12-2028",
+        "NumeroCuentaPago": "BB00058745214789635",
+        "BancoPago": "BANCO POPULAR DOMINICANO"
+      },
+      "Emisor": {
+        "RNCEmisor": "132596161",
+        "RazonSocialEmisor": "2BUY ELECTRONICS AND SERVICES SRL",
+        "NombreComercial": "2BUY ELECTRONICS",
+        "DireccionEmisor": "Av. San Vicente de Paul, Esq. Puerto Rico, Baro Plaza",
+        "CorreoEmisor": "info@2buy.do",
+        "FechaEmision": "14-02-2026"
+      },
+      "Comprador": {
+        "IdentificadorExtranjero": "533445888",
+        "RazonSocialComprador": "INTERNATIONAL SOFTWARE INC"
+      },
+      "Totales": {
+        "MontoExento": "180000.00",
+        "MontoTotal": "180000.00",
+        "TotalISRRetencion": "48600.00"
+      },
+      "OtraMoneda": {
+        "TipoMoneda": "USD",
+        "TipoCambio": "60.0000",
+        "MontoExentoOtraMoneda": "3000.00",
+        "MontoTotalOtraMoneda": "3000.00"
+      }
+    },
+    "DetallesItems": {
+      "Item": [
+        {
+          "NumeroLinea": "1",
+          "IndicadorFacturacion": "4",
+          "Retencion": {
+            "IndicadorAgenteRetencionoPercepcion": "1",
+            "MontoISRRetenido": "48600.00"
+          },
+          "NombreItem": "LICENCIA SOFTWARE INTERNACIONAL",
+          "IndicadorBienoServicio": "2",
+          "CantidadItem": "1.00",
+          "UnidadMedida": "43",
+          "PrecioUnitarioItem": "180000.00",
+          "OtraMonedaDetalle": {
+            "PrecioOtraMoneda": "3000.0000",
+            "MontoItemOtraMoneda": "3000.00"
+          },
+          "MontoItem": "180000.00"
+        }
+      ]
+    }
+  }
+}

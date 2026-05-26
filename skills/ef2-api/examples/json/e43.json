@@ -1,0 +1,41 @@
+{
+  "ECF": {
+    "Encabezado": {
+      "Version": "1.0",
+      "IdDoc": {
+        "TipoeCF": "43",
+        "FechaVencimientoSecuencia": "31-12-2028",
+        "TipoPago": "1"
+      },
+      "Emisor": {
+        "RNCEmisor": "132596161",
+        "RazonSocialEmisor": "2BUY ELECTRONICS AND SERVICES SRL",
+        "NombreComercial": "2BUY ELECTRONICS",
+        "DireccionEmisor": "Av. San Vicente de Paul, Esq. Puerto Rico, Baro Plaza",
+        "Municipio": "010101",
+        "Provincia": "010000",
+        "CorreoEmisor": "info@2buy.do",
+        "NumeroFacturaInterna": "123456789016",
+        "FechaEmision": "14-02-2026"
+      },
+      "Totales": {
+        "MontoExento": "700.00",
+        "MontoTotal": "700.00"
+      }
+    },
+    "DetallesItems": {
+      "Item": [
+        {
+          "NumeroLinea": "1",
+          "IndicadorFacturacion": "4",
+          "NombreItem": "Peajes viaje semana I",
+          "IndicadorBienoServicio": "2",
+          "CantidadItem": "7.00",
+          "UnidadMedida": "43",
+          "PrecioUnitarioItem": "100.00",
+          "MontoItem": "700.00"
+        }
+      ]
+    }
+  }
+}

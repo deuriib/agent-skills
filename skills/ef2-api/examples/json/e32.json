@@ -1,0 +1,46 @@
+{
+  "ECF": {
+    "Encabezado": {
+      "Version": "1.0",
+      "IdDoc": {
+        "TipoeCF": "32",
+        "IndicadorMontoGravado": "0",
+        "TipoIngresos": "01",
+        "TipoPago": "1",
+        "FechaLimitePago": "14-02-2026"
+      },
+      "Emisor": {
+        "RNCEmisor": "132596161",
+        "RazonSocialEmisor": "2BUY ELECTRONICS AND SERVICES SRL",
+        "NombreComercial": "2BUY ELECTRONICS",
+        "DireccionEmisor": "Av. San Vicente de Paul, Esq. Puerto Rico, Baro Plaza",
+        "Municipio": "010100",
+        "Provincia": "010000",
+        "CorreoEmisor": "info@2buy.do",
+        "FechaEmision": "14-02-2026"
+      },
+      "Totales": {
+        "MontoGravadoTotal": "5000.00",
+        "MontoGravadoI1": "5000.00",
+        "ITBIS1": "18",
+        "TotalITBIS": "900.00",
+        "TotalITBIS1": "900.00",
+        "MontoTotal": "5900.00"
+      }
+    },
+    "DetallesItems": {
+      "Item": [
+        {
+          "NumeroLinea": "1",
+          "IndicadorFacturacion": "1",
+          "NombreItem": "Teclado mecanico RGB",
+          "IndicadorBienoServicio": "1",
+          "CantidadItem": "2",
+          "UnidadMedida": "43",
+          "PrecioUnitarioItem": "2500.00",
+          "MontoItem": "5000.00"
+        }
+      ]
+    }
+  }
+}

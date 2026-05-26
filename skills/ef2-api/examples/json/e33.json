@@ -1,0 +1,54 @@
+{
+  "ECF": {
+    "Encabezado": {
+      "Version": "1.0",
+      "IdDoc": {
+        "TipoeCF": "33",
+        "FechaVencimientoSecuencia": "31-12-2028",
+        "TipoIngresos": "01",
+        "TipoPago": "1"
+      },
+      "Emisor": {
+        "RNCEmisor": "132596161",
+        "RazonSocialEmisor": "2BUY ELECTRONICS AND SERVICES SRL",
+        "NombreComercial": "2BUY ELECTRONICS",
+        "DireccionEmisor": "Av. San Vicente de Paul, Esq. Puerto Rico, Baro Plaza",
+        "Municipio": "010101",
+        "Provincia": "010000",
+        "CorreoEmisor": "info@2buy.do",
+        "FechaEmision": "14-02-2026"
+      },
+      "Comprador": {
+        "RNCComprador": "131703836",
+        "RazonSocialComprador": "GRUPO MEDIA SOFT TECHNOLOGY GMS SRL",
+        "CorreoComprador": "compras@mediasoft.do",
+        "DireccionComprador": "Santo Domingo",
+        "MunicipioComprador": "010100",
+        "ProvinciaComprador": "010000"
+      },
+      "InformacionReferencia": {
+        "NCFModificado": "E310000003935",
+        "RazonModificacion": "Cargo adicional por servicio express de entrega",
+        "FechaNCFModificado": "14-02-2026",
+        "CodigoModificacion": "3"
+      },
+      "Totales": {
+        "MontoExento": "1500.00",
+        "MontoTotal": "1500.00"
+      }
+    },
+    "DetallesItems": {
+      "Item": [
+        {
+          "NumeroLinea": "1",
+          "IndicadorFacturacion": "4",
+          "NombreItem": "Cargo adicional por servicio de instalacion",
+          "IndicadorBienoServicio": "1",
+          "CantidadItem": "1",
+          "PrecioUnitarioItem": "1500.00",
+          "MontoItem": "1500.00"
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,59 @@
+{
+  "ECF": {
+    "Encabezado": {
+      "Version": "1.0",
+      "IdDoc": {
+        "TipoeCF": "44",
+        "FechaVencimientoSecuencia": "31-12-2028",
+        "TipoIngresos": "01",
+        "TipoPago": "1",
+        "TablaFormasPago": {
+          "FormaDePago": [
+            { "FormaPago": "2", "MontoPago": "4840.00" }
+          ]
+        },
+        "TipoCuentaPago": "CT",
+        "NumeroCuentaPago": "0301678890090",
+        "BancoPago": "BANCO POPULAR DOMINICANO"
+      },
+      "Emisor": {
+        "RNCEmisor": "132596161",
+        "RazonSocialEmisor": "2BUY ELECTRONICS AND SERVICES SRL",
+        "NombreComercial": "2BUY ELECTRONICS",
+        "DireccionEmisor": "Av. San Vicente de Paul, Esq. Puerto Rico, Baro Plaza",
+        "Municipio": "010101",
+        "Provincia": "010000",
+        "CorreoEmisor": "info@2buy.do",
+        "FechaEmision": "14-02-2026"
+      },
+      "Comprador": {
+        "RNCComprador": "131703836",
+        "RazonSocialComprador": "EMPRESA ZONA FRANCA SRL",
+        "ContactoComprador": "MARCOS LLUBERES",
+        "CorreoComprador": "compras@zonafranca.com",
+        "DireccionComprador": "PARQUE INDUSTRIAL ITABO, NAVE 12",
+        "MunicipioComprador": "010100",
+        "ProvinciaComprador": "010000"
+      },
+      "Totales": {
+        "MontoExento": "4840.00",
+        "MontoTotal": "4840.00",
+        "ValorPagar": "4840.00"
+      }
+    },
+    "DetallesItems": {
+      "Item": [
+        {
+          "NumeroLinea": "1",
+          "IndicadorFacturacion": "4",
+          "NombreItem": "COMBUSTIBLE DIESEL",
+          "IndicadorBienoServicio": "1",
+          "CantidadItem": "22.00",
+          "UnidadMedida": "15",
+          "PrecioUnitarioItem": "220.00",
+          "MontoItem": "4840.00"
+        }
+      ]
+    }
+  }
+}
