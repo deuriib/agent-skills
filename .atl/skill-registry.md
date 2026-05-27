@@ -12,6 +12,7 @@ This registry provides a central index of all installed skills. Use it to discov
 
 | Skill | Trigger / Description | Scope | Path |
 | --- | --- | --- | --- |
+| **azul-payment** | Azul Payment, Azul API, integration, payments, 3DS, DataVault. Assists with Azul Payment Gateway implementation. | project | `skills/azul-payment/SKILL.md` |
 | **bridge-xyz** | Bridge API, stablecoin payments, /bridge-xyz, transfer funds, customer onboarding. Integrate Bridge-xyz APIs for stablecoin money movement. | project | `skills/bridge-xyz/SKILL.md` |
 | **ef2-api** | facturacion electronica, e-CF, DGII, NCF, EF2, factura, comprobante fiscal, nota credito, nota debito. Build EF2 API integrations for Dominican Republic electronic invoicing. | project | `skills/ef2-api/SKILL.md` |
 | **flet-expert** | Flet, building Python web/desktop/mobile apps, ft.Page, Flet controls. Expert guidance for building applications with the Flet framework. | project | `skills/flet-expert/SKILL.md` |
