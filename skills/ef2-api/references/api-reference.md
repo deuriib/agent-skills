@@ -309,91 +309,93 @@ Only inactive ranges can be deleted. Deactivate first with PUT.
 
 ---
 
-## Catalog Codes
+## Catalogos de Referencia DGII
+
+Tablas de códigos oficiales utilizados en los comprobantes electrónicos.
 
 ### Unidades de Medida (UnidadMedida)
 
-| Code | Description | Common use |
-|------|-------------|------------|
-| `43` | Service / Unit | Services, licenses, unit items |
-| `NIU` | Unit (alternative) | Products per unit |
-| `15` | Liter | Fuels, liquids |
-| `21` | Kilogram | Weight, agricultural products |
-| `25` | Box | Packaged products |
-| `27` | Cubic meter | Volumes, shipments |
-| `MTR` | Meter | Length, fabrics |
-| `DPC` | Dozen pieces | Products by dozen |
-| `GLL` | Gallon | Fuels, paints |
-| `LBR` | Pound | Alternative weight |
-| `YRD` | Yard | Fabrics, construction |
-| `SET` | Set | Kits, tool sets |
+| Código | Descripción | Uso común |
+|--------|-------------|-----------|
+| `43` | Servicio / Unidad | Servicios, licencias, items unitarios |
+| `NIU` | Unidad (alternativa) | Productos por unidad |
+| `15` | Litro | Combustibles, líquidos |
+| `21` | Kilogramo | Peso, productos agrícolas |
+| `25` | Caja | Productos empacados |
+| `27` | Metro cúbico | Volúmenes, embarques |
+| `MTR` | Metro | Longitud, telas |
+| `DPC` | Docena de piezas | Productos por docena |
+| `GLL` | Galón | Combustibles, pinturas |
+| `LBR` | Libra | Peso alternativo |
+| `YRD` | Yarda | Telas, construcción |
+| `SET` | Juego / Set | Kits, juegos de herramientas |
 
 ### Formas de Pago (FormaPago)
 
-| Code | Description |
-|------|-------------|
-| `1` | Cash |
-| `2` | Check / Transfer / Deposit |
-| `3` | Credit / Debit Card |
-| `4` | Credit Purchase |
-| `5` | Barter |
-| `6` | Credit Note |
-| `7` | Mixed |
+| Código | Descripción |
+|--------|-------------|
+| `1` | Efectivo |
+| `2` | Cheque / Transferencia / Deposito |
+| `3` | Tarjeta de Crédito / Débito |
+| `4` | Compra a Crédito |
+| `5` | Permuta |
+| `6` | Nota de Crédito |
+| `7` | Mixto |
 
 ### Tipo de Ingresos (TipoIngresos)
 
-| Code | Description |
-|------|-------------|
-| `01` | Operating income (non-financial) |
-| `02` | Financial income |
-| `03` | Extraordinary income |
-| `04` | Rental income |
-| `05` | Sale of depreciable assets |
-| `06` | Other income |
+| Código | Descripción |
+|--------|-------------|
+| `01` | Ingresos por operaciones (no financieros) |
+| `02` | Ingresos financieros |
+| `03` | Ingresos extraordinarios |
+| `04` | Ingresos por arrendamientos |
+| `05` | Ingresos por venta de activos depreciables |
+| `06` | Otros ingresos |
 
-### IndicadorFacturacion (per item)
+### Indicador de Facturación (IndicadorFacturacion)
 
-| Code | Description | ITBIS Rate |
-|------|-------------|------------|
-| `1` | Taxed ITBIS Rate 1 | 18% |
-| `2` | Taxed ITBIS Rate 2 | 16% |
-| `3` | Taxed ITBIS Rate 3 | 0% (exports) |
-| `4` | ITBIS Exempt | N/A |
+| Código | Descripción | Tasa ITBIS |
+|--------|-------------|------------|
+| `1` | Gravado con ITBIS Tasa 1 | 18% |
+| `2` | Gravado con ITBIS Tasa 2 | 16% |
+| `3` | Gravado con ITBIS Tasa 3 | 0% (exportaciones) |
+| `4` | Exento de ITBIS | N/A |
 
-### IndicadorBienoServicio
+### Tipo de Bien o Servicio (IndicadorBienoServicio)
 
-| Code | Description |
-|------|-------------|
-| `1` | Good |
-| `2` | Service |
-| `3` | Good and Service |
-| `4` | Other |
+| Código | Descripción |
+|--------|-------------|
+| `1` | Bien |
+| `2` | Servicio |
+| `3` | Bien y Servicio |
+| `4` | Otros |
 
-### CodigoModificacion (E33/E34)
+### Código de Modificación (CodigoModificacion) - Para E33/E34
 
-| Code | Description |
-|------|-------------|
-| `1` | Full invoice cancellation |
-| `2` | Text correction / typo |
-| `3` | Return of goods |
-| `4` | Discount / bonus |
-| `5` | Price change |
+| Código | Descripción |
+|--------|-------------|
+| `1` | Cancelación total de la factura |
+| `2` | Corrección de texto / error de escritura |
+| `3` | Devolución de bienes |
+| `4` | Descuento / bonificación |
+| `5` | Cambio de precio |
 
-### Currency Codes (ISO 4217)
+### Códigos de Moneda (TipoMoneda - ISO 4217)
 
-| Code | Currency |
-|------|----------|
-| `DOP` | Dominican Peso |
-| `USD` | US Dollar |
+| Código | Moneda |
+|--------|--------|
+| `DOP` | Peso Dominicano |
+| `USD` | Dólar Estadounidense |
 | `EUR` | Euro |
-| `GBP` | British Pound |
-| `CAD` | Canadian Dollar |
-| `CHF` | Swiss Franc |
+| `GBP` | Libra Esterlina |
+| `CAD` | Dólar Canadiense |
+| `CHF` | Franco Suizo |
 
-### Main Provinces
+### Provincias de República Dominicana
 
-| Code | Province |
-|------|----------|
+| Código | Provincia |
+|--------|-----------|
 | `010000` | Distrito Nacional |
 | `020000` | Azua |
 | `030000` | Bahoruco |
@@ -427,24 +429,27 @@ Only inactive ranges can be deleted. Deactivate first with PUT.
 | `310000` | San Jose de Ocoa |
 | `320000` | Santo Domingo |
 
-### Main Municipalities
+### Municipios Principales
 
-| Code | Municipality | Province |
-|------|-------------|----------|
-| `010100` | Santo Domingo de Guzman | Distrito Nacional |
+| Código | Municipio | Provincia |
+|--------|-----------|-----------|
+| `010100` | Santo Domingo de Guzmán | Distrito Nacional |
+| `010101` | Santo Domingo de Guzmán (DM) | Distrito Nacional |
 | `320100` | Santo Domingo Este | Santo Domingo |
 | `320200` | Santo Domingo Oeste | Santo Domingo |
 | `320300` | Santo Domingo Norte | Santo Domingo |
 | `320400` | Boca Chica | Santo Domingo |
+| `320500` | San Antonio de Guerra | Santo Domingo |
 | `320600` | Los Alcarrizos | Santo Domingo |
+| `320700` | Pedro Brand | Santo Domingo |
 | `250100` | Santiago de los Caballeros | Santiago |
-| `230100` | San Pedro de Macoris | San Pedro de Macoris |
+| `230100` | San Pedro de Macorís | San Pedro de Macorís |
 | `120100` | La Romana | La Romana |
 | `180100` | San Felipe de Puerto Plata | Puerto Plata |
 | `130100` | La Vega | La Vega |
-| `210100` | San Cristobal | San Cristobal |
-| `110100` | Higuey | La Altagracia |
-| `060100` | San Francisco de Macoris | Duarte |
+| `210100` | San Cristóbal | San Cristóbal |
+| `110100` | Higüey | La Altagracia |
+| `060100` | San Francisco de Macorís | Duarte |
 
 ---
 
