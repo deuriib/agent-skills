@@ -1,6 +1,6 @@
 ---
 name: ecf-dgii-ssd
-description: "Trigger: ECF DGII, SSD, República Dominicana, facturación electrónica, comprobantes fiscales, ECF, SDK, e-CF. Expert guidance for integrating Dominican Republic electronic invoicing using ECF SSD SDKs (.NET, TypeScript, React, Python, Java, Kotlin, iOS, C++)."
+description: "Trigger: ECF DGII, SSD, República Dominicana, facturación electrónica, comprobantes fiscales, ECF, SDK, e-CF. Expert guidance for integrating Dominican Republic electronic invoicing using ECF SSD SDKs (.NET, TypeScript, React, Python, Ruby, Java, Kotlin, iOS, C++)."
 license: MIT
 metadata:
   author: SSD-Smart-Software-Development-SRL
@@ -13,7 +13,7 @@ metadata:
 
 Use this skill when:
 - The user or agent needs to integrate Electronic Invoicing (Facturación Electrónica e-CF) for the Dominican Republic (DGII).
-- The user mentions ECF SSD, DGII SDKs, or e-CF integration in any supported language (.NET, TypeScript, React, Python, Java, Kotlin, iOS, C++).
+- The user mentions ECF SSD, DGII SDKs, or e-CF integration in any supported language (.NET, TypeScript, React, Python, Ruby, Java, Kotlin, iOS, C++).
 - Implementing solutions for e-CF generation, signing, token authentication, and DGII communication using SSD's services.
 
 ## Overview
@@ -36,6 +36,7 @@ References for each SDK are available in the local `references/` directory:
 - **TypeScript / Node.js**: `references/typescript-README.md` (`npm install @ssddo/ecf-sdk`)
 - **React**: `references/react-README.md` (`npm install @ssddo/ecf-react`)
 - **Python**: `references/python-README.md` (`pip install ecf-dgii`)
+- **Ruby**: `references/ruby-README.md` (`gem 'ecf-dgii'`)
 - **Java**: `references/java-README.md` (`implementation 'do.com.ssd.ecfx:ecf-dgii-sdk-java:1.0.0'`)
 - **Kotlin**: `references/kotlin-README.md` (`implementation("do.com.ssd.ecfx:ecf-dgii-sdk-kotlin:1.0.0")`)
 - **iOS / Swift**: `references/ios-README.md`
