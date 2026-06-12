@@ -18,7 +18,7 @@ npx skills add deuriib/agent-skills
 - **azul-payment**: Azul Payment Gateway integration for Dominican Republic. Supports Sale, Refund, 3DS 2.0, and DataVault (tokenization).
 - **better-auth-plugin**: Create Better Auth plugins with server-client pairs, schema extensions, hooks, and middleware for custom authentication logic.
 - **bridge-xyz**: Integrate Bridge-xyz APIs for stablecoin money movement, including customer onboarding (KYC/KYB), fiat-to-crypto transfers, and virtual accounts.
-- **ecf-dgii-ssd**: ECF SSD SDKs and integration guidelines for Dominican Republic electronic invoicing (e-CF), supporting multiple languages (.NET, TypeScript, React, Python, Java, Kotlin, iOS, C++).
+- **ecf-dgii-ssd**: ECF SSD SDKs and integration guidelines for Dominican Republic electronic invoicing (e-CF), supporting multiple languages (.NET, TypeScript, React, Python, Ruby, Java, Kotlin, iOS, C++).
 - **ef2-api**: Build EF2 API integrations for Dominican Republic electronic invoicing (e-CF) via DGII. Includes support for B2B, consumer sales, credit/debit notes, and exports.
 - **lago**: Integrate the Lago open-source billing platform for usage-based and subscription billing. Covers event ingestion, billable metrics, plans, charges, invoices, credit notes, payment providers, wallets, webhooks, and self-hosted deployment.
 - **lago-payment-integration**: Extend the Lago billing system with custom Payment Service Provider (PSP) integrations, covering backend (Rails) and frontend (React) components.
