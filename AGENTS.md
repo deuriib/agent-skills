@@ -16,7 +16,6 @@ This repository is a collection of portable AI agent skills. Every subdirectory 
 - **better-auth-plugin**: [skills/better-auth-plugin/SKILL.md](skills/better-auth-plugin/SKILL.md)
 - **bridge-xyz**: [skills/bridge-xyz/SKILL.md](skills/bridge-xyz/SKILL.md)
 - **ef2-api**: [skills/ef2-api/SKILL.md](skills/ef2-api/SKILL.md)
-- **flet-expert**: [skills/flet-expert/SKILL.md](skills/flet-expert/SKILL.md)
 - **lago-payment-integration**: [skills/lago-payment-integration/SKILL.md](skills/lago-payment-integration/SKILL.md)
 - **mintoria-brand-guidelines**: [skills/mintoria-brand-guidelines/SKILL.md](skills/mintoria-brand-guidelines/SKILL.md)
 
@@ -25,7 +24,7 @@ This repository is a collection of portable AI agent skills. Every subdirectory 
 ### Creating a New Skill
 
 1. Create `skills/<name>/SKILL.md`.
-2. Populate frontmatter (see `skills/flet-expert/SKILL.md` for reference).
+2. Populate frontmatter (see `skills/animate-ui/SKILL.md` for reference).
 3. Add a summary of the skill to `README.md` under "Available Skills".
 
 ### Verification
