@@ -16,6 +16,7 @@ This repository is a collection of portable AI agent skills. Every subdirectory 
 - **better-auth-plugin**: [skills/better-auth-plugin/SKILL.md](skills/better-auth-plugin/SKILL.md)
 - **bridge-xyz**: [skills/bridge-xyz/SKILL.md](skills/bridge-xyz/SKILL.md)
 - **ef2-api**: [skills/ef2-api/SKILL.md](skills/ef2-api/SKILL.md)
+- **lago**: [skills/lago/SKILL.md](skills/lago/SKILL.md)
 - **lago-payment-integration**: [skills/lago-payment-integration/SKILL.md](skills/lago-payment-integration/SKILL.md)
 - **mintoria-brand-guidelines**: [skills/mintoria-brand-guidelines/SKILL.md](skills/mintoria-brand-guidelines/SKILL.md)
 
