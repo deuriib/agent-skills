@@ -15,6 +15,7 @@ This repository is a collection of portable AI agent skills. Every subdirectory 
 - **azul-payment**: [skills/azul-payment/SKILL.md](skills/azul-payment/SKILL.md)
 - **better-auth-plugin**: [skills/better-auth-plugin/SKILL.md](skills/better-auth-plugin/SKILL.md)
 - **bridge-xyz**: [skills/bridge-xyz/SKILL.md](skills/bridge-xyz/SKILL.md)
+- **ecf-dgii-ssd**: [skills/ecf-dgii-ssd/SKILL.md](skills/ecf-dgii-ssd/SKILL.md)
 - **ef2-api**: [skills/ef2-api/SKILL.md](skills/ef2-api/SKILL.md)
 - **lago**: [skills/lago/SKILL.md](skills/lago/SKILL.md)
 - **lago-payment-integration**: [skills/lago-payment-integration/SKILL.md](skills/lago-payment-integration/SKILL.md)
