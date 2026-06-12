@@ -16,6 +16,7 @@ npx skills add deuriib/agent-skills
 
 - **animate-ui**: Implement and customize Motion-powered components from Animate UI. shadcn/ui compatible animated primitives and components.
 - **azul-payment**: Azul Payment Gateway integration for Dominican Republic. Supports Sale, Refund, 3DS 2.0, and DataVault (tokenization).
+- **better-auth-plugin**: Create Better Auth plugins with server-client pairs, schema extensions, hooks, and middleware for custom authentication logic.
 - **bridge-xyz**: Integrate Bridge-xyz APIs for stablecoin money movement, including customer onboarding (KYC/KYB), fiat-to-crypto transfers, and virtual accounts.
 - **ecf-dgii-ssd**: ECF SSD SDKs and integration guidelines for Dominican Republic electronic invoicing (e-CF), supporting multiple languages (.NET, TypeScript, React, Python, Java, Kotlin, iOS, C++).
 - **ef2-api**: Build EF2 API integrations for Dominican Republic electronic invoicing (e-CF) via DGII. Includes support for B2B, consumer sales, credit/debit notes, and exports.
