@@ -20,4 +20,5 @@ npx skills add deuriib/agent-skills
 - **ecf-dgii-ssd**: ECF SSD SDKs and integration guidelines for Dominican Republic electronic invoicing (e-CF), supporting multiple languages (.NET, TypeScript, React, Python, Java, Kotlin, iOS, C++).
 - **ef2-api**: Build EF2 API integrations for Dominican Republic electronic invoicing (e-CF) via DGII. Includes support for B2B, consumer sales, credit/debit notes, and exports.
 - **flet-expert**: A specialized skill for building apps with Flet (Python-based Flutter framework).
+- **lago-payment-integration**: Extend the Lago billing system with custom Payment Service Provider (PSP) integrations, covering backend (Rails) and frontend (React) components.
 - **mintoria-brand-guidelines**: Official brand guidelines for Mintoria, including colors, typography, logos, and premium design principles.
