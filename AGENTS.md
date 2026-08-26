@@ -17,6 +17,7 @@ This repository is a collection of portable AI agent skills. Every subdirectory 
 - **bridge-xyz**: [skills/bridge-xyz/SKILL.md](skills/bridge-xyz/SKILL.md)
 - **ecf-dgii-ssd**: [skills/ecf-dgii-ssd/SKILL.md](skills/ecf-dgii-ssd/SKILL.md)
 - **ef2-api**: [skills/ef2-api/SKILL.md](skills/ef2-api/SKILL.md)
+- **htmx**: [skills/htmx/SKILL.md](skills/htmx/SKILL.md)
 - **htpy**: [skills/htpy/SKILL.md](skills/htpy/SKILL.md)
 - **lago**: [skills/lago/SKILL.md](skills/lago/SKILL.md)
 - **lago-payment-integration**: [skills/lago-payment-integration/SKILL.md](skills/lago-payment-integration/SKILL.md)
