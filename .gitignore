@@ -13,3 +13,4 @@ venv.bak/
 .atl/
 openspec/
 /.opencode/opencode-swarm.json
+.ruff_cache/
