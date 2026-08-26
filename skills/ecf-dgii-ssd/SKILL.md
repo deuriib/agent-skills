@@ -3,7 +3,7 @@ name: ecf-dgii-ssd
 description: "Trigger: ECF DGII, SSD, República Dominicana, facturación electrónica, comprobantes fiscales, ECF, SDK, e-CF. Expert guidance for integrating Dominican Republic electronic invoicing using ECF SSD SDKs (.NET, TypeScript, React, Python, Ruby, Java, Kotlin, iOS, C++)."
 license: MIT
 metadata:
-  author: SSD-Smart-Software-Development-SRL
+  author: deuriib
   version: "1.0"
 ---
 

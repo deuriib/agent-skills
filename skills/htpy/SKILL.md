@@ -6,6 +6,9 @@ description: >
   attributes, components, streaming, async rendering, static typing, and the html2htpy converter.
   Triggers: htpy, html in python, python html generation, python components, server rendered html,
   django components, fastapi html, starlette html, htmx python, python templates.
+metadata:
+  author: deuriib
+  version: "1.0"
 ---
 
 # htpy — HTML in Pure Python

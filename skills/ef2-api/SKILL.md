@@ -3,7 +3,7 @@ name: ef2-api
 description: "Trigger: facturacion electronica, e-CF, DGII, NCF, EF2, factura, comprobante fiscal, nota credito, nota debito. Build EF2 API integrations for Dominican Republic electronic invoicing."
 license: Apache-2.0
 metadata:
-  author: deuri-vasquez
+  author: deuriib
   version: "2.0"
 ---
 

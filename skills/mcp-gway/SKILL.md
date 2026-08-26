@@ -1,6 +1,9 @@
 ---
 name: mcp-gway
 description: MCP Gateway manages MCP (Model Context Protocol) servers. It acts as a bridge between agent-clients and multiple MCP servers, providing a unified interface to discover, connect, and use MCP tools.
+metadata:
+  author: deuriib
+  version: "1.0"
 ---
 
 # MCP Gateway — mcp-gway

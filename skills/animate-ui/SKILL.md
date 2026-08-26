@@ -3,7 +3,7 @@ name: animate-ui
 description: "Trigger: animate-ui, motion components, animated shadcn. Implement and customize Motion-powered components from Animate UI."
 license: Apache-2.0
 metadata:
-  author: gentleman-programming
+  author: deuriib
   version: "1.0"
 ---
 

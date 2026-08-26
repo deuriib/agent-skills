@@ -3,6 +3,7 @@ name: azul-payment
 description: "Trigger: Azul Payment, Azul API, integration, payments, 3DS, DataVault. Assists with Azul Payment Gateway implementation."
 license: MIT
 metadata:
+  author: deuriib
   version: "1.0"
 ---
 

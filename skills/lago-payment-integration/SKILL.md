@@ -3,6 +3,7 @@ name: lago-payment-integration
 description: Use when integrating a custom payment gateway provider (PSP) in the Lago billing system, or modifying existing payment provider models, controllers, and frontend configuration.
 license: MIT
 metadata:
+  author: deuriib
   version: "1.0"
 ---
 
