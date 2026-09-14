@@ -9,7 +9,7 @@ A collection of AI agent skills.
 To use these skills with your AI agent, you can add them using the `skills` CLI:
 
 ```bash
-npx skills add deuriib/agent-skills
+npx -y skills add deuriib/agent-skills
 ```
 
 ## Available Skills
@@ -26,3 +26,20 @@ npx skills add deuriib/agent-skills
 - **htmx**: Build modern web interfaces using HTML attributes instead of JavaScript frameworks. Covers htmx attributes, events, extensions, server-side integration patterns, and UI examples.
 - **htpy**: Generate HTML from pure Python without templates. Covers elements, attributes, components, streaming, async rendering, static typing, and the html2htpy converter.
 - **mintoria-brand-guidelines**: Official brand guidelines for Mintoria, including colors, typography, logos, and premium design principles.
+
+## Dispatch & Workflow — spec-sdd Pack
+
+A stage-powered dispatch chain for spec-driven work. Every unit of work runs
+`route → specify → plan → tasks → execute → verify → lessons → seal`, with all
+state living in the shared agent memory store.
+
+- **spec-sdd-delgado**: Thin orchestrator and chain router for the spec-sdd pack. Owns frontier scheduling, signals, routines, sessions, and mesh sync. Use when starting, routing, or escalating spec-driven work.
+- **spec-sdd-specify**: Durable spec authoring via memory slots. Owns slot lifecycle and explicit saves. Use when creating, reading, or evolving the frozen spec all downstream stages consume.
+- **spec-sdd-plan**: Exploratory planning with sketches, graph context, and recall. Owns sketch lifecycle and pre-task research. Use when turning a frozen spec into a promotable plan.
+- **spec-sdd-tasks**: Durable task DAG with leases, checkpoints, sentinels, and facet tags. Use when decomposing a promoted plan into executable, guarded work units.
+- **spec-sdd-execute**: Evidence-backed execution with facet queries, provenance, and commit linkage. Use when claiming leased actions and producing verifiable outputs.
+- **spec-sdd-verify**: Independent quality gate with audit, diagnostics, healing, and insights. Owns FAIL → execute retry (N=2), then escalates to delgado. Use when gating execute outputs before lessons.
+- **spec-sdd-lessons**: Lesson capture and team diffusion for passed work. Owns lesson lifecycle, team sharing, and Obsidian publishing. Use when turning verified outputs into reusable knowledge.
+- **spec-sdd-crystallize**: Terminal compaction with crystals, consolidation, snapshots, governance deletes, and bridge sync. Use when sealing verified lessons into long-term memory.
+
+Chain: `spec-sdd-delgado → spec-sdd-specify → spec-sdd-plan → spec-sdd-tasks → spec-sdd-execute → spec-sdd-verify → spec-sdd-lessons → spec-sdd-crystallize`
