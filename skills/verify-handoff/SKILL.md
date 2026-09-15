@@ -26,7 +26,7 @@ produce HANDOFF.md routing to the next agent. No gate OPEN, no handoff.
 
 1. Read spec + test matrix + `GATE_REPORT.md`.
 2. Run DoD via `references/dod-checklist.md`.
-3. Produce `specs/40_workspace/<agent>/HANDOFF.md` via `references/handoff-template.md`.
+3. Produce `docs/specs/40_workspace/<agent>/HANDOFF.md` via `references/handoff-template.md`.
 4. All gates pass → hand off to `ship-release`.
 5. Gates fail → return to `execute-spec` with specific findings.
 

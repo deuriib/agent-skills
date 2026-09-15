@@ -23,8 +23,8 @@ Force design-before-code. The proposal is reviewable; the repo is untouched.
 
 ## 3. Process
 
-1. Read the target spec (`specs/20_backlog/` or individual spec file).
-2. Produce `specs/40_workspace/<agent>/PROPOSED_CHANGES.md` via `references/proposal-template.md`.
+1. Read the target spec (`docs/specs/20_backlog/` or individual spec file).
+2. Produce `docs/specs/40_workspace/<agent>/PROPOSED_CHANGES.md` via `references/proposal-template.md`.
 3. Include risk assessment via `references/risk-assessment.md`.
 4. Identify approvers and block until approval.
 5. Hand off to `review-security` / `review-architecture` as required.

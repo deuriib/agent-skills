@@ -25,8 +25,8 @@ and `review-risk` agents — no parallel reviewer universe.
 
 ## 3. Process
 
-1. Read `specs/40_workspace/<agent>/PROPOSED_CHANGES.md`.
-2. Produce `specs/40_workspace/barrera/SECURITY_REVIEW.md` via `references/security-review-template.md`.
+1. Read `docs/specs/40_workspace/<agent>/PROPOSED_CHANGES.md`.
+2. Produce `docs/specs/40_workspace/barrera/SECURITY_REVIEW.md` via `references/security-review-template.md`.
 3. Threat-model via `references/threat-model.md` (STRIDE).
 4. Issue verdict + conditions; block implementation on Rejected.
 

@@ -48,7 +48,7 @@ A spec spanning multiple domains needs ALL touched-domain reviewers to sign.
 
 1. Identify touched domains from spec tags/requirements.
 2. Dispatch each required reviewer as subagent (reference-only packet).
-3. Each reviewer writes `specs/40_workspace/quality-gate/<spec-id>/<reviewer>.md`.
+3. Each reviewer writes `docs/specs/40_workspace/quality-gate/<spec-id>/<reviewer>.md`.
 4. Consolidate into `GATE_REPORT.md` via `references/gate-report.md`.
 5. Any ❌ → gate CLOSED. Any ⚠️ → CONDITIONAL (conditions must clear).
 6. All ✅ → gate OPEN → hand off to `verify-handoff`.

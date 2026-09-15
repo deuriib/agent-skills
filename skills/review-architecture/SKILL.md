@@ -9,7 +9,7 @@ description: Review a proposal against the canonical architecture contract and r
 
 ## 1. Purpose
 
-Validate proposals against `specs/10_design/ARCHITECTURE.md` and record
+Validate proposals against `docs/specs/10_design/ARCHITECTURE.md` and record
 significant decisions as ADRs. No invariant break without an explicit ADR.
 
 ## 2. Chain Contract
@@ -25,7 +25,7 @@ significant decisions as ADRs. No invariant break without an explicit ADR.
 
 ## 3. Process
 
-1. Read `specs/40_workspace/<agent>/PROPOSED_CHANGES.md`.
+1. Read `docs/specs/40_workspace/<agent>/PROPOSED_CHANGES.md`.
 2. Compare against `ARCHITECTURE.md` + `API_CONTRACTS.md`.
 3. Produce/update ADR via `references/adr-template.md`.
 4. Issue review via `references/architecture-review.md`.

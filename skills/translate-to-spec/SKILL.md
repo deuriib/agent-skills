@@ -29,8 +29,8 @@ canonical architecture contract. The brief is read-only here.
 1. Read `docs/briefs/BRIEF-<slug>.md` (reference only, never paste full context).
 2. Route to C-levels by domains touched.
 3. Each produces a spec using `references/spec-template.md`.
-4. `vasquez` consolidates `specs/10_design/ARCHITECTURE.md` and `API_CONTRACTS.md`.
-5. Index requirements in `specs/15_requirements/` via `references/requirements-template.md`.
+4. `vasquez` consolidates `docs/specs/10_design/ARCHITECTURE.md` and `API_CONTRACTS.md`.
+5. Index requirements in `docs/specs/15_requirements/` via `references/requirements-template.md`.
 6. Hand off to `propose-changes`.
 
 ## 4. What I won't do
