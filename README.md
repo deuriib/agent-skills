@@ -27,19 +27,21 @@ npx -y skills add deuriib/agent-skills
 - **htpy**: Generate HTML from pure Python without templates. Covers elements, attributes, components, streaming, async rendering, static typing, and the html2htpy converter.
 - **mintoria-brand-guidelines**: Official brand guidelines for Mintoria, including colors, typography, logos, and premium design principles.
 
-## Dispatch & Workflow — spec-sdd Pack
+## Dispatch & Workflow — frame→ship Pack
 
 A stage-powered dispatch chain for spec-driven work. Every unit of work runs
-`route → specify → plan → tasks → execute → verify → lessons → seal`, with all
-state living in the shared agent memory store.
+`frame-intent → translate-to-spec → propose-changes → review → execute-spec → quality-gate → verify-handoff → ship-release`, with reviews fanning out to
+`review-security` / `review-architecture` when the proposal touches trust
+boundaries or architecture contracts.
 
-- **spec-sdd-delgado**: Thin orchestrator and chain router for the spec-sdd pack. Owns frontier scheduling, signals, routines, sessions, and mesh sync. Use when starting, routing, or escalating spec-driven work.
-- **spec-sdd-specify**: Durable spec authoring via memory slots. Owns slot lifecycle and explicit saves. Use when creating, reading, or evolving the frozen spec all downstream stages consume.
-- **spec-sdd-plan**: Exploratory planning with sketches, graph context, and recall. Owns sketch lifecycle and pre-task research. Use when turning a frozen spec into a promotable plan.
-- **spec-sdd-tasks**: Durable task DAG with leases, checkpoints, sentinels, and facet tags. Use when decomposing a promoted plan into executable, guarded work units.
-- **spec-sdd-execute**: Evidence-backed execution with facet queries, provenance, and commit linkage. Use when claiming leased actions and producing verifiable outputs.
-- **spec-sdd-verify**: Independent quality gate with audit, diagnostics, healing, and insights. Owns FAIL → execute retry (N=2), then escalates to delgado. Use when gating execute outputs before lessons.
-- **spec-sdd-lessons**: Lesson capture and team diffusion for passed work. Owns lesson lifecycle, team sharing, and Obsidian publishing. Use when turning verified outputs into reusable knowledge.
-- **spec-sdd-crystallize**: Terminal compaction with crystals, consolidation, snapshots, governance deletes, and bridge sync. Use when sealing verified lessons into long-term memory.
+- **frame-intent**: Convert CEO/COO strategic direction into a structured Product Brief and OKR set. Use when a new initiative starts, quarterly planning begins, or a strategic pivot is considered. Triggered by "start a new initiative", "define OKRs", or "strategic planning".
+- **translate-to-spec**: Translate an approved Product Brief into domain specs, architecture contracts, and testable requirements. Use after a brief is approved or when a new domain needs spec coverage.
+- **propose-changes**: Produce a structured PROPOSED_CHANGES.md for a spec without modifying repository files. Use when a specialist is ready to implement or a change needs pre-approval.
+- **review-security**: Perform a structured security review of a proposed change with STRIDE threat model and verdict. Use when a change touches auth, data, external APIs, or when CISO sign-off is required.
+- **review-architecture**: Review a proposal against the canonical architecture contract and record an ADR. Use when a change modifies public APIs, data models, or cross-cutting concerns.
+- **execute-spec**: Execute an approved spec through structured implementation with test traceability. Use when a proposal is approved and the specialist is cleared to write code. Triggered by "implement this spec" or "execute SPEC-XXX".
+- **quality-gate**: Orchestrate domain reviewers and produce a consolidated Quality Gate Report. Use when implementation is ready for review, or when c-levels plus CEO must waive a gate. Triggered by "run quality gate" or "gate SPEC-XXX", after execute-spec completes.
+- **verify-handoff**: Verify completed implementation meets Definition of Done and produce a structured handoff. Use when a specialist declares work complete and it needs review before shipping.
+- **ship-release**: Orchestrate release shipping including release notes, changelog, and deployment coordination. Use when verified work is ready to ship or when preparing a tagged release.
 
-Chain: `spec-sdd-delgado → spec-sdd-specify → spec-sdd-plan → spec-sdd-tasks → spec-sdd-execute → spec-sdd-verify → spec-sdd-lessons → spec-sdd-crystallize`
+Chain: `frame-intent → translate-to-spec → propose-changes → review-security / review-architecture → execute-spec → quality-gate → verify-handoff → ship-release`

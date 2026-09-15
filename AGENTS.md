@@ -24,16 +24,17 @@ This repository is a collection of portable AI agent skills. Every subdirectory 
 - **mcp-gway**: [skills/mcp-gway/SKILL.md](skills/mcp-gway/SKILL.md)
 - **mintoria-brand-guidelines**: [skills/mintoria-brand-guidelines/SKILL.md](skills/mintoria-brand-guidelines/SKILL.md)
 
-### Dispatch & Workflow — spec-sdd Pack
+### Dispatch & Workflow — frame→ship Pack
 
-- **spec-sdd-delgado**: [skills/spec-sdd-delgado/SKILL.md](skills/spec-sdd-delgado/SKILL.md)
-- **spec-sdd-specify**: [skills/spec-sdd-specify/SKILL.md](skills/spec-sdd-specify/SKILL.md)
-- **spec-sdd-plan**: [skills/spec-sdd-plan/SKILL.md](skills/spec-sdd-plan/SKILL.md)
-- **spec-sdd-tasks**: [skills/spec-sdd-tasks/SKILL.md](skills/spec-sdd-tasks/SKILL.md)
-- **spec-sdd-execute**: [skills/spec-sdd-execute/SKILL.md](skills/spec-sdd-execute/SKILL.md)
-- **spec-sdd-verify**: [skills/spec-sdd-verify/SKILL.md](skills/spec-sdd-verify/SKILL.md)
-- **spec-sdd-lessons**: [skills/spec-sdd-lessons/SKILL.md](skills/spec-sdd-lessons/SKILL.md)
-- **spec-sdd-crystallize**: [skills/spec-sdd-crystallize/SKILL.md](skills/spec-sdd-crystallize/SKILL.md)
+- **frame-intent**: [skills/frame-intent/SKILL.md](skills/frame-intent/SKILL.md)
+- **translate-to-spec**: [skills/translate-to-spec/SKILL.md](skills/translate-to-spec/SKILL.md)
+- **propose-changes**: [skills/propose-changes/SKILL.md](skills/propose-changes/SKILL.md)
+- **review-security**: [skills/review-security/SKILL.md](skills/review-security/SKILL.md)
+- **review-architecture**: [skills/review-architecture/SKILL.md](skills/review-architecture/SKILL.md)
+- **execute-spec**: [skills/execute-spec/SKILL.md](skills/execute-spec/SKILL.md)
+- **quality-gate**: [skills/quality-gate/SKILL.md](skills/quality-gate/SKILL.md)
+- **verify-handoff**: [skills/verify-handoff/SKILL.md](skills/verify-handoff/SKILL.md)
+- **ship-release**: [skills/ship-release/SKILL.md](skills/ship-release/SKILL.md)
 
 ## Developer Workflows
 
@@ -42,7 +43,7 @@ This repository is a collection of portable AI agent skills. Every subdirectory 
 1. Create `skills/<name>/SKILL.md`.
 2. Populate frontmatter (see `skills/animate-ui/SKILL.md` for reference).
 3. Add a summary of the skill to `README.md` under "Available Skills".
-4. If the skill is part of a pack (a set of skills that work together, e.g. `spec-sdd-*`), add it to its group section in both `README.md` and `AGENTS.md` instead of the flat list.
+4. If the skill is part of a pack (a set of skills that work together, e.g. `frame-intent` → `ship-release`), add it to its group section in both `README.md` and `AGENTS.md` instead of the flat list.
 
 ### Verification
 
