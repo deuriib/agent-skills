@@ -25,6 +25,5 @@ npx -y skills add deuriib/agent-skills
 - **init-deep**: Deep project bootstrap — generates hierarchical AGENTS.md files (root + scored subdirectories). Use when a repo needs full agent context beyond what /init covers.
 - **lago**: Integrate the Lago open-source billing platform for usage-based and subscription billing. Covers event ingestion, billable metrics, plans, charges, invoices, credit notes, payment providers, wallets, webhooks, and self-hosted deployment.
 - **lago-payment-integration**: Extend the Lago billing system with custom Payment Service Provider (PSP) integrations, covering backend (Rails) and frontend (React) components.
-- **mcp-gway**: MCP Gateway manages MCP (Model Context Protocol) servers. It acts as a bridge between agent-clients and multiple MCP servers, providing a unified interface to discover, connect, and use MCP tools.
 - **mintoria-brand-guidelines**: Official brand guidelines for Mintoria, including colors, typography, logos, and premium design principles.
 ```

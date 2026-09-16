@@ -22,7 +22,6 @@ This repository is a collection of portable AI agent skills. Every subdirectory 
 - **init-deep**: [skills/init-deep/SKILL.md](skills/init-deep/SKILL.md)
 - **lago**: [skills/lago/SKILL.md](skills/lago/SKILL.md)
 - **lago-payment-integration**: [skills/lago-payment-integration/SKILL.md](skills/lago-payment-integration/SKILL.md)
-- **mcp-gway**: [skills/mcp-gway/SKILL.md](skills/mcp-gway/SKILL.md)
 - **mintoria-brand-guidelines**: [skills/mintoria-brand-guidelines/SKILL.md](skills/mintoria-brand-guidelines/SKILL.md)
 
 ## Developer Workflows
