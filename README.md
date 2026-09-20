@@ -26,4 +26,4 @@ npx -y skills add deuriib/agent-skills
 - **lago**: Integrate the Lago open-source billing platform for usage-based and subscription billing. Covers event ingestion, billable metrics, plans, charges, invoices, credit notes, payment providers, wallets, webhooks, and self-hosted deployment.
 - **lago-payment-integration**: Extend the Lago billing system with custom Payment Service Provider (PSP) integrations, covering backend (Rails) and frontend (React) components.
 - **mintoria-brand-guidelines**: Official brand guidelines for Mintoria, including colors, typography, logos, and premium design principles.
-```
+- **wifi-roam-fix**: Diagnose and fix WiFi roaming loops caused by aggressive iwd roaming between two BSSIDs of the same SSID on Arch/Omarchy with iwd + systemd-networkd and Realtek RTL8821CE.
