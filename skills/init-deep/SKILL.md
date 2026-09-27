@@ -1,6 +1,6 @@
 ---
 name: init-deep
-description: Deep project bootstrap — generates hierarchical AGENTS.md files (root + scored subdirectories). Use when a repo needs full agent context beyond what /init covers.
+description: Deep project bootstrap/maintaing — generates/updates hierarchical AGENTS.md files (root + scored subdirectories). Use when a repo needs full agent context beyond what /init covers.
 ---
 
 # /init-deep
@@ -25,11 +25,11 @@ $ARGUMENTS
 
 ## Arguments
 
-| Flag | Meaning | Default |
-| ---- | ------- | ------- |
-| `--depth=N` | Hard cap on directory depth for new `AGENTS.md` files | `3` |
-| `--max-depth=N` | Alias of `--depth` (oMo compat) | `3` |
-| `--create-new` | Read existing files first, then remove all and regenerate from scratch | off (update mode) |
+| Flag            | Meaning                                                                | Default           |
+| --------------- | ---------------------------------------------------------------------- | ----------------- |
+| `--depth=N`     | Hard cap on directory depth for new `AGENTS.md` files                  | `3`               |
+| `--max-depth=N` | Alias of `--depth` (oMo compat)                                        | `3`               |
+| `--create-new`  | Read existing files first, then remove all and regenerate from scratch | off (update mode) |
 
 Parse `$ARGUMENTS` first. When both `--depth` and `--max-depth` appear, last one wins.
 Depth counts from the project root (`./` = depth 0). Never exceed the cap.
@@ -106,25 +106,25 @@ Mark `scoring` as `in_progress`.
 
 ### Scoring matrix
 
-| Factor | Weight | High threshold | Source |
-| ------ | ------ | -------------- | ------ |
-| File count | 3x | >20 | structural map |
-| Subdir count | 2x | >5 | structural map |
-| Code ratio | 2x | >70% | structural map |
-| Unique patterns | 1x | has own config | explore |
-| Module boundary | 2x | has index/entry file | structural map |
-| Symbol density | 2x | >30 symbols | LSP |
-| Export count | 2x | >10 exports | LSP/Grep |
-| Reference centrality | 3x | >20 refs | LSP |
+| Factor               | Weight | High threshold       | Source         |
+| -------------------- | ------ | -------------------- | -------------- |
+| File count           | 3x     | >20                  | structural map |
+| Subdir count         | 2x     | >5                   | structural map |
+| Code ratio           | 2x     | >70%                 | structural map |
+| Unique patterns      | 1x     | has own config       | explore        |
+| Module boundary      | 2x     | has index/entry file | structural map |
+| Symbol density       | 2x     | >30 symbols          | LSP            |
+| Export count         | 2x     | >10 exports          | LSP/Grep       |
+| Reference centrality | 3x     | >20 refs             | LSP            |
 
 ### Decision rules
 
-| Score | Action |
-| ----- | ------ |
-| Root (`.`) | ALWAYS create/update |
-| >15 | Create `AGENTS.md` |
-| 8–15 | Create only if distinct domain |
-| <8 | Skip (parent covers) |
+| Score      | Action                         |
+| ---------- | ------------------------------ |
+| Root (`.`) | ALWAYS create/update           |
+| >15        | Create `AGENTS.md`             |
+| 8–15       | Create only if distinct domain |
+| <8         | Skip (parent covers)           |
 
 Apply the `--depth` / `--max-depth` cap AFTER scoring: drop every location
 deeper than the cap, no exceptions. Emit the final list:
@@ -146,7 +146,7 @@ Mark `generate` as `in_progress`.
 
 ### Root AGENTS.md (full treatment, 50–150 lines)
 
-```markdown
+````markdown
 # PROJECT KNOWLEDGE BASE
 
 **Generated:** {TIMESTAMP}
@@ -154,31 +154,41 @@ Mark `generate` as `in_progress`.
 **Branch:** {BRANCH}
 
 ## OVERVIEW
+
 {1-2 sentences: what + core stack}
 
 ## STRUCTURE
+
 {tree with non-obvious purposes only}
 
 ## WHERE TO LOOK
+
 | Task | Location | Notes |
 
 ## CODE MAP
+
 {from LSP/Grep — skip if project <10 files}
 
 ## CONVENTIONS
+
 {ONLY deviations from standard}
 
 ## ANTI-PATTERNS (THIS PROJECT)
+
 {explicitly forbidden here}
 
 ## COMMANDS
+
 ```bash
 {dev/test/build}
 ```
+````
 
 ## NOTES
+
 {gotchas}
-```
+
+````
 
 Quality gates: telegraphic style, no generic advice, no content obvious from the tree.
 
@@ -218,7 +228,7 @@ AGENTS.md Updated: {N}
 Hierarchy:
   ./AGENTS.md
   └── src/hooks/AGENTS.md
-```
+````
 
 ---
 
