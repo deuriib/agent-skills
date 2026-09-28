@@ -85,9 +85,7 @@ Skip if no cross-domain evidence. Max 8 lines.}
 ## GUARDRAILS (THIS DIR)
 
 {max 5 bullets, domain-specific deltas only. No parent repeats.
-Examples: `- Security: all queries parameterized — see db/client.ts`
-`- Testing: unit floor 80% — tests/unit/<domain>/ required with change`
-`- Legal: DPA required before new processor — route to legal`}
+Pick from the per-domain examples below — adapt paths, drop the rest.}
 
 ## CONVENTIONS
 
@@ -100,3 +98,39 @@ Examples: `- Security: all queries parameterized — see db/client.ts`
 
 Omit `STRUCTURE` unless dir has >5 subdirs.
 Omit `GUARDRAILS` bullets without evidence.
+
+## GUARDRAILS examples per domain (pick, adapt, never paste all)
+
+- Security & Privacy:
+  `- Security: queries parameterized only — see db/client.ts; never interpolate user input`
+  `- Privacy: PII store users (purpose: auth, TTL: 30d, deletion: DSR route docs/privacy.md)`
+- Testing:
+  `- Testing: unit floor 80% — tests/unit/<domain>/ required with every behavior change`
+  `- Testing: no merge on red; flaky tests quarantined with owner + ticket, never silently skipped`
+- Engineering:
+  `- Engineering: strict types only (no any) — see tsconfig strict; wrap errors with context`
+  `- Engineering: no circular deps; side effects at edges, DI over globals`
+- Operations & Automation:
+  `- Ops: pipeline as code — .github/workflows/; no manual prod changes outside it`
+  `- Ops: progressive deploy with auto-rollback on SLO breach; flag + kill switch per risky change`
+- Legal & Regulatory:
+  `- Legal: every contract reviewed by legal before signature — route, don't interpret`
+  `- Legal: new PII store/export → privacy review + DPIA if high risk (72h breach-notify ready)`
+- Brand & Marketing:
+  `- Brand: no claim without evidence on file — comparatives need verified data + legal review`
+  `- Brand: opt-in per channel (Ley 172-13); opt-out honored, suppression lists enforced`
+- Revenue & Commercial:
+  `- Revenue: CRM is source of truth — no stage advance without exit criteria`
+  `- Revenue: discounts/non-standard terms need threshold-matrix approval; no verbal side deals`
+- Product:
+  `- Product: every PRD needs ≥1 falsifiable acceptance criterion — else CLOSED at gate`
+  `- Product: one north-star metric per product; roadmap bets carry confidence + evidence`
+- Financial:
+  `- Finance: no spend without budget line + owner approval; dual approval above threshold`
+  `- Finance: no single person initiates + approves + reconciles the same transaction`
+- People & Conduct:
+  `- People: least-privilege access; same-day revocation on exit`
+  `- People: employee PII purpose/TTL/deletion enforced; no bulk exports without approval`
+- Cross-Domain:
+  `- Boundary: new endpoint/adapter/queue payload → security review before merge`
+  `- Boundary: new PII or cross-border flow → privacy review; pricing/entitlement change → CRO + Finance + Product`
