@@ -22,7 +22,7 @@ npx -y skills add deuriib/agent-skills
 - **ef2-api**: Build EF2 API integrations for Dominican Republic electronic invoicing (e-CF) via DGII. Includes support for B2B, consumer sales, credit/debit notes, and exports.
 - **htmx**: Build modern web interfaces using HTML attributes instead of JavaScript frameworks. Covers htmx attributes, events, extensions, server-side integration patterns, and UI examples.
 - **htpy**: Generate HTML from pure Python without templates. Covers elements, attributes, components, streaming, async rendering, static typing, and the html2htpy converter.
-- **init-deep**: Deep project bootstrap — generates hierarchical AGENTS.md files (root + scored subdirectories). Use when a repo needs full agent context beyond what /init covers.
+- **init-deep**: Deep project bootstrap — generates domain-aware hierarchical AGENTS.md files (root + scored subdirectories) covering engineering, security, testing, ops, legal, brand, revenue, product, finance, and people. Use when a repo needs full agent context beyond what /init covers.
 - **lago**: Integrate the Lago open-source billing platform for usage-based and subscription billing. Covers event ingestion, billable metrics, plans, charges, invoices, credit notes, payment providers, wallets, webhooks, and self-hosted deployment.
 - **lago-payment-integration**: Extend the Lago billing system with custom Payment Service Provider (PSP) integrations, covering backend (Rails) and frontend (React) components.
 - **mintoria-brand-guidelines**: Official brand guidelines for Mintoria, including colors, typography, logos, and premium design principles.
