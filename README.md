@@ -20,6 +20,7 @@ npx -y skills add deuriib/agent-skills
 - **bridge-xyz**: Integrate Bridge-xyz APIs for stablecoin money movement, including customer onboarding (KYC/KYB), fiat-to-crypto transfers, and virtual accounts.
 - **ecf-dgii-ssd**: ECF SSD SDKs and integration guidelines for Dominican Republic electronic invoicing (e-CF), supporting multiple languages (.NET, TypeScript, React, Python, Ruby, Java, Kotlin, iOS, C++).
 - **ef2-api**: Build EF2 API integrations for Dominican Republic electronic invoicing (e-CF) via DGII. Includes support for B2B, consumer sales, credit/debit notes, and exports.
+- **git-commit**: Split dirty worktrees into atomic work-units and commit them as Conventional Commits linear history.
 - **htmx**: Build modern web interfaces using HTML attributes instead of JavaScript frameworks. Covers htmx attributes, events, extensions, server-side integration patterns, and UI examples.
 - **htpy**: Generate HTML from pure Python without templates. Covers elements, attributes, components, streaming, async rendering, static typing, and the html2htpy converter.
 - **init-deep**: Deep project bootstrap — generates domain-aware hierarchical AGENTS.md files (root + scored subdirectories) covering engineering, security, testing, ops, legal, brand, revenue, product, finance, and people. Use when a repo needs full agent context beyond what /init covers.
