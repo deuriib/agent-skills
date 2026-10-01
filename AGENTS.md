@@ -14,6 +14,7 @@ This repository is a collection of portable AI agent skills. Every subdirectory 
 - **animate-ui**: [skills/animate-ui/SKILL.md](skills/animate-ui/SKILL.md)
 - **azul-payment**: [skills/azul-payment/SKILL.md](skills/azul-payment/SKILL.md)
 - **better-auth-plugin**: [skills/better-auth-plugin/SKILL.md](skills/better-auth-plugin/SKILL.md)
+- **fix-a-bug**: [skills/fix-a-bug/SKILL.md](skills/fix-a-bug/SKILL.md)
 - **git-commit**: [skills/git-commit/SKILL.md](skills/git-commit/SKILL.md)
 - **htmx**: [skills/htmx/SKILL.md](skills/htmx/SKILL.md)
 - **htpy**: [skills/htpy/SKILL.md](skills/htpy/SKILL.md)
@@ -21,6 +22,7 @@ This repository is a collection of portable AI agent skills. Every subdirectory 
 - **lago**: [skills/lago/SKILL.md](skills/lago/SKILL.md)
 - **lago-payment-integration**: [skills/lago-payment-integration/SKILL.md](skills/lago-payment-integration/SKILL.md)
 - **mintoria-brand-guidelines**: [skills/mintoria-brand-guidelines/SKILL.md](skills/mintoria-brand-guidelines/SKILL.md)
+- **open-a-pull-request**: [skills/open-a-pull-request/SKILL.md](skills/open-a-pull-request/SKILL.md)
 - **pi-agent**: [skills/pi-agent/SKILL.md](skills/pi-agent/SKILL.md)
 - **wifi-roam-fix**: [skills/wifi-roam-fix/SKILL.md](skills/wifi-roam-fix/SKILL.md)
 
