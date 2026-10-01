@@ -17,7 +17,6 @@ npx -y skills add deuriib/agent-skills
 - **animate-ui**: Implement and customize Motion-powered components from Animate UI. shadcn/ui compatible animated primitives and components.
 - **azul-payment**: Azul Payment Gateway integration for Dominican Republic. Supports Sale, Refund, 3DS 2.0, and DataVault (tokenization).
 - **better-auth-plugin**: Create Better Auth plugins with server-client pairs, schema extensions, hooks, and middleware for custom authentication logic.
-- **bridge-xyz**: Integrate Bridge-xyz APIs for stablecoin money movement, including customer onboarding (KYC/KYB), fiat-to-crypto transfers, and virtual accounts.
 - **git-commit**: Split dirty worktrees into atomic work-units and commit them as Conventional Commits linear history.
 - **htmx**: Build modern web interfaces using HTML attributes instead of JavaScript frameworks. Covers htmx attributes, events, extensions, server-side integration patterns, and UI examples.
 - **htpy**: Generate HTML from pure Python without templates. Covers elements, attributes, components, streaming, async rendering, static typing, and the html2htpy converter.
