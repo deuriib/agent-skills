@@ -18,6 +18,7 @@ npx -y skills add deuriib/agent-skills
 - **azul-payment**: Azul Payment Gateway integration for Dominican Republic. Supports Sale, Refund, 3DS 2.0, and DataVault (tokenization).
 - **better-auth-plugin**: Create Better Auth plugins with server-client pairs, schema extensions, hooks, and middleware for custom authentication logic.
 - **fix-a-bug**: Reproduce first, trace to root cause one hypothesis at a time, then fix small with a regression test.
+- **github-issues**: Full issue lifecycle on `gh` — shape, triage, take, track, close with proof. Feeds fix-a-bug → git-commit → open-a-pull-request.
 - **git-commit**: Split dirty worktrees into atomic work-units and commit them as Conventional Commits linear history.
 - **htmx**: Build modern web interfaces using HTML attributes instead of JavaScript frameworks. Covers htmx attributes, events, extensions, server-side integration patterns, and UI examples.
 - **htpy**: Generate HTML from pure Python without templates. Covers elements, attributes, components, streaming, async rendering, static typing, and the html2htpy converter.
