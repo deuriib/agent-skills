@@ -1,0 +1,39 @@
+{
+  "name": "create-skill",
+  "version": "1.0.0",
+  "description": "Create or update a repo skill with OmniRoute compatibility — scaffold SKILL.md + references/, handler.ts, omniskill.json, frontmatter omniroute block, and Compatibility section. Use when adding a new skill or converting an existing one to omniskill.",
+  "schema": {
+    "input": {
+      "type": "object",
+      "properties": {
+        "action": {
+          "type": "string",
+          "enum": ["scaffold", "validate", "update-plan"],
+          "default": "validate",
+          "description": "'scaffold' returns file templates; 'validate' checks the four-file contract; 'update-plan' diffs contract impact and states the bump."
+        },
+        "name": { "type": "string", "description": "Skill dir name, lowercase kebab-case. Required." },
+        "bump": {
+          "type": "string",
+          "enum": ["minor", "none"],
+          "default": "minor",
+          "description": "Version advice for update-plan. Contract change = minor; content-only = none."
+        }
+      },
+      "required": ["action", "name"]
+    },
+    "output": {
+      "type": "object",
+      "properties": {
+        "success": { "type": "boolean" },
+        "skill": { "type": "string" },
+        "gate": { "type": "string", "enum": ["scaffold", "validate", "update-plan"] },
+        "omniskill": { "type": "boolean" }
+      }
+    }
+  },
+  "handler": "create-skill-handler",
+  "mode": "auto",
+  "sourceProvider": "local",
+  "tags": ["meta", "scaffolding", "omniroute", "omniskill"]
+}

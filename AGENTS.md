@@ -14,6 +14,7 @@ This repository is a collection of portable AI agent skills. Every subdirectory 
 - **animate-ui**: [skills/animate-ui/SKILL.md](skills/animate-ui/SKILL.md)
 - **azul-payment**: [skills/azul-payment/SKILL.md](skills/azul-payment/SKILL.md)
 - **better-auth-plugin**: [skills/better-auth-plugin/SKILL.md](skills/better-auth-plugin/SKILL.md)
+- **create-skill**: [skills/create-skill/SKILL.md](skills/create-skill/SKILL.md)
 - **fix-a-bug**: [skills/fix-a-bug/SKILL.md](skills/fix-a-bug/SKILL.md)
 - **github-issues**: [skills/github-issues/SKILL.md](skills/github-issues/SKILL.md)
 - **git-commit**: [skills/git-commit/SKILL.md](skills/git-commit/SKILL.md)

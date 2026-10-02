@@ -17,6 +17,7 @@ npx -y skills add deuriib/agent-skills
 - **animate-ui**: Implement and customize Motion-powered components from Animate UI. shadcn/ui compatible animated primitives and components.
 - **azul-payment**: Azul Payment Gateway integration for Dominican Republic. Supports Sale, Refund, 3DS 2.0, and DataVault (tokenization).
 - **better-auth-plugin**: Create Better Auth plugins with server-client pairs, schema extensions, hooks, and middleware for custom authentication logic.
+- **create-skill**: Create or convert repo skills to omniskills — scaffold SKILL.md + handler.ts + omniskill.json with OmniRoute contract validation.
 - **fix-a-bug**: Reproduce first, trace to root cause one hypothesis at a time, then fix small with a regression test.
 - **github-issues**: Full issue lifecycle on `gh` — shape, triage, take, track, close with proof. Feeds fix-a-bug → git-commit → open-a-pull-request.
 - **git-commit**: Split dirty worktrees into atomic work-units and commit them as Conventional Commits linear history.
