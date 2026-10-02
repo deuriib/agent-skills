@@ -4,7 +4,7 @@ description: Use when something is broken, a test fails, or behavior is not what
 license: Apache-2.0
 metadata:
   author: deuriib
-  version: "1.0"
+  version: "1.1"
 omniroute:
   handler: fix-a-bug-handler
   mode: auto

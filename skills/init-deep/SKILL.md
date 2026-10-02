@@ -1,6 +1,9 @@
 ---
 name: init-deep
 description: Deep project bootstrap/maintaining — generates/updates hierarchical AGENTS.md files (root + scored subdirectories) with multi-domain coverage (engineering, security, testing, ops, legal, brand, revenue, product, finance, people). Use when a repo needs full agent context beyond what /init covers.
+metadata:
+  author: deuriib
+  version: "1.1"
 omniroute:
   handler: init-deep-handler
   mode: auto

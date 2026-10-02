@@ -1,6 +1,6 @@
 {
   "name": "htpy",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Generate HTML from pure Python without templates. Use when building server-rendered HTML with Django, FastAPI, Starlette, Flask, or any Python web framework. Covers element creation, attributes, components, streaming, async rendering, static typing, and the html2htpy converter.",
   "schema": {
     "input": {

@@ -1,6 +1,6 @@
 {
   "name": "fix-a-bug",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Use when something is broken, a test fails, or behavior is not what was expected. Reproduce first, trace to root cause with one hypothesis at a time, then fix small with a regression test.",
   "schema": {
     "input": {

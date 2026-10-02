@@ -4,7 +4,7 @@ description: "Trigger: htmx, HTMX, hypermedia, hx-get, hx-post, hx-trigger, hx-t
 license: MIT
 metadata:
   author: deuriib
-  version: "1.0"
+  version: "1.1"
 omniroute:
   handler: htmx-handler
   mode: auto

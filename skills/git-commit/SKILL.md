@@ -4,7 +4,7 @@ description: Use when committing changes, splitting a dirty worktree into atomic
 license: Apache-2.0
 metadata:
   author: deuriib
-  version: "1.0"
+  version: "1.1"
 omniroute:
   handler: git-commit-handler
   mode: auto

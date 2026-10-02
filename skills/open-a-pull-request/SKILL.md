@@ -4,7 +4,7 @@ description: Use when a branch is ready for other people to read. Keep it small,
 license: Apache-2.0
 metadata:
   author: deuriib
-  version: "1.0"
+  version: "1.1"
 omniroute:
   handler: open-a-pull-request-handler
   mode: auto

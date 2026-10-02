@@ -4,7 +4,7 @@ description: Use when creating, triaging, searching, taking, commenting on, or c
 license: Apache-2.0
 metadata:
   author: deuriib
-  version: "1.0"
+  version: "1.1"
 omniroute:
   handler: github-issues-handler
   mode: auto
