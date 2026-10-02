@@ -5,6 +5,11 @@ license: MIT
 metadata:
   author: deuriib
   version: "1.0"
+omniroute:
+  handler: htmx-handler
+  mode: auto
+  sourceProvider: local
+  tags: [htmx, hypermedia, frontend, html-over-the-wire]
 ---
 
 # Skill: htmx
@@ -318,6 +323,16 @@ Download `htmx.min.js` from jsDelivr and include via script tag.
 - Proper request/response headers
 - Event handlers for custom behavior
 - Extension integration (SSE, WebSocket, etc.)
+
+## OmniRoute Compatibility
+
+This skill is an omniskill: executable via OmniRoute Skills API + MCP, documentation via Agent Skills catalog.
+
+- **Handler**: `handler.ts` exports `handler(input, { apiKeyId, sessionId })`. Register with `skillExecutor.registerHandler("htmx-handler", handler)`.
+- **Manifest**: `omniskill.json` mirrors the install payload (`name`, `version`, `description`, `schema.input/output`, `handler`, `mode`, `sourceProvider`, `tags`).
+- **Install** (`POST /api/skills/install`, management auth): `handlerCode` = `htmx-handler` (handler-name lookup, not eval'd code).
+- **Execute via MCP**: `omniroute_skills_execute({ skillName: "htmx", input: { task: "live product search", pattern: "live-search" } })`.
+- **Patterns**: `ajax | form | infinite-scroll | live-search | click-to-edit | realtime | history | boost | custom`. Returns element scaffold + server contract (HTML fragments, HX-Request check). Optional `snippet` review against hard rules.
 
 ## References
 

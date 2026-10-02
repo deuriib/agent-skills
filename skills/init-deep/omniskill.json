@@ -1,0 +1,61 @@
+{
+  "name": "init-deep",
+  "version": "1.0.0",
+  "description": "Deep project bootstrap/maintaining — generates/updates hierarchical AGENTS.md files (root + scored subdirectories) with multi-domain coverage (engineering, security, testing, ops, legal, brand, revenue, product, finance, people). Use when a repo needs full agent context beyond what /init covers.",
+  "schema": {
+    "input": {
+      "type": "object",
+      "properties": {
+        "mode": {
+          "type": "string",
+          "enum": ["update", "create-new"],
+          "default": "update",
+          "description": "'update' modifies existing + creates where warranted; 'create-new' reads existing, deletes all, regenerates."
+        },
+        "depth": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 10,
+          "default": 3,
+          "description": "Hard cap on directory depth for new AGENTS.md files."
+        },
+        "domains": {
+          "type": "string",
+          "default": "all",
+          "description": "CSV subset, e.g. 'Security,Legal'. Aliases accepted (Sec, Ops, Rev). Unknown names warn + ignore."
+        },
+        "directories": {
+          "type": "array",
+          "description": "Phase-1 discovery output to score. Empty = return plan + scoring matrix.",
+          "items": {
+            "type": "object",
+            "properties": {
+              "path": { "type": "string" },
+              "factors": {
+                "type": "object",
+                "description": "Factor counts keyed by: file_count, subdir_count, code_ratio, unique_patterns, module_boundary, symbol_density, export_count, reference_centrality, pii_secrets_proximity, regulated_artifact, revenue_impact, cross_domain_boundary."
+              },
+              "distinct_domain": { "type": "boolean" },
+              "regulated": { "type": "boolean", "description": "High-confidence regulated artifact -> domain-override create even if score <8." }
+            },
+            "required": ["path"]
+          }
+        }
+      },
+      "required": []
+    },
+    "output": {
+      "type": "object",
+      "properties": {
+        "success": { "type": "boolean" },
+        "skill": { "type": "string" },
+        "phase": { "type": "string", "enum": ["plan", "scored"] },
+        "AGENTS_LOCATIONS": { "type": "array" }
+      }
+    }
+  },
+  "handler": "init-deep-handler",
+  "mode": "auto",
+  "sourceProvider": "local",
+  "tags": ["agents-md", "bootstrap", "governance", "onboarding"]
+}

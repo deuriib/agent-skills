@@ -1,6 +1,11 @@
 ---
 name: init-deep
 description: Deep project bootstrap/maintaining — generates/updates hierarchical AGENTS.md files (root + scored subdirectories) with multi-domain coverage (engineering, security, testing, ops, legal, brand, revenue, product, finance, people). Use when a repo needs full agent context beyond what /init covers.
+omniroute:
+  handler: init-deep-handler
+  mode: auto
+  sourceProvider: local
+  tags: [agents-md, bootstrap, governance, onboarding]
 ---
 
 # /init-deep
@@ -310,6 +315,16 @@ Hierarchy:
 - Giving legal interpretations instead of routing to legal.
 - Letting domains bloat past budgets (root >150, subdir >80).
 - `find`/`sed`/`awk` shellisms that break on pwsh non-interactive.
+
+## OmniRoute Compatibility
+
+This skill is an omniskill: executable via OmniRoute Skills API + MCP, documentation via Agent Skills catalog.
+
+- **Handler**: `handler.ts` exports `handler(input, { apiKeyId, sessionId })`. Register with `skillExecutor.registerHandler("init-deep-handler", handler)`.
+- **Manifest**: `omniskill.json` mirrors the install payload (`name`, `version`, `description`, `schema.input/output`, `handler`, `mode`, `sourceProvider`, `tags`).
+- **Install** (`POST /api/skills/install`, management auth): `handlerCode` = `init-deep-handler` (handler-name lookup, not eval'd code).
+- **Execute via MCP**: `omniroute_skills_execute({ skillName: "init-deep", input: { depth: 2, domains: "Security,Legal" } })`.
+- **Two calls**: empty `directories[]` returns plan + scoring matrix + guardrails; with discovery output returns `scored[]` + `AGENTS_LOCATIONS`. Depth cap + domains filter applied AFTER scoring. Manual-only, project-workdir-only, evidence-gated.
 
 ## References
 

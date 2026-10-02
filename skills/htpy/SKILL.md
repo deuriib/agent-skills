@@ -6,6 +6,11 @@ description: >
   attributes, components, streaming, async rendering, static typing, and the html2htpy converter.
   Triggers: htpy, html in python, python html generation, python components, server rendered html,
   django components, fastapi html, starlette html, htmx python, python templates.
+omniroute:
+  handler: htpy-handler
+  mode: auto
+  sourceProvider: local
+  tags: [htpy, python, server-rendered-html, django, fastapi]
 metadata:
   author: deuriib
   version: "1.0"
@@ -523,6 +528,16 @@ html2htpy --format=ruff example.html    # format output
 | Why `[]` instead of `<tags>`? | Compatible with Python formatters, editors, and type checkers. |
 
 ---
+
+## OmniRoute Compatibility
+
+This skill is an omniskill: executable via OmniRoute Skills API + MCP, documentation via Agent Skills catalog.
+
+- **Handler**: `handler.ts` exports `handler(input, { apiKeyId, sessionId })`. Register with `skillExecutor.registerHandler("htpy-handler", handler)`.
+- **Manifest**: `omniskill.json` mirrors the install payload (`name`, `version`, `description`, `schema.input/output`, `handler`, `mode`, `sourceProvider`, `tags`).
+- **Install** (`POST /api/skills/install`, management auth): `handlerCode` = `htpy-handler` (handler-name lookup, not eval'd code).
+- **Execute via MCP**: `omniroute_skills_execute({ skillName: "htpy", input: { task: "product card component", framework: "fastapi", concern: "fragment" } })`.
+- **Concerns**: `component | layout | fragment (htmx partial, no <html> wrapper) | streaming | async | typing | html2htpy | review`. Framework wiring for django/fastapi/starlette/flask/bare. Optional `snippet` review (class_ vs class, hx_post vs hx-post).
 
 ## References
 

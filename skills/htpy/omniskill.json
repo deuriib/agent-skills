@@ -1,0 +1,41 @@
+{
+  "name": "htpy",
+  "version": "1.0.0",
+  "description": "Generate HTML from pure Python without templates. Use when building server-rendered HTML with Django, FastAPI, Starlette, Flask, or any Python web framework. Covers element creation, attributes, components, streaming, async rendering, static typing, and the html2htpy converter.",
+  "schema": {
+    "input": {
+      "type": "object",
+      "properties": {
+        "task": { "type": "string", "description": "One sentence: the HTML/component you need. Required." },
+        "framework": {
+          "type": "string",
+          "enum": ["django", "fastapi", "starlette", "flask", "bare"],
+          "default": "bare",
+          "description": "Python web framework for the render wiring."
+        },
+        "concern": {
+          "type": "string",
+          "enum": ["component", "layout", "fragment", "streaming", "async", "typing", "html2htpy", "review"],
+          "default": "component",
+          "description": "'fragment' = htmx partial without <html> wrapper. 'review' lints a snippet."
+        },
+        "snippet": { "type": "string", "description": "Existing Python code to review against htpy hard rules." }
+      },
+      "required": ["task"]
+    },
+    "output": {
+      "type": "object",
+      "properties": {
+        "success": { "type": "boolean" },
+        "skill": { "type": "string" },
+        "framework": { "type": "string" },
+        "concern": { "type": "string" },
+        "scaffold": { "type": "string" }
+      }
+    }
+  },
+  "handler": "htpy-handler",
+  "mode": "auto",
+  "sourceProvider": "local",
+  "tags": ["htpy", "python", "server-rendered-html", "django", "fastapi"]
+}
