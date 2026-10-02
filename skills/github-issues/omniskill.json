@@ -1,0 +1,49 @@
+{
+  "name": "github-issues",
+  "version": "1.0.0",
+  "description": "Use when creating, triaging, searching, taking, commenting on, or closing GitHub issues, or turning an issue into a branch and pull request.",
+  "schema": {
+    "input": {
+      "type": "object",
+      "properties": {
+        "action": {
+          "type": "string",
+          "enum": ["view", "create", "triage", "take", "comment", "close", "reopen", "search"],
+          "default": "view",
+          "description": "Issue lifecycle step."
+        },
+        "number": { "type": "integer", "description": "Issue number. Required for everything except create/search." },
+        "title": { "type": "string", "description": "Imperative scoped title (create)." },
+        "body": { "type": "string", "description": "Shaped body: context + repro/proposal + acceptance (create)." },
+        "labels": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "type:/priority:/status: labels (triage/create)."
+        },
+        "comment": { "type": "string", "description": "Proof/reason comment (close/comment). Required for manual close." },
+        "dry_run": {
+          "type": "boolean",
+          "default": true,
+          "description": "true = plan + commands only. false = run gh."
+        }
+      },
+      "required": []
+    },
+    "output": {
+      "type": "object",
+      "properties": {
+        "success": { "type": "boolean" },
+        "skill": { "type": "string" },
+        "gate": {
+          "type": "string",
+          "enum": ["auth-first", "locate", "view-before-mutate", "shape-first", "triage", "take", "track", "create", "close-needs-proof", "reopen"]
+        },
+        "detail": { "type": "string" }
+      }
+    }
+  },
+  "handler": "github-issues-handler",
+  "mode": "auto",
+  "sourceProvider": "local",
+  "tags": ["github", "issues", "gh-cli", "workflow"]
+}

@@ -5,6 +5,11 @@ license: Apache-2.0
 metadata:
   author: deuriib
   version: "1.0"
+omniroute:
+  handler: open-a-pull-request-handler
+  mode: auto
+  sourceProvider: local
+  tags: [github, pull-request, gh-cli, workflow]
 ---
 
 # Skill: open-a-pull-request
@@ -59,6 +64,17 @@ Do NOT use this skill when:
 - "Just this once over 400 lines" without rationale → STOP. Split or justify in the body.
 - Pushing red "to see CI" → STOP. Local green first.
 - Force-push to silence review comments → STOP. History of the conversation matters.
+
+## OmniRoute Compatibility
+
+This skill is an omniskill: executable via OmniRoute Skills API + MCP, documentation via Agent Skills catalog.
+
+- **Handler**: `handler.ts` exports `handler(input, { apiKeyId, sessionId })`. Register with `skillExecutor.registerHandler("open-a-pull-request-handler", handler)`.
+- **Manifest**: `omniskill.json` mirrors the install payload (`name`, `version`, `description`, `schema.input/output`, `handler`, `mode`, `sourceProvider`, `tags`).
+- **Install** (`POST /api/skills/install`, management auth): `handlerCode` = `open-a-pull-request-handler` (handler-name lookup, not eval'd code).
+- **Execute via MCP**: `omniroute_skills_execute({ skillName: "open-a-pull-request", input: { issue_number: 12, dry_run: true } })`.
+- **Input**: `issue_number (required) | branch | branch_type | title | summary | test_plan | base=main | draft | dry_run=true`. Body always carries `Closes #<N>`; >400-line diffs warn split/stack/`size:exception`.
+- Default `dry_run: true` = plan + commands; `false` pushes + `gh pr create`.
 
 ## References
 

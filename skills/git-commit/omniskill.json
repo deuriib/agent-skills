@@ -1,0 +1,55 @@
+{
+  "name": "git-commit",
+  "version": "1.0.0",
+  "description": "Use when committing changes, splitting a dirty worktree into atomic units, writing Conventional Commits messages, or shaping history into a linear logical sequence before push or PR.",
+  "schema": {
+    "input": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["feat", "fix", "refactor", "perf", "test", "docs", "style", "build", "ci", "chore", "revert"],
+          "description": "Conventional Commit type."
+        },
+        "scope": {
+          "type": "string",
+          "description": "Module scope derived from changed paths (lowercase)."
+        },
+        "subject": {
+          "type": "string",
+          "description": "Full 'type(scope): imperative subject', max 72 chars."
+        },
+        "body": {
+          "type": "string",
+          "description": "Why the change exists (not how). Optional."
+        },
+        "paths": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Work-unit file paths to stage. Required when dry_run=false."
+        },
+        "dry_run": {
+          "type": "boolean",
+          "default": true,
+          "description": "true = validate + propose only. false = run git add + git commit."
+        }
+      },
+      "required": ["subject"]
+    },
+    "output": {
+      "type": "object",
+      "properties": {
+        "success": { "type": "boolean" },
+        "skill": { "type": "string" },
+        "valid": { "type": "boolean" },
+        "proposed_message": { "type": "string" },
+        "worktree_status": { "type": "string" },
+        "diff_stat": { "type": "string" }
+      }
+    }
+  },
+  "handler": "git-commit-handler",
+  "mode": "auto",
+  "sourceProvider": "local",
+  "tags": ["git", "conventional-commits", "workflow"]
+}
