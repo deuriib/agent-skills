@@ -5,13 +5,24 @@ This repository is a collection of portable AI agent skills. Every subdirectory 
 ## Repository Structure & Conventions
 
 - **Skills Location**: All skills live in `skills/<skill-name>/`.
-- **Mandatory Files**:
-  - `SKILL.md`: The main entry point containing frontmatter (trigger, name, description) and instructions.
-  - `references/`: Local documentation that the skill refers to.
-- **Omniskill Files** (default for every skill — docs-only is the exception):
-  - `handler.ts`: OmniRoute `SkillHandler` (`handler(input, { apiKeyId, sessionId })` + `export default handler`).
-  - `omniskill.json`: Install manifest mirroring the `POST /api/skills/install` payload (`name`, semver `version`, `description`, `schema.input/output`, `handler`, `mode`, `sourceProvider`, `tags`).
-  - `SKILL.md` carries the `omniroute:` frontmatter block + a `## OmniRoute Compatibility` section before `## References`.
+- **Canonical layout** — every skill follows this shape (omit a directory only when it would be empty):
+
+  ```text
+  skills/<skill-name>/
+  ├── SKILL.md          # Entry point: frontmatter + instructions (required)
+  ├── references/       # Additional *.md docs the skill links to (required: at least the contract or topic docs)
+  ├── assets/           # Static files the skill ships: templates, images, fonts, token files (omit if none)
+  ├── scripts/          # Executable helpers: .sh/.mjs/.py run by the skill or its users (omit if none)
+  ├── handler.ts        # OmniRoute SkillHandler — root level (omniskills; omit only for docs-only skills)
+  └── omniskill.json    # Install manifest — root level (omniskills; omit only for docs-only skills)
+  ```
+
+- **What goes where**:
+  - `SKILL.md`: frontmatter (`name`, `description`, `metadata.version`) + instructions. Always required.
+  - `references/`: prose docs the skill links to (guides, recipes, contracts, machine-readable specs like `DESIGN.md`). Links as `references/<file>.md` from `SKILL.md`.
+  - `assets/`: static payloads consumed as data — templates (any extension, incl. `.md`/`.json`/dotfiles), images (`.webp/.png`), fonts, token files. No standalone `*.md` prose docs (those belong in `references/`).
+  - `scripts/`: runnable helpers (`scripts/*.sh`, `scripts/*.mjs`, runnable `*.py` incl. grouped subdirs like `scripts/examples/`). Never templates or prose docs.
+  - `handler.ts` + `omniskill.json` stay at the **skill root** (default for every skill — docs-only is the exception). `handler.ts` implements the `SkillHandler` (`handler(input, { apiKeyId, sessionId })` + `export default handler`); `omniskill.json` mirrors the `POST /api/skills/install` payload (`name`, semver `version`, `description`, `schema.input/output`, `handler`, `mode`, `sourceProvider`, `tags`). `SKILL.md` carries the `omniroute:` frontmatter block + a `## OmniRoute Compatibility` section before `## References`.
 
 ## Available Skills
 
@@ -38,7 +49,7 @@ This repository is a collection of portable AI agent skills. Every subdirectory 
 
 Use the [create-skill](skills/create-skill/SKILL.md) skill — it scaffolds and validates the full contract (`scaffold` → fill → `validate`). Manual path:
 
-1. Scaffold `skills/<name>/` with all four files: `SKILL.md` + `references/` + `handler.ts` + `omniskill.json`.
+1. Scaffold `skills/<name>/` with the canonical files: `SKILL.md` + `references/` + `handler.ts` + `omniskill.json`, adding `assets/` and/or `scripts/` only when the skill ships static files or runnable helpers.
 2. Populate frontmatter (`name`, `description` ≤500 chars, `metadata.version` starting at `"1.0"`) plus the `omniroute:` block (`handler: <name>-handler`, `mode: auto`, `sourceProvider: local`, `tags`) — see `skills/git-commit/SKILL.md` for reference.
 3. Write `handler.ts` with the exact signature `(input, { apiKeyId, sessionId }) => Promise<output>`; side-effecting skills (`git`, `gh`, disk) default `dry_run: true`.
 4. Write `omniskill.json` with `description` identical to the frontmatter and semver `version` (`"1.x"` ↔ `"1.x.0"` move together).
@@ -52,8 +63,9 @@ Use the [create-skill](skills/create-skill/SKILL.md) skill — it scaffolds and 
 
 ### Verification
 
-- **Link Integrity**: Verify that all paths in `SKILL.md` sections like `## References` point to existing files in the local `references/` directory.
-- **Contract Checks** (or run `create-skill` with `{ action: "validate", name }`): `omniskill.json` parses as JSON with semver `version`; `handler.ts` exports `handler` + `default`; frontmatter `description` == manifest `description`; `handler` field == `<name>-handler`; versions in lockstep.
+- **Link Integrity**: Verify that every local path in `SKILL.md` points to an existing file in the right directory — `references/` for prose docs, `assets/` for static files (templates of any kind, images, fonts), `scripts/` for executables. No standalone `*.md` prose docs in `assets/` or `scripts/`.
+- **Contract Checks** (or run `create-skill` with `{ action: "validate", name }`): `omniskill.json` parses as JSON with semver `version`; `handler.ts` exports `handler` + `default`; frontmatter `description` == manifest `description`; `handler` field == `<name>-handler`; versions in lockstep. Treat returned `suggestions` (trigger-first wording, lean body) as craft advice, not blockers.
+- **Test the skill itself**: every new/updated omniskill ships an L1 handler smoke (guards, happy path, idempotence); reference skills get an L0 retrieval check; discipline skills (gates, must-do steps) get L2 pressure scenarios — RED baseline without the skill, GREEN with it, REFACTOR loopholes. Details: `skills/create-skill/references/testing-skills.md`.
 
 ## Critical Constraints
 
