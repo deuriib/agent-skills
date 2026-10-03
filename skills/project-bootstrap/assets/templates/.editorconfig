@@ -1,0 +1,24 @@
+# EditorConfig — https://editorconfig.org
+# Keeps indentation and line endings consistent across editors.
+# Enforced by the `editorconfig-checker` hook in .pre-commit-config.yaml.
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+indent_style = space
+indent_size = 2
+max_line_length = 80
+
+# Markdown: two trailing spaces are a hard line break — don't trim them.
+[*.md]
+trim_trailing_whitespace = false
+
+# Windows scripts must keep CRLF.
+[*.{bat,cmd,ps1}]
+end_of_line = crlf
+
+[Makefile]
+indent_style = tab

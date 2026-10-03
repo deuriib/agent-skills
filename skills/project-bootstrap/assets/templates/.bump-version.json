@@ -1,0 +1,13 @@
+{
+  "files": [
+    "package.json",
+    "pyproject.toml",
+    "Cargo.toml",
+    "composer.json",
+    "version.txt"
+  ],
+  "updateSubpackage": false,
+  "requireVersion": false,
+  "tagAnnotation": "v",
+  "preRelease": false
+}

@@ -29,4 +29,5 @@ npx -y skills add deuriib/agent-skills
 - **mintoria-brand-guidelines**: Official brand guidelines for Mintoria, including colors, typography, logos, and premium design principles.
 - **open-a-pull-request**: Keep PRs small, linked, and green — one intent, named branch, filled body, checks passing before review.
 - **pi-agent**: Build with and use Pi, the minimal terminal coding harness. Covers providers/models, extensions, skills, SDK/RPC/JSON integration, sessions, and ecosystem packages.
+- **project-bootstrap**: Bootstrap or update a project with standard repo hygiene files — `.gitattributes`, `.gitignore`, `.npmrc`, `.editorconfig`, `.pre-commit-config.yaml`, `.bump-version.json` + `script/bump-version.mjs`, LICENSE, README, CHANGELOG, CODE_OF_CONDUCT, PRODUCT. Dry-run by default, never clobbers existing content.
 - **wifi-roam-fix**: Diagnose and fix WiFi roaming loops caused by aggressive iwd roaming between two BSSIDs of the same SSID on Arch/Omarchy with iwd + systemd-networkd and Realtek RTL8821CE.
