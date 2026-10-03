@@ -1,14 +1,9 @@
 ---
 name: htpy
-description: >
-  Generate HTML from pure Python without templates. Use when building server-rendered HTML
-  with Django, FastAPI, Starlette, Flask, or any Python web framework. Covers element creation,
-  attributes, components, streaming, async rendering, static typing, and the html2htpy converter.
-  Triggers: htpy, html in python, python html generation, python components, server rendered html,
-  django components, fastapi html, starlette html, htmx python, python templates.
+description: Generate HTML from pure Python without templates. Use when building server-rendered HTML with Django, FastAPI, Starlette, Flask, or any Python web framework. Covers element creation, attributes, components, streaming, async rendering, static typing, and the html2htpy converter.
 metadata:
   author: deuriib
-  version: "1.1"
+  version: "1.2"
 omniroute:
   handler: htpy-handler
   mode: auto
@@ -549,11 +544,11 @@ See the `references/` directory for detailed reference docs:
 - [references/typing.md](references/typing.md) — Element, VoidElement, Renderable, Node types
 - [references/html2htpy.md](references/html2htpy.md) — CLI tool reference
 
-See `examples/` for ready-to-use code samples:
+See [scripts/examples/](scripts/examples/) for ready-to-use code samples:
 
-- [examples/basic.py](examples/basic.py) — Minimal htpy usage
-- [examples/components.py](examples/components.py) — Reusable component patterns
-- [examples/django_view.py](examples/django_view.py) — Django integration
-- [examples/fastapi_app.py](examples/fastapi_app.py) — FastAPI/Starlette integration
-- [examples/streaming.py](examples/streaming.py) — Streaming with generators
-- [examples/async_render.py](examples/async_render.py) — Async rendering
+- [scripts/examples/basic.py](scripts/examples/basic.py) — Minimal htpy usage
+- [scripts/examples/components.py](scripts/examples/components.py) — Reusable component patterns
+- [scripts/examples/django_view.py](scripts/examples/django_view.py) — Django integration
+- [scripts/examples/fastapi_app.py](scripts/examples/fastapi_app.py) — FastAPI/Starlette integration
+- [scripts/examples/streaming.py](scripts/examples/streaming.py) — Streaming with generators
+- [scripts/examples/async_render.py](scripts/examples/async_render.py) — Async rendering

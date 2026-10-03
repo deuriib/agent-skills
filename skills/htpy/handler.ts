@@ -81,11 +81,11 @@ function hardRules(): string[] {
 
 function concernRefs(concern: string): string[] {
   switch (concern) {
-    case "streaming": return ["references/usage.md", "examples/streaming.py"];
-    case "async": return ["references/integration.md", "examples/async_render.py"];
+    case "streaming": return ["references/usage.md", "scripts/examples/streaming.py"];
+    case "async": return ["references/integration.md", "scripts/examples/async_render.py"];
     case "typing": return ["references/typing.md"];
     case "html2htpy": return ["references/html2htpy.md"];
-    case "component": case "layout": return ["references/patterns.md", "examples/components.py"];
+    case "component": case "layout": return ["references/patterns.md", "scripts/examples/components.py"];
     case "fragment": return ["references/usage.md", "references/integration.md"];
     default: return ["references/usage.md", "references/patterns.md"];
   }

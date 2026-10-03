@@ -41,3 +41,7 @@ distintos, ej. `192.168.1.1` vs `192.168.1.11`).
 - No adivinar sintaxis `iwctl`; validar con `man iwd.config` (RoamThreshold,
   RoamThreshold5G, RoamRetryInterval, DisableRoamingScan).
 - Señal bajo -80 dBm = física, no config: acercarse al nodo bueno.
+
+## References
+
+- `scripts/wifi-roam-fix.sh` — diagnose / fix / verify, idempotente, con backup (ver `## Archivos` para los cambios que hace `fix`).
