@@ -18,7 +18,7 @@ Access these reference files for detailed specifications:
 - **[Logos & Assets](references/brand-logos.md)**: Logo composition, sizing, and asset paths.
 - **[Typography](references/typography.md)**: Font families, weights, and hierarchical styles.
 - **[Design Principles](references/design-principles.md)**: Micro-animations, glassmorphism, and layout patterns.
-- **[DESIGN.md](DESIGN.md)**: Canonical machine-readable design tokens (YAML front matter) and design rationale in the [DESIGN.md format](https://github.com/google-labs-code/design.md). Use it as the single source of truth for colors, typography, spacing, shapes, and component tokens.
+- **[DESIGN.md](references/DESIGN.md)**: Canonical machine-readable design tokens (YAML front matter) and design rationale in the [DESIGN.md format](https://github.com/google-labs-code/design.md). Use it as the single source of truth for colors, typography, spacing, shapes, and component tokens.
 
 ## Implementation Workflow
 
@@ -47,11 +47,11 @@ Contains detailed documentation:
 - `typography.md`
 - `design-principles.md`
 
-### DESIGN.md
+### references/DESIGN.md
 
 Canonical design token file for the brand, following the [DESIGN.md format](https://github.com/google-labs-code/design.md). Validate and export it with:
 
 ```bash
-npx -p @google/design.md designmd lint skills/mintoria-brand-guidelines/DESIGN.md
-npx -p @google/design.md designmd export --format css-tailwind skills/mintoria-brand-guidelines/DESIGN.md
+npx -p @google/design.md designmd lint skills/mintoria-brand-guidelines/references/DESIGN.md
+npx -p @google/design.md designmd export --format css-tailwind skills/mintoria-brand-guidelines/references/DESIGN.md
 ```
