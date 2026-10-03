@@ -1,6 +1,6 @@
 ---
 name: htmx
-description: "Trigger: htmx, HTMX, hypermedia, hx-get, hx-post, hx-trigger, hx-target, hx-swap, AJAX, HTML-over-the-wire. Build modern web interfaces using HTML attributes instead of JavaScript frameworks. Covers htmx attributes, events, extensions, server-side integration patterns, and UI examples."
+description: Trigger: htmx, HTMX, hypermedia, hx-get, hx-post, hx-trigger, hx-target, hx-swap, AJAX, HTML-over-the-wire. Build modern web interfaces using HTML attributes instead of JavaScript frameworks. Covers htmx attributes, events, extensions, server-side integration patterns, and UI examples.
 license: MIT
 metadata:
   author: deuriib
