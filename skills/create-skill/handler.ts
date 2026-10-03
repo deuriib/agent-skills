@@ -47,11 +47,11 @@ export async function handler(
       skill: "create-skill",
       gate: "scaffold",
       files: {
-        [`skills/${name}/SKILL.md`:
-          `---\nname: ${name}\ndescription: "<one line, <=500 chars, trigger-first>"\nlicense: Apache-2.0\nmetadata:\n  author: deuriib\n  version: "1.0"\nomniroute:\n  handler: ${handlerName}\n  mode: auto\n  sourceProvider: local\n  tags: []\n---\n\n# Skill: ${name}\n\n## Activation Contract\n## Hard Rules\n## Decision Gates\n## Execution Steps\n## OmniRoute Compatibility\n## References\n`],
-        [`skills/${name}/handler.ts`:
-          `export async function handler(input: Record<string, unknown>, ctx: { apiKeyId: string; sessionId: string }): Promise<Record<string, unknown>> {\n  return { success: true, skill: "${name}" };\n}\n\nexport default handler;\n`],
-        [`skills/${name}/omniskill.json`]:
+        ["skills/" + name + "/SKILL.md"]:
+          "---\nname: " + name + "\ndescription: \"<one line, <=500 chars, trigger-first>\"\nlicense: Apache-2.0\nmetadata:\n  author: deuriib\n  version: \"1.0\"\nomniroute:\n  handler: " + handlerName + "\n  mode: auto\n  sourceProvider: local\n  tags: []\n---\n\n# Skill: " + name + "\n\n## Activation Contract\n## Hard Rules\n## Decision Gates\n## Execution Steps\n## OmniRoute Compatibility\n## References\n",
+        ["skills/" + name + "/handler.ts"]:
+          "export async function handler(input: Record<string, unknown>, ctx: { apiKeyId: string; sessionId: string }): Promise<Record<string, unknown>> {\n  return { success: true, skill: \"" + name + "\" };\n}\n\nexport default handler;\n",
+        ["skills/" + name + "/omniskill.json"]:
           JSON.stringify(
             {
               name, version: "1.0.0", description: "<same as frontmatter>",
@@ -62,8 +62,9 @@ export async function handler(
           ),
       },
       next_steps: [
-        `mkdir -p skills/${name}/references`,
-        "Fill SKILL.md sections; add references/; keep description parity across the 3 copies.",
+        `mkdir -p skills/${name}/references skills/${name}/assets skills/${name}/scripts`,
+        "Fill SKILL.md sections (trigger-first description, lean body); add references/*.md; drop static files in assets/, executables in scripts/ (omit empty dirs); keep description parity across the 3 copies.",
+        "Test per references/testing-skills.md (L1 smoke always; L2 pressure for discipline skills).",
         `Re-run with { action: "validate", name: "${name}" }.`,
       ],
     };
@@ -101,16 +102,39 @@ export async function handler(
   for (const f of REQUIRED_FILES) {
     if (contents[f] == null) issues.push(`Missing ${dir}/${f}.`);
   }
+  const suggestions: string[] = [];
   if (contents["SKILL.md"]) {
     const m = contents["SKILL.md"]!;
     if (!/^name: /m.test(m)) issues.push("SKILL.md frontmatter missing `name:`.");
     const desc = m.match(/^description: (.*)$/m)?.[1] ?? "";
     if (desc.length > 550) issues.push(`description ~${desc.length} chars — install cap is 500.`);
-    if (!/omniroute:\n  handler:/.test(m)) issues.push("SKILL.md missing `omniroute:` block (docs-only skill, not omniskill).");
+    if (desc && !/^Use when\b/i.test(desc.trim()))
+      suggestions.push("Description doesn't start with 'Use when' — trigger-first descriptions discover better (references/skill-craft.md §1).");
+    if (/\bthen\b/i.test(desc) && desc.split(/[,;]|\bthen\b/i).length > 2)
+      suggestions.push("Description may summarize the workflow — keep trigger-only so agents read the body (references/skill-craft.md §1).");
+    const words = m.replace(/^---[\s\S]*?---/, "").split(/\s+/).filter(Boolean).length;
+    if (words > 1200)
+      suggestions.push(`SKILL.md body is ~${words} words — consider moving reference material to references/ (references/skill-craft.md §2).`);
+    if (!/^omniroute:\r?\n  handler:/m.test(m)) issues.push("SKILL.md missing `omniroute:` block (docs-only skill, not omniskill).");
     if (!/## OmniRoute Compatibility/.test(m)) issues.push("SKILL.md missing `## OmniRoute Compatibility` section.");
     for (const ref of m.matchAll(/`references\/([a-z0-9/_.-]+\.md)`/g)) {
       if (readFile(`${dir}/references/${ref[1]}`) == null)
         issues.push(`Broken link: references/${ref[1]} does not exist.`);
+    }
+    for (const ref of m.matchAll(/`(assets\/[^`\s]+)`/g)) {
+      if (/\.md$/.test(ref[1]))
+        issues.push(`Structure: prose \`*.md\` belongs in references/, not \`${ref[1]}\`.`);
+      else if (readFile(`${dir}/${ref[1]}`) == null)
+        issues.push(`Broken link: ${ref[1]} does not exist.`);
+    }
+    for (const ref of m.matchAll(/`(scripts\/[^`\s]+)`/g)) {
+      const target = ref[1].replace(/\/$/, "");
+      if (/\.md$/.test(target))
+        issues.push(`Structure: prose \`*.md\` belongs in references/, not \`${ref[1]}\`.`);
+      else if (/\.(png|jpe?g|webp|gif|ico|woff2?|ttf|eot)$/.test(target))
+        issues.push(`Structure: static asset \`${ref[1]}\` belongs in assets/, not scripts/ ([allowed: .sh/.mjs/.py]).`);
+      else if (readFile(`${dir}/${target}`) == null && sh(`test -d "${dir}/${target}" && echo dir`) !== "dir" && !/\/$/.test(ref[1]))
+        issues.push(`Broken link: ${ref[1]} does not exist.`);
     }
   }
   if (contents["handler.ts"]) {
@@ -143,6 +167,7 @@ export async function handler(
     name,
     omniskill: issues.length === 0,
     issues,
+    suggestions,
     next_steps: issues.length
       ? ["Fix listed issues, then re-validate."]
       : [`Install: POST /api/skills/install with handlerCode "${name}-handler".`, `Execute: omniroute_skills_execute({ skillName: "${name}", input: {...} })`],

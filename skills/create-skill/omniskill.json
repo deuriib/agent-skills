@@ -1,7 +1,7 @@
 {
   "name": "create-skill",
-  "version": "1.0.0",
-  "description": "Create or update a repo skill with OmniRoute compatibility — scaffold SKILL.md + references/, handler.ts, omniskill.json, frontmatter omniroute block, and Compatibility section. Use when adding a new skill or converting an existing one to omniskill.",
+  "version": "1.2.0",
+  "description": "Use when creating a new repo skill, converting one to omniskill, updating schema/handler/docs, or reviewing skill compliance. Scaffolds SKILL.md + references/assets/scripts, handler.ts, omniskill.json with contract validation.",
   "schema": {
     "input": {
       "type": "object",
@@ -28,7 +28,9 @@
         "success": { "type": "boolean" },
         "skill": { "type": "string" },
         "gate": { "type": "string", "enum": ["scaffold", "validate", "update-plan"] },
-        "omniskill": { "type": "boolean" }
+        "omniskill": { "type": "boolean" },
+        "issues": { "type": "array", "items": { "type": "string" } },
+        "suggestions": { "type": "array", "items": { "type": "string" } }
       }
     }
   },
