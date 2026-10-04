@@ -5,11 +5,6 @@ license: Apache-2.0
 metadata:
   author: deuriib
   version: "1.1"
-omniroute:
-  handler: git-commit-handler
-  mode: auto
-  sourceProvider: local
-  tags: [git, conventional-commits, workflow, commit]
 ---
 
 # Skill: git-commit
@@ -45,27 +40,6 @@ Use this skill when:
 3. **Message**: for each unit write `type(scope): imperative subject ≤72 chars` + body explaining why + footer (`Refs:`, `BREAKING CHANGE:` if needed).
 4. **Commit in order**: `git add <unit-paths>` then `git commit -m ...` one unit at a time. Re-check `status` between units.
 5. **Verify linearity**: `git log --oneline -10` must read as a logical story; each commit passes checks independently.
-
-## OmniRoute Compatibility
-
-This skill is an omniskill: executable via OmniRoute Skills API + MCP, documentation via Agent Skills catalog.
-
-- **Handler**: `handler.ts` exports `handler(input, { apiKeyId, sessionId })`. Register with `skillExecutor.registerHandler("git-commit-handler", handler)`.
-- **Manifest**: `omniskill.json` mirrors the install payload (`name`, `version`, `description`, `schema.input/output`, `handler`, `mode`, `sourceProvider`, `tags`).
-- **Install** (`POST /api/skills/install`, management auth):
-
-```json
-{
-  "name": "git-commit", "version": "1.0.0",
-  "description": "<same as frontmatter>",
-  "schema": { "input": { "<from omniskill.json>" }, "output": { "<from omniskill.json>" } },
-  "handlerCode": "git-commit-handler"
-}
-```
-
-- **Execute via MCP**: `omniroute_skills_execute({ skillName: "git-commit", input: { subject: "feat(api): add retry", dry_run: true } })`.
-- **Input**: `type | scope | subject (required) | body | paths[] | dry_run=true`. **Output**: `success, valid, proposed_message, worktree_status, diff_stat` (or `error`).
-- Default `dry_run: true` = validate + propose only; `false` runs `git add <paths>` + `git commit`. Never `git add -A`.
 
 ## References
 

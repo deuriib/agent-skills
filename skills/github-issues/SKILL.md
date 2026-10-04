@@ -5,11 +5,6 @@ license: Apache-2.0
 metadata:
   author: deuriib
   version: "1.1"
-omniroute:
-  handler: github-issues-handler
-  mode: auto
-  sourceProvider: local
-  tags: [github, issues, gh-cli, workflow]
 ---
 
 # Skill: github-issues
@@ -69,17 +64,6 @@ Do NOT use this skill when:
 - Closing because "PR merged" when the PR didn't carry `Closes #N` → STOP. Link it or close manually with proof.
 - Bulk-closing stale issues with no comment → STOP. Each close gets a reason; reopen path stays open.
 - Pasting raw logs with tokens/sessions → STOP. Scrub first, placeholders only.
-
-## OmniRoute Compatibility
-
-This skill is an omniskill: executable via OmniRoute Skills API + MCP, documentation via Agent Skills catalog.
-
-- **Handler**: `handler.ts` exports `handler(input, { apiKeyId, sessionId })`. Register with `skillExecutor.registerHandler("github-issues-handler", handler)`.
-- **Manifest**: `omniskill.json` mirrors the install payload (`name`, `version`, `description`, `schema.input/output`, `handler`, `mode`, `sourceProvider`, `tags`).
-- **Install** (`POST /api/skills/install`, management auth): `handlerCode` = `github-issues-handler` (handler-name lookup, not eval'd code).
-- **Execute via MCP**: `omniroute_skills_execute({ skillName: "github-issues", input: { action: "view", number: 12 } })`.
-- **Actions**: `view | create | triage | take | comment | close | reopen | search`. View-before-mutate enforced; `gh auth status` gates everything; manual `close` needs a proof comment; secrets scrubbed to `<TOKEN>`.
-- Default `dry_run: true` = plan + `gh` commands only; `false` executes `gh`.
 
 ## References
 

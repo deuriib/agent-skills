@@ -5,11 +5,6 @@ license: Apache-2.0
 metadata:
   author: deuriib
   version: "1.1"
-omniroute:
-  handler: fix-a-bug-handler
-  mode: auto
-  sourceProvider: local
-  tags: [debug, repro, regression-test, workflow]
 ---
 
 # Skill: fix-a-bug
@@ -63,17 +58,6 @@ Do NOT use this skill when:
 - "Try X and see" without a stated hypothesis → STOP. One theory, then test.
 - Each attempt surfaces symptoms in a new area → STOP. You're patching symptoms; return to step 4.
 - "Probably X" → STOP. "Probably" is not evidence; go back to step 2.
-
-## OmniRoute Compatibility
-
-This skill is an omniskill: executable via OmniRoute Skills API + MCP, documentation via Agent Skills catalog.
-
-- **Handler**: `handler.ts` exports `handler(input, { apiKeyId, sessionId })`. Register with `skillExecutor.registerHandler("fix-a-bug-handler", handler)`.
-- **Manifest**: `omniskill.json` mirrors the install payload (`name`, `version`, `description`, `schema.input/output`, `handler`, `mode`, `sourceProvider`, `tags`).
-- **Install** (`POST /api/skills/install`, management auth): `handlerCode` = `fix-a-bug-handler` (handler-name lookup, not eval'd code).
-- **Execute via MCP**: `omniroute_skills_execute({ skillName: "fix-a-bug", input: { symptom: "...", repro_command: "...", repro_output: "..." } })`.
-- **Gates**: `reproduce-first` (stop, no repro) → `hypothesize` → `test-hypothesis` (one variable) → `verify-fix` (regression test required) → `escalate` at attempt >= 3.
-- Never logs secrets/PII; handler scrubs to placeholders.
 
 ## References
 
