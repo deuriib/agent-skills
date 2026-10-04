@@ -1,0 +1,48 @@
+# mise — https://mise.jdx.dev
+#
+# Tool versions and task runner in one file, checked into the repo so every
+# contributor and CI job gets the same runtime. Replaces .nvmrc, .python-version,
+# .tool-versions and the CI "install this exact version" drift.
+#
+#   mise install       # install the pinned tools
+#   mise tasks         # list tasks
+#   mise run <task>    # run one
+#   mise trust         # if mise asks to trust a freshly cloned config
+
+[tools]
+node = "{{node_version}}"
+python = "{{python_version}}"
+
+# Pin only what the project actually uses. Uncomment and pin as needed:
+# go = "1.23"
+# rust = "1.83"
+# bun = "1.2"
+# deno = "2.1"
+
+[env]
+# Keep CI and laptops byte-identical.
+NODE_ENV = "development"
+
+[tasks.build]
+description = "Build the project"
+run = "npm run build"
+
+[tasks.test]
+description = "Run the test suite"
+run = "npm test"
+
+[tasks.lint]
+description = "Lint and format check"
+run = "npm run lint"
+
+[tasks.typecheck]
+description = "Type-check without emitting"
+run = "npm run typecheck"
+
+[tasks.dev]
+description = "Start the dev server"
+run = "npm run dev"
+
+[tasks.check]
+description = "Lint + typecheck + test, the gate CI enforces"
+depends = ["lint", "typecheck", "test"]

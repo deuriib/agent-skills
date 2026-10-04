@@ -1,7 +1,7 @@
 # Merging & Rendering — project-bootstrap
 
-How the handler decides between create / merge / force, and how placeholders
-render. Companion to the `PLAN_TABLE` in `handler.ts`.
+How to decide between create / merge / force, and how placeholders
+render. Companion to the `PLAN_TABLE` in `SKILL.md`.
 
 ## Decision table
 
@@ -46,6 +46,8 @@ them from input vars using a single pass:
 | `{{install_cmd}}` | `install_cmd` | `npm install <project>` |
 | `{{usage_cmd}}` | `usage_cmd` | `npx <project>` |
 | `{{dev_cmd}}` | `dev_cmd` | `npm install && npm test` |
+| `{{node_version}}` | `node_version` | `22` |
+| `{{python_version}}` | `python_version` | `3.12` |
 | `{{date}}` | derived | today, `YYYY-MM-DD` |
 | `{{goal_1}}`, `{{goal_2}}`, `{{nongoal_1}}` | derived | prompts for PRODUCT.md |
 
@@ -56,11 +58,12 @@ leftover token in a written file is a bug, assert against it.
 
 When `files: [...]` is provided, only those paths run through the table; every
 other managed file reports `skipped` with note `not requested`. Entries must be
-one of the 12 known paths — anything else stops at the `unknown-file` gate with
-the allowed list.
+one of the 13 known paths in `PLAN_TABLE` — anything else stops at the
+`unknown-file` gate with the allowed list.
 
 ## Ordering
 
-Config → versioning → docs. Config files land first so a subsequent `git add`
-picks up ignore/attributes rules before content files; versioning follows; docs
-close the run.
+Config → toolchain → versioning → docs. Config files land first so a subsequent
+`git add` picks up ignore/attributes rules before content files; `mise.toml`
+follows so the toolchain is pinned before anything documents commands; versioning
+follows; docs close the run.

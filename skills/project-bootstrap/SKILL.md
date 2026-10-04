@@ -1,15 +1,10 @@
 ---
 name: project-bootstrap
-description: Use when a repo is missing standard hygiene files or a new project needs its baseline scaffold. Creates .gitattributes, .gitignore, .npmrc, .editorconfig, pre-commit, bump-version, LICENSE, README, CHANGELOG, CODE_OF_CONDUCT, PRODUCT without clobbering.
+description: Use when a repository is missing standard hygiene files, or when a new project needs its baseline scaffold — git config, ignore rules, license, README, changelog, hooks, toolchain pin.
 license: Apache-2.0
 metadata:
   author: deuriib
-  version: "1.0"
-omniroute:
-  handler: project-bootstrap-handler
-  mode: auto
-  sourceProvider: local
-  tags: [bootstrap, scaffolding, repo-hygiene, versioning, onboarding]
+  version: "1.1"
 ---
 
 # Skill: project-bootstrap
@@ -29,7 +24,7 @@ Do NOT use this skill when:
 
 - **Missing file = write; existing file = keep.** Non-destructive by default. Existing content always wins unless `force: true` is passed explicitly.
 - **Dry-run is the default.** `dry_run: true` unless the caller explicitly sets `false`. Nothing touches disk in a dry run.
-- **All 12 files are planned every run.** Config first (`.gitattributes`, `.gitignore`, `.npmrc`, `.editorconfig`, `.pre-commit-config.yaml`), then versioning (`.bump-version.json`, `script/bump-version.mjs`), then docs (LICENSE, README, CHANGELOG, CODE_OF_CONDUCT, PRODUCT).
+- **All 13 files are planned every run.** Config first (`.gitattributes`, `.gitignore`, `.editorconfig`, `.npmrc`, `.pre-commit-config.yaml`), then toolchain (`mise.toml`), then versioning (`.bump-version.json`, `script/bump-version.mjs`), then docs (LICENSE, README, CHANGELOG, CODE_OF_CONDUCT, PRODUCT).
 - **Placeholders render once.** `{{project}}`, `{{description}}`, `{{author}}`, `{{year}}`, etc. are substituted from input; leftover tokens are a bug.
 - **Merge mode preserves history.** `.gitignore` and `CHANGELOG.md` get their missing section appended below existing content, never rewritten.
 - **`project` is required.** Empty/missing `project` stops at the `need-project` gate.
@@ -49,14 +44,38 @@ Do NOT use this skill when:
 ## Execution Steps
 
 1. **Validate input**: `project` required (non-empty). Unknown entries in `files` stop at `unknown-file`.
-2. **Build vars**: `project`, `description`, `author` (default `Your Name`), `year` (default current year), `license` (default `MIT`), `contact`, `status`, `install_cmd` / `usage_cmd` / `dev_cmd`, `date`.
-3. **Plan**: run the ordered `PLAN_TABLE` (12 entries). Each entry resolves to `create` / `merge` / `conditional` handling under the current `dry_run` + `force` flags.
+2. **Build vars**: `project`, `description`, `author` (default `Your Name`), `year` (default current year), `license` (default `MIT`), `contact`, `status`, `install_cmd` / `usage_cmd` / `dev_cmd`, `date`, plus `node_version` (default `22`) and `python_version` (default `3.12`) for `mise.toml`.
+3. **Plan**: run the ordered `PLAN_TABLE` (13 entries). Each entry resolves to `create` / `merge` / `conditional` handling under the current `dry_run` + `force` flags.
 4. **Apply** (or simulate): write files only when `dry_run: false`. Dry run emits `would_create` / `would_skip`.
 5. **Report**: return `summary`, the per-file `files` array (`path`, `status`, `note`), and `next_steps`.
 
+## PLAN_TABLE
+
+Run in this order — earlier entries are written before later ones so
+`script/bump-version.mjs` lands after `.bump-version.json` exists.
+
+| # | Target | Mode | Source |
+|---|--------|------|--------|
+| 1 | `.gitattributes` | create | `assets/templates/.gitattributes` |
+| 2 | `.gitignore` | merge | `assets/templates/.gitignore` |
+| 3 | `.editorconfig` | create | `assets/templates/.editorconfig` |
+| 4 | `.npmrc` | create | `assets/templates/.npmrc` |
+| 5 | `.pre-commit-config.yaml` | create | `assets/templates/.pre-commit-config.yaml` |
+| 6 | `mise.toml` | create | `assets/templates/mise.toml` |
+| 7 | `.bump-version.json` | create | `assets/templates/.bump-version.json` |
+| 8 | `script/bump-version.mjs` | create | `assets/templates/script/bump-version.mjs` |
+| 9 | `LICENSE` | create | `assets/templates/LICENSE` |
+| 10 | `README.md` | create | `assets/templates/README.md` |
+| 11 | `CHANGELOG.md` | merge | `assets/templates/CHANGELOG.md` |
+| 12 | `CODE_OF_CONDUCT.md` | conditional | `assets/templates/CODE_OF_CONDUCT.md` |
+| 13 | `PRODUCT.md` | conditional | `assets/templates/PRODUCT.md` |
+
+`merge` uses the anchors in `references/merging.md`. `conditional` files are
+skipped unless listed in the caller's `files` array.
+
 ## Input / Output
 
-Input (`schema.input` in `omniskill.json`):
+Input:
 
 ```json
 {
@@ -70,6 +89,8 @@ Input (`schema.input` in `omniskill.json`):
   "install_cmd": "npm i pkg",
   "usage_cmd": "npx pkg",
   "dev_cmd": "npm i && npm test",
+  "node_version": "22",
+  "python_version": "3.12",
   "files": [".gitignore", "LICENSE"],
   "force": false,
   "dry_run": true
@@ -104,6 +125,7 @@ Status vocabulary: `created`, `merged`, `skipped`, `would_create`, `would_skip`.
 - **`.editorconfig`** — UTF-8 + LF, spaces/2 indent, `max_line_length = 80`; Markdown keeps its hard-break spaces, Windows scripts stay CRLF, Makefile keeps tabs.
 - **`.pre-commit-config.yaml`** — pre-commit hooks (trailing whitespace, YAML/JSON/TOML checks, private-key detection, prettier). Run `pre-commit install` after.
 - **`.bump-version.json`** — config consumed by `script/bump-version.mjs`.
+- **`mise.toml`** — pins `node`/`python` versions and defines `mise run` tasks (`build`, `test`, `lint`, `typecheck`, `dev`, `check`). Replaces `.nvmrc` / `.tool-versions`; run `mise install` after.
 - **`script/bump-version.mjs`** — bumps the version across listed files (`major|minor|patch`, `--dry-run`), prints the next Conventional Commit type. **Node ≥ 18.**
 - **`LICENSE`** — MIT by default (`{{year}}` + `{{author}}` rendered).
 - **`README.md`** — Status / Installation / Usage / Development / Contributing / License scaffold.
@@ -111,11 +133,7 @@ Status vocabulary: `created`, `merged`, `skipped`, `would_create`, `would_skip`.
 - **`CODE_OF_CONDUCT.md`** — Contributor Covenant-style community standards, `{{contact}}` for reports.
 - **`PRODUCT.md`** — problem/target users/solution/goals/metrics/constraints/risks brief.
 
-## OmniRoute Compatibility
-
-This skill is an omniskill (not docs-only): `handler.ts` implements the `SkillHandler` signature, `omniskill.json` declares schema + handler name, and this file carries the `omniroute:` block. Register at boot via `skillExecutor.registerHandler("project-bootstrap-handler", handler)`; templates are inlined in `templates.ts` (generated) so no external file read is needed in the sandbox.
-
 ## References
 
-- [assets/templates/](assets/templates/) — the 12 source templates that `templates.ts` is generated from. Edit these, then regenerate `templates.ts`.
+- [assets/templates/](assets/templates/) — the 13 source templates. Copy from here, render `{{placeholder}}` values, and write to the repo root.
 - [references/merging.md](references/merging.md) — merge vs. create vs. force decision table and how placeholders render.
