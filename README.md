@@ -14,20 +14,20 @@ npx -y skills add deuriib/agent-skills
 
 ## Available Skills
 
-- **animate-ui**: Implement and customize Motion-powered components from Animate UI. shadcn/ui compatible animated primitives and components.
-- **azul-payment**: Azul Payment Gateway integration for Dominican Republic. Supports Sale, Refund, 3DS 2.0, and DataVault (tokenization).
-- **better-auth-plugin**: Create Better Auth plugins with server-client pairs, schema extensions, hooks, and middleware for custom authentication logic.
-- **create-skill**: Create or convert repo skills to omniskills — scaffold SKILL.md + handler.ts + omniskill.json with OmniRoute contract validation.
-- **fix-a-bug**: Reproduce first, trace to root cause one hypothesis at a time, then fix small with a regression test.
-- **github-issues**: Full issue lifecycle on `gh` — shape, triage, take, track, close with proof. Feeds fix-a-bug → git-commit → open-a-pull-request.
-- **git-commit**: Split dirty worktrees into atomic work-units and commit them as Conventional Commits linear history.
-- **htmx**: Build modern web interfaces using HTML attributes instead of JavaScript frameworks. Covers htmx attributes, events, extensions, server-side integration patterns, and UI examples.
-- **htpy**: Generate HTML from pure Python without templates. Covers elements, attributes, components, streaming, async rendering, static typing, and the html2htpy converter.
-- **init-deep**: Deep project bootstrap — generates domain-aware hierarchical AGENTS.md files (root + scored subdirectories) covering engineering, security, testing, ops, legal, brand, revenue, product, finance, and people. Use when a repo needs full agent context beyond what /init covers.
-- **lago**: Integrate the Lago open-source billing platform for usage-based and subscription billing. Covers event ingestion, billable metrics, plans, charges, invoices, credit notes, payment providers, wallets, webhooks, and self-hosted deployment.
-- **lago-payment-integration**: Extend the Lago billing system with custom Payment Service Provider (PSP) integrations, covering backend (Rails) and frontend (React) components.
-- **mintoria-brand-guidelines**: Official brand guidelines for Mintoria, including colors, typography, logos, and premium design principles.
-- **open-a-pull-request**: Keep PRs small, linked, and green — one intent, named branch, filled body, checks passing before review.
-- **pi-agent**: Build with and use Pi, the minimal terminal coding harness. Covers providers/models, extensions, skills, SDK/RPC/JSON integration, sessions, and ecosystem packages.
-- **project-bootstrap**: Bootstrap or update a project with standard repo hygiene files — `.gitattributes`, `.gitignore`, `.npmrc`, `.editorconfig`, `.pre-commit-config.yaml`, `.bump-version.json` + `script/bump-version.mjs`, LICENSE, README, CHANGELOG, CODE_OF_CONDUCT, PRODUCT. Dry-run by default, never clobbers existing content.
-- **wifi-roam-fix**: Diagnose and fix WiFi roaming loops caused by aggressive iwd roaming between two BSSIDs of the same SSID on Arch/Omarchy with iwd + systemd-networkd and Realtek RTL8821CE.
+- **animate-ui**: Use when implementing or customizing Motion-powered components from Animate UI in a shadcn/ui codebase.
+- **azul-payment**: Use when integrating the Azul Payment Gateway in the Dominican Republic — Sale, Refund, 3DS 2.0, or DataVault tokenization.
+- **better-auth-plugin**: Use when adding custom authentication logic to a Better Auth setup via a plugin.
+- **fix-a-bug**: Use when something is broken, a test fails, or behavior is not what was expected.
+- **github-issues**: Use when creating, triaging, searching, taking, commenting on, or closing GitHub issues.
+- **git-commit**: Use when committing changes, splitting a dirty worktree into atomic units, or writing Conventional Commits messages.
+- **htmx**: Use when building web interfaces with HTML attributes instead of a JavaScript framework.
+- **htpy**: Use when generating HTML from pure Python without templates.
+- **init-deep**: Use when a repo needs agent context beyond what `/init` covers, or when AGENTS.md files must be generated or refreshed.
+- **lago**: Use when integrating the Lago open-source billing platform for usage-based or subscription billing.
+- **lago-payment-integration**: Use when extending Lago with a custom Payment Service Provider (PSP) integration.
+- **mintoria-brand-guidelines**: Use when applying or reviewing Mintoria brand colors, typography, logos, or design principles.
+- **open-a-pull-request**: Use when a branch is ready for other people to read.
+- **pi-agent**: Use when building with or configuring Pi, the minimal terminal coding harness.
+- **project-bootstrap**: Use when a repo is missing standard hygiene files, or a new project needs its baseline scaffold — git config, ignore rules, toolchain pin, license, README, changelog, hooks.
+- **wifi-roam-fix**: Use when WiFi roams in a loop between two BSSIDs of the same SSID on Arch/Omarchy with iwd + systemd-networkd.
+- **writing-skills**: Use when creating new skills, editing existing skills, or verifying skills work before deployment.
