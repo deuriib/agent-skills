@@ -84,9 +84,24 @@ Specifies the event that triggers the request.
 - `changed` — only if value changed
 - `delay:<time>` — delay before trigger
 - `throttle:<time>` — throttle trigger
+- `debounce:<time>` — debounce trigger
 - `from:<selector>` — listen on different element
+- `target:<selector>` — apply to a different element
 - `consume` — prevent parent triggers
 - `queue:<option>` — first, last, all, none
+
+**Special Triggers (require an extension):**
+- `intersect once` — fire when the element scrolls into view (lazy load, infinite scroll)
+- `revealed` — fire once the element is first revealed on page load
+- `load` — fire on the target's `load` event
+- `mouseenter`, `mouseleave` — pointer transitions
+
+```html
+<!-- Infinite scroll: fetch the next page when the sentinel becomes visible -->
+<div hx-get="/page/2" hx-trigger="intersect once" hx-swap="outerHTML">
+  <div hx-get="/page/3" hx-trigger="intersect once" hx-swap="outerHTML"></div>
+</div>
+```
 
 **Multiple Triggers:**
 ```html
