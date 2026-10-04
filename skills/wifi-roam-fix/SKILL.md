@@ -42,6 +42,8 @@ distintos, ej. `192.168.1.1` vs `192.168.1.11`).
   RoamThreshold5G, RoamRetryInterval, DisableRoamingScan).
 - Señal bajo -80 dBm = física, no config: acercarse al nodo bueno.
 
-## References
+## Archivos
 
-- `scripts/wifi-roam-fix.sh` — diagnose / fix / verify, idempotente, con backup (ver `## Archivos` para los cambios que hace `fix`).
+- `scripts/wifi-roam-fix.sh` — diagnose / fix / verify, idempotente, con backup.
+- Cambios que hace `fix`: `/etc/iwd/main.conf`,
+  `/etc/udev/rules.d/81-wifi-powersave.rules`, `systemctl restart iwd`.
