@@ -1,6 +1,6 @@
 ---
 name: lago
-description: "Trigger: Lago billing, usage-based billing, event ingestion, metering, billing API, subscription management. Integrate and implement Lago open-source billing platform for usage-based and subscription billing."
+description: Use when integrating Lago billing — sending usage events, defining billable metrics or plans, generating invoices, handling credit notes, wallets, or payment providers.
 license: Apache-2.0
 metadata:
   author: deuriib

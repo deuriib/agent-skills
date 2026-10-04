@@ -1,6 +1,6 @@
 ---
 name: open-a-pull-request
-description: Use when a branch is ready for other people to read. Keep it small, linked, and green — one intent per PR, named branch, filled body, checks passing before review.
+description: Use when a branch is finished and needs review, or when a pull request must be scoped, titled, described, linked to an issue, or made ready for review.
 license: Apache-2.0
 metadata:
   author: deuriib

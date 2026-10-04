@@ -1,6 +1,6 @@
 ---
 name: mintoria-brand-guidelines
-description: Official brand guidelines for Mintoria, including colors, typography, logos, and premium design principles. Use this skill when designing or implementing new UI components, pages, or brand assets for Mintoria to ensure consistency and a high-end, premium aesthetic.
+description: Use when designing or reviewing anything in the Mintoria brand — UI components, pages, decks, or assets that must match the official colors, typography, and logo rules.
 metadata:
   author: deuriib
   version: "1.0"

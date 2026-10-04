@@ -1,6 +1,6 @@
 ---
-name: WiFi Roam Fix
-description: Diagnostica y estabiliza loop connect/disconnect WiFi por roaming agresivo de iwd entre dos BSSIDs del mismo SSID. Para Arch/Omarchy con iwd + systemd-networkd y Realtek RTL8821CE (rtw88_8821ce).
+name: wifi-roam-fix
+description: Use when WiFi se conecta y desconecta en loop solo con un SSID (otros SSID y moviles funcionan bien) en Arch u Omarchy con iwd + systemd-networkd, tipicamente con Realtek RTL8821CE.
 ---
 
 # WiFi Roam Fix — loop por ping-pong entre nodos

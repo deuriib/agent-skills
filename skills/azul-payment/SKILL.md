@@ -1,6 +1,6 @@
 ---
 name: azul-payment
-description: "Trigger: Azul Payment, Azul API, integration, payments, 3DS, DataVault. Assists with Azul Payment Gateway implementation."
+description: Use when processing payments in the Dominican Republic through the Azul Payment Gateway — Sale or Refund transactions, 3DS 2.0 challenge flows, or DataVault tokenization.
 license: MIT
 metadata:
   author: deuriib

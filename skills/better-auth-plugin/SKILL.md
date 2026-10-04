@@ -1,6 +1,6 @@
 ---
 name: better-auth-plugin
-description: "Trigger: Better Auth plugin, create plugin, server plugin, client plugin, auth hooks, schema extension. Create and integrate Better Auth plugins for authentication extensions."
+description: Use when adding custom authentication logic to a Better Auth setup — new providers, database schema extensions, auth hooks, middleware, or session behavior.
 license: Apache-2.0
 metadata:
   author: deuriib

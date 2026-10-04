@@ -1,6 +1,6 @@
 ---
 name: github-issues
-description: Use when creating, triaging, searching, taking, commenting on, or closing GitHub issues, or turning an issue into a branch and pull request.
+description: Use when creating, triaging, searching, taking, commenting on, or closing GitHub issues, or when turning an issue into a branch and pull request.
 license: Apache-2.0
 metadata:
   author: deuriib

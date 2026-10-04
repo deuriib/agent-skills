@@ -1,6 +1,6 @@
 ---
 name: fix-a-bug
-description: Use when something is broken, a test fails, or behavior is not what was expected. Reproduce first, trace to root cause with one hypothesis at a time, then fix small with a regression test.
+description: Use when something is broken, a test fails, behavior is not what was expected, or a fix is not taking effect and the root cause is still unknown.
 license: Apache-2.0
 metadata:
   author: deuriib

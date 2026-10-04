@@ -1,6 +1,6 @@
 ---
 name: animate-ui
-description: "Trigger: animate-ui, motion components, animated shadcn. Implement and customize Motion-powered components from Animate UI."
+description: Use when building or customizing shadcn/ui components that need Motion-powered animation — tabs, accordions, carousel, sidebar, or text effects from Animate UI.
 license: Apache-2.0
 metadata:
   author: deuriib
