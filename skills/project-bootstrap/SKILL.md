@@ -12,11 +12,13 @@ metadata:
 ## Activation Contract
 
 Use this skill when:
+
 - Initializing a new repo or project directory that needs the standard hygiene files.
 - Updating an existing project so the missing baseline files get added without touching what's already there.
 - Someone asks for `.gitignore`, `.npmrc`, `.pre-commit-config`, version-bump tooling, LICENSE, README, CHANGELOG, CODE_OF_CONDUCT, or PRODUCT as a set.
 
 Do NOT use this skill when:
+
 - Only one file is needed and it's unrelated to this set (edit it directly).
 - The task is writing a skill (use `create-skill`) or committing (use `git-commit`).
 
@@ -24,22 +26,22 @@ Do NOT use this skill when:
 
 - **Missing file = write; existing file = keep.** Non-destructive by default. Existing content always wins unless `force: true` is passed explicitly.
 - **Dry-run is the default.** `dry_run: true` unless the caller explicitly sets `false`. Nothing touches disk in a dry run.
-- **All 13 files are planned every run.** Config first (`.gitattributes`, `.gitignore`, `.editorconfig`, `.npmrc`, `.pre-commit-config.yaml`), then toolchain (`mise.toml`), then versioning (`.bump-version.json`, `script/bump-version.mjs`), then docs (LICENSE, README, CHANGELOG, CODE_OF_CONDUCT, PRODUCT).
+- **All 13 files are planned every run.** Config first (`.gitattributes`, `.gitignore`, `.editorconfig`, `.npmrc`, `.pre-commit-config.yaml`), then toolchain (`mise.toml`), then versioning (`.bump-version.json`, `scripts/bump-version.mjs`), then docs (LICENSE, README, CHANGELOG, CODE_OF_CONDUCT, PRODUCT).
 - **Placeholders render once.** `{{project}}`, `{{description}}`, `{{author}}`, `{{year}}`, etc. are substituted from input; leftover tokens are a bug.
 - **Merge mode preserves history.** `.gitignore` and `CHANGELOG.md` get their missing section appended below existing content, never rewritten.
 - **`project` is required.** Empty/missing `project` stops at the `need-project` gate.
 
 ## Decision Gates
 
-| Situation | Action |
-|-----------|--------|
-| Target file doesn't exist | Create it from the bundled template (`status: created`) |
-| Target file exists, no `force` | Skip it (`status: skipped`, note `exists`) — existing content wins |
-| Target file exists, `force: true` | Overwrite from template (note `overwritten (force)`) |
-| `.gitignore` / `CHANGELOG.md` lacks its anchor | Append rendered section below existing content (`status: merged`) |
-| Caller passes `files: [...]` | Only those files are considered; the rest report `skipped` (note `not requested`) |
-| Caller passes an unknown file name | Stop at the `unknown-file` gate with the allowed list |
-| `dry_run` not specified | Treat as `true` and only report what would happen |
+| Situation                                      | Action                                                                            |
+| ---------------------------------------------- | --------------------------------------------------------------------------------- |
+| Target file doesn't exist                      | Create it from the bundled template (`status: created`)                           |
+| Target file exists, no `force`                 | Skip it (`status: skipped`, note `exists`) — existing content wins                |
+| Target file exists, `force: true`              | Overwrite from template (note `overwritten (force)`)                              |
+| `.gitignore` / `CHANGELOG.md` lacks its anchor | Append rendered section below existing content (`status: merged`)                 |
+| Caller passes `files: [...]`                   | Only those files are considered; the rest report `skipped` (note `not requested`) |
+| Caller passes an unknown file name             | Stop at the `unknown-file` gate with the allowed list                             |
+| `dry_run` not specified                        | Treat as `true` and only report what would happen                                 |
 
 ## Execution Steps
 
@@ -54,21 +56,21 @@ Do NOT use this skill when:
 Run in this order — earlier entries are written before later ones so
 `script/bump-version.mjs` lands after `.bump-version.json` exists.
 
-| # | Target | Mode | Source |
-|---|--------|------|--------|
-| 1 | `.gitattributes` | create | `assets/templates/.gitattributes` |
-| 2 | `.gitignore` | merge | `assets/templates/.gitignore` |
-| 3 | `.editorconfig` | create | `assets/templates/.editorconfig` |
-| 4 | `.npmrc` | create | `assets/templates/.npmrc` |
-| 5 | `.pre-commit-config.yaml` | create | `assets/templates/.pre-commit-config.yaml` |
-| 6 | `mise.toml` | create | `assets/templates/mise.toml` |
-| 7 | `.bump-version.json` | create | `assets/templates/.bump-version.json` |
-| 8 | `script/bump-version.mjs` | create | `assets/templates/script/bump-version.mjs` |
-| 9 | `LICENSE` | create | `assets/templates/LICENSE` |
-| 10 | `README.md` | create | `assets/templates/README.md` |
-| 11 | `CHANGELOG.md` | merge | `assets/templates/CHANGELOG.md` |
-| 12 | `CODE_OF_CONDUCT.md` | conditional | `assets/templates/CODE_OF_CONDUCT.md` |
-| 13 | `PRODUCT.md` | conditional | `assets/templates/PRODUCT.md` |
+| #   | Target                    | Mode        | Source                                     |
+| --- | ------------------------- | ----------- | ------------------------------------------ |
+| 1   | `.gitattributes`          | create      | `assets/templates/.gitattributes`          |
+| 2   | `.gitignore`              | merge       | `assets/templates/.gitignore`              |
+| 3   | `.editorconfig`           | create      | `assets/templates/.editorconfig`           |
+| 4   | `.npmrc`                  | create      | `assets/templates/.npmrc`                  |
+| 5   | `.pre-commit-config.yaml` | create      | `assets/templates/.pre-commit-config.yaml` |
+| 6   | `mise.toml`               | create      | `assets/templates/mise.toml`               |
+| 7   | `.bump-version.json`      | create      | `assets/templates/.bump-version.json`      |
+| 8   | `script/bump-version.mjs` | create      | `assets/templates/script/bump-version.mjs` |
+| 9   | `LICENSE`                 | create      | `assets/templates/LICENSE`                 |
+| 10  | `README.md`               | create      | `assets/templates/README.md`               |
+| 11  | `CHANGELOG.md`            | merge       | `assets/templates/CHANGELOG.md`            |
+| 12  | `CODE_OF_CONDUCT.md`      | conditional | `assets/templates/CODE_OF_CONDUCT.md`      |
+| 13  | `PRODUCT.md`              | conditional | `assets/templates/PRODUCT.md`              |
 
 `merge` uses the anchors in `references/merging.md`. `conditional` files are
 skipped unless listed in the caller's `files` array.
