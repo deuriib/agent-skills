@@ -128,7 +128,7 @@ Status vocabulary: `created`, `merged`, `skipped`, `would_create`, `would_skip`.
 - **`.pre-commit-config.yaml`** — pre-commit hooks (trailing whitespace, YAML/JSON/TOML checks, private-key detection, prettier). Run `pre-commit install` after.
 - **`.bump-version.json`** — config consumed by `script/bump-version.mjs`.
 - **`mise.toml`** — pins `node`/`python` versions and defines `mise run` tasks (`build`, `test`, `lint`, `typecheck`, `dev`, `check`). Replaces `.nvmrc` / `.tool-versions`; run `mise install` after.
-- **`script/bump-version.mjs`** — bumps the version across listed files (`major|minor|patch`, `--dry-run`), prints the next Conventional Commit type. **Node ≥ 18.**
+- **`scripts/bump-version.mjs`** — bumps the version across listed files (`major|minor|patch`, `--dry-run`), prints the next Conventional Commit type. **Node ≥ 18.**
 - **`LICENSE`** — MIT by default (`{{year}}` + `{{author}}` rendered).
 - **`README.md`** — Status / Installation / Usage / Development / Contributing / License scaffold.
 - **`CHANGELOG.md`** — Keep a Changelog format with an `[Unreleased]` section.
