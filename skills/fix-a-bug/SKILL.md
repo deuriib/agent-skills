@@ -1,10 +1,10 @@
 ---
 name: fix-a-bug
-description: Use when something is broken, a test fails, behavior is not what was expected, or a fix is not taking effect and the root cause is still unknown.
+description: Use when something is broken, failing, or behaving unexpectedly - a test fails, an error or stack trace appears, a crash, regression, or flaky failure happens, or a fix did not take effect. Triggers on "it's broken", "not working", "why is this happening", "what's wrong with", "help me debug", "find the root cause". Not for filing or tracking issues (github-issues), opening pull requests (open-a-pull-request), or building new features.
 license: Apache-2.0
 metadata:
   author: deuriib
-  version: "1.1"
+  version: "1.2"
 ---
 
 # Skill: fix-a-bug

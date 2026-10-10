@@ -1,10 +1,10 @@
 ---
 name: open-a-pull-request
-description: Use when a branch is finished and needs review, or when a pull request must be created, scoped, titled, described, linked to an issue, or made ready for review.
+description: Use when a branch is finished or a pull request is being prepared - opening, raising, or submitting a PR, writing a PR title, description, or body, linking a PR to an issue ("fixes 123"), scoping or splitting an oversized PR, or marking a draft ready for review. Triggers on "open a PR", "raise a PR", "submit for review", "this branch is ready", "undraft this PR". Not for filing issues (github-issues) or shaping commits (git-commit).
 license: Apache-2.0
 metadata:
   author: deuriib
-  version: "1.1"
+  version: "1.2"
 ---
 
 # Skill: open-a-pull-request

@@ -1,10 +1,10 @@
 ---
 name: github-issues
-description: Use when creating, triaging, searching, taking, commenting on, or closing GitHub issues, or when turning an issue into a branch and pull request.
+description: Use when working with GitHub issues - filing a bug report, feature request, or task, writing repro steps, searching or filtering the backlog ("is this a duplicate", "what's open"), labeling, prioritizing, assigning, triaging, marking duplicate, wontfix, or stale, commenting, closing, reopening, or turning an issue into a branch and pull request. Triggers on "file an issue", "log a bug", "make a ticket", "triage", "resolve issue". Not for diagnosing the failure itself (fix-a-bug).
 license: Apache-2.0
 metadata:
   author: deuriib
-  version: "1.1"
+  version: "1.2"
 ---
 
 # Skill: github-issues
