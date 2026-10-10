@@ -1,6 +1,6 @@
 ---
 name: open-a-pull-request
-description: Use when a branch is finished and needs review, or when a pull request must be scoped, titled, described, linked to an issue, or made ready for review.
+description: Use when a branch is finished and needs review, or when a pull request must be created, scoped, titled, described, linked to an issue, or made ready for review.
 license: Apache-2.0
 metadata:
   author: deuriib
@@ -12,11 +12,13 @@ metadata:
 ## Activation Contract
 
 Use this skill when:
+
 - A branch is ready for review — "open a PR", "ready for review", "push this up".
 - You need the branch-naming or PR-body convention for this repo.
 - CI is red on an open PR and you need the fix-forward path.
 
 Do NOT use this skill when:
+
 - Commits aren't shaped yet — split and message them first with `git-commit`.
 - There is no approved unit of work (no issue, no spec, no agreed task) — get that first. A PR with no linked unit gets closed, not reviewed.
 - You just want to save work in progress — push the branch, don't open a PR. Draft PRs are for "review my approach early", not backups.
@@ -33,15 +35,15 @@ Do NOT use this skill when:
 
 ## Decision Gates
 
-| Situation | Action |
-|-----------|--------|
-| No issue / spec / agreed task | Stop. Get the unit first — a PR without one gets closed. |
-| Diff > 400 lines | Split (see `references/splitting-a-pr.md`), stack, or document `size:exception`. Default: split. |
-| Baseline is red (`git status` dirty in unexpected ways) | Clean it: stash, separate commit, or record the override. Don't smuggle stray files into the PR. |
-| Local checks fail | Fix forward on the branch. Never push red hoping CI disagrees. |
-| CI fails AFTER opening | Fix on the same branch, push, re-verify — see `references/ci-red.md`. Don't open PR #2 for the fix. |
-| Reviewer asks for changes | Address each thread (change or reply with reason), push, re-request — see `references/addressing-review.md`. |
-| Repo has its own template / checks | Repo wins. Fill ITS template fully; run ITS checks. This skill's template is the fallback — see `references/pr-body-template.md`. |
+| Situation                                               | Action                                                                                                                            |
+| ------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| No issue / spec / agreed task                           | Stop. Get the unit first — a PR without one gets closed.                                                                          |
+| Diff > 400 lines                                        | Split (see `references/splitting-a-pr.md`), stack, or document `size:exception`. Default: split.                                  |
+| Baseline is red (`git status` dirty in unexpected ways) | Clean it: stash, separate commit, or record the override. Don't smuggle stray files into the PR.                                  |
+| Local checks fail                                       | Fix forward on the branch. Never push red hoping CI disagrees.                                                                    |
+| CI fails AFTER opening                                  | Fix on the same branch, push, re-verify — see `references/ci-red.md`. Don't open PR #2 for the fix.                               |
+| Reviewer asks for changes                               | Address each thread (change or reply with reason), push, re-request — see `references/addressing-review.md`.                      |
+| Repo has its own template / checks                      | Repo wins. Fill ITS template fully; run ITS checks. This skill's template is the fallback — see `references/pr-body-template.md`. |
 
 ## Execution Steps
 
