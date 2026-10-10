@@ -12,11 +12,13 @@ metadata:
 ## Activation Contract
 
 Use this skill when:
+
 - Something is broken: error, crash, wrong output, failing test.
 - Behavior changed after a recent edit, upgrade, or deploy.
 - A flaky test or intermittent failure needs a real cause, not a retry.
 
 Do NOT use this skill when:
+
 - The request is a new feature or behavior change — that's design work, not a bug.
 - The "bug" has no observable symptom yet ("might break someday") — write the test first, then decide.
 - You already know the one-line fix and it is trivially safe (typo, wrong string) — fix it, run the tests, move on.
@@ -32,15 +34,15 @@ Do NOT use this skill when:
 
 ## Decision Gates
 
-| Situation | Action |
-|-----------|--------|
-| Can't reproduce after 3 serious attempts | Stop fixing. Write down exact steps tried, environment, and what differs from the report — see `references/reproduction-recipe.md`. Ask for the missing detail. |
-| No working example exists in the codebase | Skip pattern-matching; go straight to backward tracing — see `references/root-cause-tracing.md`. |
-| Two hypotheses failed in a row | Stop and widen: re-read the full error, check assumptions (wrong file? stale cache? wrong env?). Say "I don't understand X yet" and research before fix #3. |
-| Fix #3 also fails | Escalate to a human with evidence so far. No fix #4 alone. |
-| Failure is timing-dependent / flaky | Poll on an explicit condition with a deadline, never `sleep N` and pray — see `references/condition-based-waiting.md`. |
-| Same class of bug could recur elsewhere | Add layered guards after the root-cause fix — see `references/defense-in-depth.md`. |
-| Fix works, suite passes | Lock it in with the regression test and edge cases — see `references/verify-fix.md`. |
+| Situation                                 | Action                                                                                                                                                          |
+| ----------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Can't reproduce after 3 serious attempts  | Stop fixing. Write down exact steps tried, environment, and what differs from the report — see `references/reproduction-recipe.md`. Ask for the missing detail. |
+| No working example exists in the codebase | Skip pattern-matching; go straight to backward tracing — see `references/root-cause-tracing.md`.                                                                |
+| Two hypotheses failed in a row            | Stop and widen: re-read the full error, check assumptions (wrong file? stale cache? wrong env?). Say "I don't understand X yet" and research before fix #3.     |
+| Fix #3 also fails                         | Escalate to a human with evidence so far. No fix #4 alone.                                                                                                      |
+| Failure is timing-dependent / flaky       | Poll on an explicit condition with a deadline, never `sleep N` and pray — see `references/condition-based-waiting.md`.                                          |
+| Same class of bug could recur elsewhere   | Add layered guards after the root-cause fix — see `references/defense-in-depth.md`.                                                                             |
+| Fix works, suite passes                   | Lock it in with the regression test and edge cases — see `references/verify-fix.md`.                                                                            |
 
 ## Execution Steps
 

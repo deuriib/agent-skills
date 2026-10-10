@@ -12,6 +12,7 @@ metadata:
 ## Activation Contract
 
 Use this skill when:
+
 - Creating a GitHub issue — bug report, feature request, task, or RFC.
 - Triaging the backlog — labels, priority, duplicates, repro checks, stale cleanup.
 - Taking an issue — assigning yourself, branching from it, turning it into work.
@@ -19,6 +20,7 @@ Use this skill when:
 - Closing or reopening an issue — merge-linked close, manual verified close, invalid/wontfix.
 
 Do NOT use this skill when:
+
 - The branch is ready for review — that's `open-a-pull-request`.
 - Commits need shaping — that's `git-commit`.
 - Something is broken and needs diagnosis — that's `fix-a-bug`. This skill files and tracks the issue; `fix-a-bug` solves it.
@@ -36,17 +38,17 @@ Do NOT use this skill when:
 
 ## Decision Gates
 
-| Situation | Action |
-|-----------|--------|
-| `gh` not authed (`gh auth status` fails) | Stop. Auth first. No API workarounds until CLI works — default is `gh`. |
-| No template / vague report ("it broke", "add X") | Shape it first — see `references/issue-template.md`. Ask for the missing field once, specifically. |
-| Untriage queue (`needs-triage` or unlabeled) | Triage oldest-first: deduplicate → repro-check → label → prioritize — see `references/triage-labels.md`. Default: triage before taking. |
-| Duplicate found | Close as duplicate with `Duplicate of #<N>` comment. Keep discussion on the canonical issue. Never triage both. |
-| Needs repro, none provided | Label `needs-repro`, ask for exact steps once. No implementation until repro lands. |
-| Ready to implement | Take it: self-assign + `gh issue develop <N> --checkout` + hand to `fix-a-bug` / implementation. PR closes it via `open-a-pull-request`. |
-| Finding issues (backlog grooming, dup check, "what's open?") | Search, don't scroll — see `references/search-recipes.md`. |
-| Close requested, proof missing | Stop. Post what's missing as a comment. Close only with proof — see `references/close-reopen.md`. |
-| Reopen requested | Reopen only with new evidence or a reverted fix. "Still broken" without evidence goes back to `needs-repro`. |
+| Situation                                                    | Action                                                                                                                                   |
+| ------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| `gh` not authed (`gh auth status` fails)                     | Stop. Auth first. No API workarounds until CLI works — default is `gh`.                                                                  |
+| No template / vague report ("it broke", "add X")             | Shape it first — see `references/issue-template.md`. Ask for the missing field once, specifically.                                       |
+| Untriage queue (`needs-triage` or unlabeled)                 | Triage oldest-first: deduplicate → repro-check → label → prioritize — see `references/triage-labels.md`. Default: triage before taking.  |
+| Duplicate found                                              | Close as duplicate with `Duplicate of #<N>` comment. Keep discussion on the canonical issue. Never triage both.                          |
+| Needs repro, none provided                                   | Label `needs-repro`, ask for exact steps once. No implementation until repro lands.                                                      |
+| Ready to implement                                           | Take it: self-assign + `gh issue develop <N> --checkout` + hand to `fix-a-bug` / implementation. PR closes it via `open-a-pull-request`. |
+| Finding issues (backlog grooming, dup check, "what's open?") | Search, don't scroll — see `references/search-recipes.md`.                                                                               |
+| Close requested, proof missing                               | Stop. Post what's missing as a comment. Close only with proof — see `references/close-reopen.md`.                                        |
+| Reopen requested                                             | Reopen only with new evidence or a reverted fix. "Still broken" without evidence goes back to `needs-repro`.                             |
 
 ## Execution Steps
 
