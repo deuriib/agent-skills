@@ -31,4 +31,5 @@ npx -y skills add deuriib/agent-skills
 - **pi-agent**: Use when building with or configuring Pi, the minimal terminal coding harness.
 - **project-bootstrap**: Use when a repo is missing standard hygiene files, or a new project needs its baseline scaffold — git config, ignore rules, toolchain pin, license, README, changelog, hooks.
 - **wifi-roam-fix**: Use when WiFi roams in a loop between two BSSIDs of the same SSID on Arch/Omarchy with iwd + systemd-networkd.
+- **writing-rules**: Use when creating or editing agent rule files, when a rule uses vague adjectives, when agents ignore an existing rule, or when compliance cannot be checked from the output.
 - **writing-skills**: Use when creating new skills, editing existing skills, or verifying skills work before deployment.
