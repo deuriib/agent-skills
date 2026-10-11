@@ -20,6 +20,7 @@ npx -y skills add deuriib/agent-skills
 - **fix-a-bug**: Use when something is broken, a test fails, or behavior is not what was expected.
 - **github-issues**: Use when creating, triaging, searching, taking, commenting on, or closing GitHub issues.
 - **git-commit**: Use when committing changes, splitting a dirty worktree into atomic units, or writing Conventional Commits messages.
+- **git-worktrees**: Use when starting feature work that needs isolation from the current checkout, or when asked for a linked worktree.
 - **htmx**: Use when building web interfaces with HTML attributes instead of a JavaScript framework.
 - **htpy**: Use when generating HTML from pure Python without templates.
 - **init-deep**: Use when a repo needs agent context beyond what `/init` covers, or when AGENTS.md files must be generated or refreshed.

@@ -76,6 +76,7 @@ When a skill exceeds its target, move the bulk into `references/` and leave a po
 - **better-auth-plugin**: [skills/better-auth-plugin/SKILL.md](skills/better-auth-plugin/SKILL.md)
 - **fix-a-bug**: [skills/fix-a-bug/SKILL.md](skills/fix-a-bug/SKILL.md)
 - **git-commit**: [skills/git-commit/SKILL.md](skills/git-commit/SKILL.md)
+- **git-worktrees**: [skills/git-worktrees/SKILL.md](skills/git-worktrees/SKILL.md)
 - **github-issues**: [skills/github-issues/SKILL.md](skills/github-issues/SKILL.md)
 - **htmx**: [skills/htmx/SKILL.md](skills/htmx/SKILL.md)
 - **htpy**: [skills/htpy/SKILL.md](skills/htpy/SKILL.md)
