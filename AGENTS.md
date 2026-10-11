@@ -88,6 +88,7 @@ When a skill exceeds its target, move the bulk into `references/` and leave a po
 - **pi-agent**: [skills/pi-agent/SKILL.md](skills/pi-agent/SKILL.md)
 - **project-bootstrap**: [skills/project-bootstrap/SKILL.md](skills/project-bootstrap/SKILL.md)
 - **wifi-roam-fix**: [skills/wifi-roam-fix/SKILL.md](skills/wifi-roam-fix/SKILL.md)
+- **writing-agents**: [skills/writing-agents/SKILL.md](skills/writing-agents/SKILL.md)
 - **writing-rules**: [skills/writing-rules/SKILL.md](skills/writing-rules/SKILL.md)
 - **writing-skills**: [skills/writing-skills/SKILL.md](skills/writing-skills/SKILL.md)
 
