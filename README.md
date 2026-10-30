@@ -32,5 +32,6 @@ npx -y skills add deuriib/agent-skills
 - **project-bootstrap**: Use when a repo is missing standard hygiene files, or a new project needs its baseline scaffold — git config, ignore rules, toolchain pin, license, README, changelog, hooks.
 - **wifi-roam-fix**: Use when WiFi roams in a loop between two BSSIDs of the same SSID on Arch/Omarchy with iwd + systemd-networkd.
 - **writing-agents**: Use when creating, refining, or scoping AI agents or subagents, when an agent violates its boundary, or when defining agent personas and tool access across execution runtimes.
+- **writing-harness-plugins**: Use when building, porting, or debugging a plugin or extension for an AI coding agent harness.
 - **writing-rules**: Use when creating or editing agent rule files, when a rule uses vague adjectives, when agents ignore an existing rule, or when compliance cannot be checked from the output.
 - **writing-skills**: Use when creating new skills, editing existing skills, or verifying skills work before deployment.

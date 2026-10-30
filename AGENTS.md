@@ -50,7 +50,7 @@ description: Use when committing changes, splitting a dirty worktree into atomic
 Context is a shared budget. Measure, do not guess.
 
 | Tier | Target |
-|------|--------|
+| ------ | -------- |
 | Getting-started / bootstrap workflows | < 150 words |
 | Frequently-loaded skills | < 200 words |
 | All other skills | < 500 words |
@@ -89,6 +89,7 @@ When a skill exceeds its target, move the bulk into `references/` and leave a po
 - **project-bootstrap**: [skills/project-bootstrap/SKILL.md](skills/project-bootstrap/SKILL.md)
 - **wifi-roam-fix**: [skills/wifi-roam-fix/SKILL.md](skills/wifi-roam-fix/SKILL.md)
 - **writing-agents**: [skills/writing-agents/SKILL.md](skills/writing-agents/SKILL.md)
+- **writing-harness-plugins**: [skills/writing-harness-plugins/SKILL.md](/skills/writing-harness-plugins/SKILL.md)
 - **writing-rules**: [skills/writing-rules/SKILL.md](skills/writing-rules/SKILL.md)
 - **writing-skills**: [skills/writing-skills/SKILL.md](skills/writing-skills/SKILL.md)
 
