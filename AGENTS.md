@@ -71,13 +71,18 @@ When a skill exceeds its target, move the bulk into `references/` and leave a po
 
 ## Available Skills
 
+- **agency-agents-creations**: [skills/agency-agents-creations/SKILL.md](skills/agency-agents-creations/SKILL.md)
 - **animate-ui**: [skills/animate-ui/SKILL.md](skills/animate-ui/SKILL.md)
 - **azul-payment**: [skills/azul-payment/SKILL.md](skills/azul-payment/SKILL.md)
 - **better-auth-plugin**: [skills/better-auth-plugin/SKILL.md](skills/better-auth-plugin/SKILL.md)
 - **fix-a-bug**: [skills/fix-a-bug/SKILL.md](skills/fix-a-bug/SKILL.md)
 - **git-commit**: [skills/git-commit/SKILL.md](skills/git-commit/SKILL.md)
 - **git-worktrees**: [skills/git-worktrees/SKILL.md](skills/git-worktrees/SKILL.md)
+- **github-code-owners**: [skills/github-code-owners/SKILL.md](skills/github-code-owners/SKILL.md)
+- **github-funding**: [skills/github-funding/SKILL.md](skills/github-funding/SKILL.md)
+- **github-issue-templates**: [skills/github-issue-templates/SKILL.md](skills/github-issue-templates/SKILL.md)
 - **github-issues**: [skills/github-issues/SKILL.md](skills/github-issues/SKILL.md)
+- **github-labels**: [skills/github-labels/SKILL.md](skills/github-labels/SKILL.md)
 - **htmx**: [skills/htmx/SKILL.md](skills/htmx/SKILL.md)
 - **htpy**: [skills/htpy/SKILL.md](skills/htpy/SKILL.md)
 - **init-deep**: [skills/init-deep/SKILL.md](skills/init-deep/SKILL.md)
@@ -87,6 +92,7 @@ When a skill exceeds its target, move the bulk into `references/` and leave a po
 - **open-a-pull-request**: [skills/open-a-pull-request/SKILL.md](skills/open-a-pull-request/SKILL.md)
 - **pi-agent**: [skills/pi-agent/SKILL.md](skills/pi-agent/SKILL.md)
 - **project-bootstrap**: [skills/project-bootstrap/SKILL.md](skills/project-bootstrap/SKILL.md)
+- **release-please**: [skills/release-please/SKILL.md](skills/release-please/SKILL.md)
 - **wifi-roam-fix**: [skills/wifi-roam-fix/SKILL.md](skills/wifi-roam-fix/SKILL.md)
 - **writing-agents**: [skills/writing-agents/SKILL.md](skills/writing-agents/SKILL.md)
 - **writing-harness-plugins**: [skills/writing-harness-plugins/SKILL.md](/skills/writing-harness-plugins/SKILL.md)
