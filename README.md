@@ -15,6 +15,7 @@ npx -y skills add deuriib/agent-skills
 ## Available Skills
 
 - **agency-agents-creations**: Use when creating, editing, or validating a new AI specialist agent for the Agency Agents repository.
+- **agency-agents-runbooks**: Use when creating, editing, or registering multi-agent scenario runbooks (NEXUS playbooks) in the Agency Agents repository.
 - **animate-ui**: Use when implementing or customizing Motion-powered components from Animate UI in a shadcn/ui codebase.
 - **azul-payment**: Use when integrating the Azul Payment Gateway in the Dominican Republic — Sale, Refund, 3DS 2.0, or DataVault tokenization.
 - **better-auth-plugin**: Use when adding custom authentication logic to a Better Auth setup via a plugin.

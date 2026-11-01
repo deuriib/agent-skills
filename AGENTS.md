@@ -72,6 +72,7 @@ When a skill exceeds its target, move the bulk into `references/` and leave a po
 ## Available Skills
 
 - **agency-agents-creations**: [skills/agency-agents-creations/SKILL.md](skills/agency-agents-creations/SKILL.md)
+- **agency-agents-runbooks**: [skills/agency-agents-runbooks/SKILL.md](skills/agency-agents-runbooks/SKILL.md)
 - **animate-ui**: [skills/animate-ui/SKILL.md](skills/animate-ui/SKILL.md)
 - **azul-payment**: [skills/azul-payment/SKILL.md](skills/azul-payment/SKILL.md)
 - **better-auth-plugin**: [skills/better-auth-plugin/SKILL.md](skills/better-auth-plugin/SKILL.md)
