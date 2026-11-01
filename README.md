@@ -32,7 +32,7 @@ npx -y skills add deuriib/agent-skills
 - **lago**: Use when integrating the Lago open-source billing platform for usage-based or subscription billing.
 - **lago-payment-integration**: Use when extending Lago with a custom Payment Service Provider (PSP) integration.
 - **mintoria-brand-guidelines**: Use when applying or reviewing Mintoria brand colors, typography, logos, or design principles.
-- **open-a-pull-request**: Use when a branch is ready for other people to read.
+- **github-pull-request**: Use when a branch is ready for other people to read.
 - **pi-agent**: Use when building with or configuring Pi, the minimal terminal coding harness.
 - **project-bootstrap**: Use when a repo is missing standard hygiene files, or a new project needs its baseline scaffold — git config, ignore rules, toolchain pin, license, README, changelog, hooks.
 - **release-please**: Use when configuring, troubleshooting, or automating releases with Google's Release Please.

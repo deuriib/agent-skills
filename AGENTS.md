@@ -89,7 +89,7 @@ When a skill exceeds its target, move the bulk into `references/` and leave a po
 - **lago**: [skills/lago/SKILL.md](skills/lago/SKILL.md)
 - **lago-payment-integration**: [skills/lago-payment-integration/SKILL.md](skills/lago-payment-integration/SKILL.md)
 - **mintoria-brand-guidelines**: [skills/mintoria-brand-guidelines/SKILL.md](skills/mintoria-brand-guidelines/SKILL.md)
-- **open-a-pull-request**: [skills/open-a-pull-request/SKILL.md](skills/open-a-pull-request/SKILL.md)
+- **github-pull-request**: [skills/github-pull-request/SKILL.md](skills/github-pull-request/SKILL.md)
 - **pi-agent**: [skills/pi-agent/SKILL.md](skills/pi-agent/SKILL.md)
 - **project-bootstrap**: [skills/project-bootstrap/SKILL.md](skills/project-bootstrap/SKILL.md)
 - **release-please**: [skills/release-please/SKILL.md](skills/release-please/SKILL.md)
