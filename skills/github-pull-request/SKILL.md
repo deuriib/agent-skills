@@ -1,5 +1,5 @@
 ---
-name: open-a-pull-request
+name: github-pull-request
 description: Use when a branch is finished or a pull request is being prepared - opening, raising, or submitting a PR, writing a PR title, description, or body, linking a PR to an issue ("fixes 123"), scoping or splitting an oversized PR, or marking a draft ready for review. Triggers on "open a PR", "raise a PR", "submit for review", "this branch is ready", "undraft this PR". Not for filing issues (github-issues) or shaping commits (git-commit).
 license: Apache-2.0
 metadata:
@@ -7,7 +7,7 @@ metadata:
   version: "1.2"
 ---
 
-# Skill: open-a-pull-request
+# Skill: github-pull-request
 
 ## Activation Contract
 
