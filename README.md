@@ -27,6 +27,7 @@ npx -y skills add deuriib/agent-skills
 - **github-labels**: Use when creating, updating, or synchronizing GitHub repository labels declaratively.
 - **git-commit**: Use when committing changes, splitting a dirty worktree into atomic units, or writing Conventional Commits messages.
 - **git-worktrees**: Use when starting feature work that needs isolation from the current checkout, or when asked for a linked worktree.
+- **git-worktrunk**: Use when starting feature work that needs isolation, or when the repo uses worktrunk (`wt`) to switch, merge, or remove worktrees.
 - **htmx**: Use when building web interfaces with HTML attributes instead of a JavaScript framework.
 - **htpy**: Use when generating HTML from pure Python without templates.
 - **init-deep**: Use when a repo needs agent context beyond what `/init` covers, or when AGENTS.md files must be generated or refreshed.

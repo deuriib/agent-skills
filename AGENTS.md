@@ -79,6 +79,7 @@ When a skill exceeds its target, move the bulk into `references/` and leave a po
 - **fix-a-bug**: [skills/fix-a-bug/SKILL.md](skills/fix-a-bug/SKILL.md)
 - **git-commit**: [skills/git-commit/SKILL.md](skills/git-commit/SKILL.md)
 - **git-worktrees**: [skills/git-worktrees/SKILL.md](skills/git-worktrees/SKILL.md)
+- **git-worktrunk**: [skills/git-worktrunk/SKILL.md](skills/git-worktrunk/SKILL.md)
 - **github-code-owners**: [skills/github-code-owners/SKILL.md](skills/github-code-owners/SKILL.md)
 - **github-funding**: [skills/github-funding/SKILL.md](skills/github-funding/SKILL.md)
 - **github-issue-templates**: [skills/github-issue-templates/SKILL.md](skills/github-issue-templates/SKILL.md)
